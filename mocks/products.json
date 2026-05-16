@@ -1,0 +1,82 @@
+{
+  "products": [
+    {
+      "id": "prod_01keychain_phone_stand",
+      "title": "Portable Keychain Phone Stand",
+      "subtitle": "Foldable • Compact • Customizable",
+      "description": "The ultimate portable phone stand that doubles as a keychain. Engineered for everyday carry with a premium 3D-printed finish.",
+      "handle": "portable-keychain-phone-stand",
+      "status": "published",
+      "thumbnail": "/images/products/keychain-stand-thumbnail.jpg",
+      "images": [
+        { "id": "img_01", "url": "/images/keychain-stand-front.jpg" },
+        { "id": "img_02", "url": "/images/keychain-stand-side.jpg" },
+        { "id": "img_03", "url": "/images/keychain-stand-lifestyle.jpg" }
+      ],
+      "options": [
+        {
+          "id": "opt_color",
+          "title": "Edition",
+          "product_id": "prod_01keychain_phone_stand",
+          "values": [
+            { "id": "optval_black", "value": "Wakanda Black", "option_id": "opt_color" },
+            { "id": "optval_grey", "value": "Batman Grey", "option_id": "opt_color" },
+            {id: "optval_teal", "value": "Captain Teal", "option_id": "opt_color" }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "var_black",
+          "title": "Wakanda Black",
+          "sku": "PKS-BLK-001",
+          "manage_inventory": true,
+          "inventory_quantity": 100,
+          "allow_backorder": false,
+          "prices": [
+            { "id": "price_blk_inr", "amount": 44900, "currency_code": "inr" }
+          ],
+          "options": [
+            { "option_id": "opt_color", "value": "Wakanda Black" }
+          ]
+        },
+        {
+          "id": "var_grey",
+          "title": "Batman Grey",
+          "sku": "PKS-GRY-002",
+          "manage_inventory": true,
+          "inventory_quantity": 100,
+          "allow_backorder": false,
+          "prices": [
+            { "id": "price_gry_inr", "amount": 44900, "currency_code": "inr" }
+          ],
+          "options": [
+            { "option_id": "opt_color", "value": "Batman Grey" }
+          ]
+        },
+        {
+          "id": "var_teal",
+          "title": "Captain Teal",
+          "sku": "PKS-TEL-003",
+          "manage_inventory": true,
+          "inventory_quantity": 100,
+          "allow_backorder": false,
+          "prices": [
+            { "id": "price_tel_inr", "amount": 44900, "currency_code": "inr" }
+          ],
+          "options": [
+            { "option_id": "opt_color", "value": "Captain Teal" }
+          ]
+        }
+      ],
+      "metadata": {
+        "dimensions": "73mm x 35mm x 12mm",
+        "material": "Premium PLA / PETG",
+        "customization": true,
+        "max_chars": 12,
+        "customization_label": "Name / Text to Engrave",
+        "customization_helper": "This text will be 3D printed on your stand"
+      }
+    }
+  ]
+}
