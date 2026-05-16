@@ -65,7 +65,7 @@
 
 ### Architecture
 
-- [ ] **ARCH-01**: MedusaJS-compatible mock data structure (prices in paise)
+- [x] **ARCH-01**: MedusaJS-compatible mock data structure (prices in paise)
 - [ ] **ARCH-02**: Abstracted productService.ts with easy SDK swap capability
 - [ ] **ARCH-03**: Abstracted cartService.ts
 - [ ] **ARCH-04**: Zustand cart store with persistence
