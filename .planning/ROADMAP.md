@@ -18,7 +18,12 @@
 7. Newsletter signup form (UI only)
 8. Mock products.json with MedusaJS-compatible data structure
 
-**Requirements:** LAND-01, LAND-02, LAND-03, LAND-04, LAND-05, LAND-06, LAND-07, ARCH-01
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-foundation-landing-page/01-01-PLAN.md — Design system, CSS variables, mock data
+- [ ] 01-foundation-landing-page/01-02-PLAN.md — Hero, Featured Products, Benefits sections
+- [ ] 01-foundation-landing-page/01-03-PLAN.md — How It Works, Testimonials, Newsletter sections
 
 ---
 
