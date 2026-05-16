@@ -1,20 +1,43 @@
+"use client";
+
 import Link from "next/link";
+
+const footerLinks = [
+  { label: "Shop", href: "/shop" },
+  { label: "About", href: "#" },
+  { label: "Contact", href: "#" },
+];
 
 export function Footer() {
   return (
-    <footer className="bg-[var(--color-primary)] border-t border-[var(--border)] py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="text-center md:text-left">
-            <span className="text-xl font-bold text-[var(--color-accent)]">Crucible Creations</span>
-            <p className="text-[var(--muted-foreground)] mt-2">Premium 3D Printed Products</p>
+    <footer className="relative py-20 bg-[#0a0f1a] border-t border-white/5">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+          {/* Brand */}
+          <div className="text-center lg:text-left">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-lg font-semibold tracking-tight text-white">Crucible Creations</span>
+            </div>
+            <p className="text-[#64748b] text-sm">Premium 3D Printed Products</p>
           </div>
-          
-          <div className="flex items-center gap-6 text-sm text-[var(--muted-foreground)]">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
-            <span>© 2026 Crucible Creations</span>
-          </div>
+
+          {/* Links */}
+          <nav className="flex items-center gap-8">
+            {footerLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="text-[#64748b] hover:text-white text-sm transition-colors duration-300"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Copyright */}
+          <p className="text-[#475569] text-xs tracking-wide">
+            © 2026 Crucible Creations
+          </p>
         </div>
       </div>
     </footer>

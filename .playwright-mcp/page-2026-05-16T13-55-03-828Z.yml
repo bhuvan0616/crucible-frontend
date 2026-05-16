@@ -1,0 +1,502 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - link "Home" [ref=e6]:
+        - /url: /
+        - img [ref=e7]
+      - list [ref=e17]:
+        - listitem [ref=e18]:
+          - button "Explore" [ref=e19]:
+            - heading "Explore" [level=2] [ref=e20]
+        - listitem [ref=e21]:
+          - button "Learn" [ref=e22]:
+            - heading "Learn" [level=2] [ref=e23]
+        - listitem [ref=e24]:
+          - button "Build" [ref=e25]:
+            - heading "Build" [level=2] [ref=e26]
+        - listitem [ref=e27]:
+          - button "Bridge" [ref=e28]:
+            - heading "Bridge" [level=2] [ref=e29]
+  - main [ref=e31]:
+    - generic [ref=e32]:
+      - generic [ref=e34]:
+        - generic [ref=e37]:
+          - button [ref=e38]:
+            - generic [ref=e39]:
+              - img
+              - generic:
+                - img
+          - button [ref=e40]:
+            - generic [ref=e41]:
+              - img
+              - generic:
+                - img
+        - generic:
+          - generic [ref=e42]:
+            - img [ref=e43]
+            - heading "HOT" [level=1] [ref=e45]
+            - generic [ref=e48]: Games
+          - heading "OTHERSIDE" [level=2] [ref=e50]:
+            - generic [ref=e51]: OTHERSIDE
+          - generic [ref=e52]:
+            - paragraph [ref=e53]:
+              - generic [ref=e54]: Web3-enabled virtual worlds on ApeChain
+            - link "Launch" [ref=e55]:
+              - /url: /apps/otherside
+              - generic [ref=e56]:
+                - img
+                - generic:
+                  - generic:
+                    - generic: Launch
+                    - generic: Launch
+          - generic [ref=e57]:
+            - link "See All Apps" [ref=e58]:
+              - /url: /apps
+              - generic [ref=e59]:
+                - generic [ref=e60]:
+                  - generic [ref=e61]: See All Apps
+                  - generic [ref=e62]: See All Apps
+                - img [ref=e63]
+            - generic [ref=e65]:
+              - button "OTHERSIDE" [ref=e66]:
+                - img "OTHERSIDE" [ref=e68]
+              - button "ApeChurch" [ref=e72]:
+                - img "ApeChurch" [ref=e74]
+              - button "OpenSea" [ref=e77]:
+                - img "OpenSea" [ref=e79]
+              - button "Clutch Market" [ref=e82]:
+                - img "Clutch Market" [ref=e84]
+              - button "Slab Cash" [ref=e87]:
+                - img "Slab Cash" [ref=e89]
+      - generic [ref=e92]:
+        - generic [ref=e94]:
+          - img "DashBo" [ref=e99]
+          - img "OpenSea" [ref=e104]
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - img "Apechain Spotlight" [ref=e107]
+            - heading "Where DApps Shine & You Win" [level=2] [ref=e108]
+            - generic [ref=e109]:
+              - paragraph [ref=e110]: Spotlight will be broken down into rounds, with each one specifically tailored to the highlighted project(s). This ensures what creators are building is amplified and elevated, while encouraging community participation.
+              - paragraph [ref=e111]: At each round's end, the top APE placements score epic prizes made up of exclusive IRL, holy sh*t experiences and other unforgettable rewards. This system rewards both builders and individual collectors, ensuring engagement at all levels, while offering high-stakes rewards to the most active participants.
+              - paragraph [ref=e112]: Simple, fun, rewarding. Ready to make your mark? 🦍✨
+            - generic [ref=e113]:
+              - link "Get Started" [ref=e114]:
+                - /url: /spotlight
+                - generic [ref=e115]:
+                  - img
+                  - generic:
+                    - generic:
+                      - generic: Get Started
+                      - generic: Get Started
+              - link "Go Spotlight" [ref=e116]:
+                - /url: https://apechain.com/spotlight
+                - generic [ref=e117]:
+                  - img
+                  - generic:
+                    - generic:
+                      - generic: Go Spotlight
+                      - generic: Go Spotlight
+          - generic [ref=e122]:
+            - heading "Clutch Markets" [level=2] [ref=e123]
+            - paragraph [ref=e124]: Decentralized parlay platform on ApeChain.
+            - link "What's this" [ref=e125]:
+              - /url: /apps/clutch-market
+              - generic [ref=e126]:
+                - img
+                - generic:
+                  - generic:
+                    - generic: What's this
+                    - generic: What's this
+      - generic [ref=e127]:
+        - generic [ref=e128]:
+          - img [ref=e129]
+          - heading "ApeChain Apps" [level=2] [ref=e131]
+        - link "See All Apps" [ref=e133]:
+          - /url: /apps
+          - generic [ref=e134]:
+            - generic [ref=e135]:
+              - generic [ref=e136]: See All Apps
+              - generic [ref=e137]: See All Apps
+            - img [ref=e138]
+        - generic [ref=e141]:
+          - generic [ref=e142]:
+            - link "OTHERSIDE Games OTHERSIDE Web3-enabled virtual worlds on ApeChain" [ref=e144]:
+              - /url: /apps/otherside
+              - generic [ref=e145]:
+                - generic [ref=e146]:
+                  - img "OTHERSIDE" [ref=e148]
+                  - generic [ref=e150]: Games
+                - img
+                - generic [ref=e152]:
+                  - generic [ref=e153]: OTHERSIDE
+                  - generic [ref=e154]: Web3-enabled virtual worlds on ApeChain
+            - link "MADE BY APES Intellectual Property MADE BY APES A Club Full of Builders" [ref=e156]:
+              - /url: /apps/made-by-apes
+              - generic [ref=e157]:
+                - generic [ref=e158]:
+                  - img "MADE BY APES" [ref=e160]
+                  - generic [ref=e162]: Intellectual Property
+                - img
+                - generic [ref=e164]:
+                  - generic [ref=e165]: MADE BY APES
+                  - generic [ref=e166]: A Club Full of Builders
+            - link "CAMELOT Finance CAMELOT Decentralized exchange" [ref=e168]:
+              - /url: /apps/camelot
+              - generic [ref=e169]:
+                - generic [ref=e170]:
+                  - img "CAMELOT" [ref=e172]
+                  - generic [ref=e174]: Finance
+                - img
+                - generic [ref=e176]:
+                  - generic [ref=e177]: CAMELOT
+                  - generic [ref=e178]: Decentralized exchange
+            - link "APE PORTAL Infrastructure APE PORTAL GET ON APECHAIN" [ref=e180]:
+              - /url: /apps/ape-portal
+              - generic [ref=e181]:
+                - generic [ref=e182]:
+                  - img "APE PORTAL" [ref=e184]
+                  - generic [ref=e186]: Infrastructure
+                - img
+                - generic [ref=e188]:
+                  - generic [ref=e189]: APE PORTAL
+                  - generic [ref=e190]: GET ON APECHAIN
+          - link "BLEVER Collectibles BLEVER An NFT launchpad for ApeChain" [ref=e193]:
+            - /url: /apps/blever
+            - generic [ref=e194]:
+              - generic [ref=e195]:
+                - img "BLEVER" [ref=e197]
+                - generic [ref=e199]: Collectibles
+              - img
+              - generic [ref=e201]:
+                - generic [ref=e202]: BLEVER
+                - generic [ref=e203]: An NFT launchpad for ApeChain
+          - generic [ref=e204]:
+            - link "APE EXPRESS Finance APE EXPRESS The ultimate memecoin toolkit" [ref=e206]:
+              - /url: /apps/ape-express
+              - generic [ref=e207]:
+                - generic [ref=e208]:
+                  - img "APE EXPRESS" [ref=e210]
+                  - generic [ref=e212]: Finance
+                - img
+                - generic [ref=e214]:
+                  - generic [ref=e215]: APE EXPRESS
+                  - generic [ref=e216]: The ultimate memecoin toolkit
+            - link "APESCAN Infrastructure APESCAN ApeChain's Block Explorer" [ref=e218]:
+              - /url: /apps/apescan-io
+              - generic [ref=e219]:
+                - generic [ref=e220]:
+                  - img "APESCAN" [ref=e222]
+                  - generic [ref=e224]: Infrastructure
+                - img
+                - generic [ref=e226]:
+                  - generic [ref=e227]: APESCAN
+                  - generic [ref=e228]: ApeChain's Block Explorer
+            - link "Clutch Market Games, Finance Clutch Market Decentralized parlay platform on ApeChain." [ref=e230]:
+              - /url: /apps/clutch-market
+              - generic [ref=e231]:
+                - generic [ref=e232]:
+                  - img "Clutch Market" [ref=e234]
+                  - generic [ref=e236]: Games, Finance
+                - img
+                - generic [ref=e238]:
+                  - generic [ref=e239]: Clutch Market
+                  - generic [ref=e240]: Decentralized parlay platform on ApeChain.
+            - link "gTrade Finance gTrade PerpDex" [ref=e242]:
+              - /url: /apps/gtrade
+              - generic [ref=e243]:
+                - generic [ref=e244]:
+                  - img "gTrade" [ref=e246]
+                  - generic [ref=e248]: Finance
+                - img
+                - generic [ref=e250]:
+                  - generic [ref=e251]: gTrade
+                  - generic [ref=e252]: PerpDex
+          - generic [ref=e253]:
+            - link "OpenOcean Finance OpenOcean DEX Aggregator" [ref=e255]:
+              - /url: /apps/openocean
+              - generic [ref=e256]:
+                - generic [ref=e257]:
+                  - img "OpenOcean" [ref=e259]
+                  - generic [ref=e261]: Finance
+                - img
+                - generic [ref=e263]:
+                  - generic [ref=e264]: OpenOcean
+                  - generic [ref=e265]: DEX Aggregator
+            - link "CYAN Finance CYAN" [ref=e267]:
+              - /url: /apps/cyan
+              - generic [ref=e268]:
+                - generic [ref=e269]:
+                  - img "CYAN" [ref=e271]
+                  - generic [ref=e273]: Finance
+                - img
+                - generic [ref=e276]: CYAN
+            - link "ApeCoin in Coinbase 50 News ApeCoin in Coinbase 50 Get in before the institutions" [ref=e278]:
+              - /url: /apps/apechain-news
+              - generic [ref=e279]:
+                - generic [ref=e280]:
+                  - img "ApeCoin in Coinbase 50" [ref=e282]
+                  - generic [ref=e284]: News
+                - img
+                - generic [ref=e286]:
+                  - generic [ref=e287]: ApeCoin in Coinbase 50
+                  - generic [ref=e288]: Get in before the institutions
+            - link "MINTPAD Collectibles MINTPAD Launch your NFT on ApeChain" [ref=e290]:
+              - /url: /apps/mintpad
+              - generic [ref=e291]:
+                - generic [ref=e292]:
+                  - img "MINTPAD" [ref=e294]
+                  - generic [ref=e296]: Collectibles
+                - img
+                - generic [ref=e298]:
+                  - generic [ref=e299]: MINTPAD
+                  - generic [ref=e300]: Launch your NFT on ApeChain
+          - link "ORMI Infrastructure ORMI" [ref=e303]:
+            - /url: /apps/ormi
+            - generic [ref=e304]:
+              - generic [ref=e305]:
+                - img "ORMI" [ref=e307]
+                - generic [ref=e309]: Infrastructure
+              - img
+              - generic [ref=e312]: ORMI
+      - generic [ref=e314]:
+        - generic [ref=e315]:
+          - generic [ref=e316]:
+            - generic [ref=e317]:
+              - link "Intellectual Property" [ref=e318]:
+                - /url: /apps?f=intellectual-property
+                - generic [ref=e319]:
+                  - generic [ref=e320]: Intellectual Property
+                  - generic [ref=e321]: Intellectual Property
+              - link "Collectibles" [ref=e323]:
+                - /url: /apps?f=collectibles
+                - generic [ref=e324]:
+                  - generic [ref=e325]: Collectibles
+                  - generic [ref=e326]: Collectibles
+              - link "Finance" [ref=e328]:
+                - /url: /apps?f=finance
+                - generic [ref=e329]:
+                  - generic [ref=e330]: Finance
+                  - generic [ref=e331]: Finance
+            - generic [ref=e333]:
+              - link "Intellectual Property" [ref=e334]:
+                - /url: /apps?f=intellectual-property
+                - generic [ref=e335]:
+                  - generic [ref=e336]: Intellectual Property
+                  - generic [ref=e337]: Intellectual Property
+              - link "Collectibles" [ref=e339]:
+                - /url: /apps?f=collectibles
+                - generic [ref=e340]:
+                  - generic [ref=e341]: Collectibles
+                  - generic [ref=e342]: Collectibles
+              - link "Finance" [ref=e344]:
+                - /url: /apps?f=finance
+                - generic [ref=e345]:
+                  - generic [ref=e346]: Finance
+                  - generic [ref=e347]: Finance
+            - generic [ref=e349]:
+              - link "Intellectual Property" [ref=e350]:
+                - /url: /apps?f=intellectual-property
+                - generic [ref=e351]:
+                  - generic [ref=e352]: Intellectual Property
+                  - generic [ref=e353]: Intellectual Property
+              - link "Collectibles" [ref=e355]:
+                - /url: /apps?f=collectibles
+                - generic [ref=e356]:
+                  - generic [ref=e357]: Collectibles
+                  - generic [ref=e358]: Collectibles
+              - link "Finance" [ref=e360]:
+                - /url: /apps?f=finance
+                - generic [ref=e361]:
+                  - generic [ref=e362]: Finance
+                  - generic [ref=e363]: Finance
+            - generic [ref=e365]:
+              - link "Intellectual Property" [ref=e366]:
+                - /url: /apps?f=intellectual-property
+                - generic [ref=e367]:
+                  - generic [ref=e368]: Intellectual Property
+                  - generic [ref=e369]: Intellectual Property
+              - link "Collectibles" [ref=e371]:
+                - /url: /apps?f=collectibles
+                - generic [ref=e372]:
+                  - generic [ref=e373]: Collectibles
+                  - generic [ref=e374]: Collectibles
+              - link "Finance" [ref=e376]:
+                - /url: /apps?f=finance
+                - generic [ref=e377]:
+                  - generic [ref=e378]: Finance
+                  - generic [ref=e379]: Finance
+          - generic [ref=e381]:
+            - generic [ref=e382]:
+              - link "Games" [ref=e383]:
+                - /url: /apps?f=games
+                - generic [ref=e384]:
+                  - generic [ref=e385]: Games
+                  - generic [ref=e386]: Games
+              - link "Infrastructure" [ref=e388]:
+                - /url: /apps?f=infrastructure
+                - generic [ref=e389]:
+                  - generic [ref=e390]: Infrastructure
+                  - generic [ref=e391]: Infrastructure
+            - generic [ref=e393]:
+              - link "Games" [ref=e394]:
+                - /url: /apps?f=games
+                - generic [ref=e395]:
+                  - generic [ref=e396]: Games
+                  - generic [ref=e397]: Games
+              - link "Infrastructure" [ref=e399]:
+                - /url: /apps?f=infrastructure
+                - generic [ref=e400]:
+                  - generic [ref=e401]: Infrastructure
+                  - generic [ref=e402]: Infrastructure
+            - generic [ref=e404]:
+              - link "Games" [ref=e405]:
+                - /url: /apps?f=games
+                - generic [ref=e406]:
+                  - generic [ref=e407]: Games
+                  - generic [ref=e408]: Games
+              - link "Infrastructure" [ref=e410]:
+                - /url: /apps?f=infrastructure
+                - generic [ref=e411]:
+                  - generic [ref=e412]: Infrastructure
+                  - generic [ref=e413]: Infrastructure
+            - generic [ref=e415]:
+              - link "Games" [ref=e416]:
+                - /url: /apps?f=games
+                - generic [ref=e417]:
+                  - generic [ref=e418]: Games
+                  - generic [ref=e419]: Games
+              - link "Infrastructure" [ref=e421]:
+                - /url: /apps?f=infrastructure
+                - generic [ref=e422]:
+                  - generic [ref=e423]: Infrastructure
+                  - generic [ref=e424]: Infrastructure
+        - link "Browse All Apps" [ref=e427]:
+          - /url: /apps
+          - generic [ref=e428]:
+            - img
+            - generic:
+              - generic:
+                - generic: Browse All Apps
+                - generic: Browse All Apps
+    - generic [ref=e429]:
+      - img "Apechain" [ref=e431]
+      - generic [ref=e432]:
+        - generic [ref=e433]:
+          - generic [ref=e434]:
+            - heading "Build on ApeChain" [level=4] [ref=e435]
+            - navigation "Footer navigation links" [ref=e436]:
+              - list [ref=e437]:
+                - listitem [ref=e438]:
+                  - link "Docs" [ref=e439]:
+                    - /url: https://docs.apechain.com/
+                    - generic [ref=e441]:
+                      - generic [ref=e442]: Docs
+                      - generic [ref=e443]: Docs
+                - listitem [ref=e444]:
+                  - link "Mainnet Hub" [ref=e445]:
+                    - /url: https://apechain.hub.caldera.xyz/
+                    - generic [ref=e447]:
+                      - generic [ref=e448]: Mainnet Hub
+                      - generic [ref=e449]: Mainnet Hub
+                - listitem [ref=e450]:
+                  - link "Testnet Hub" [ref=e451]:
+                    - /url: https://curtis.hub.caldera.xyz/
+                    - generic [ref=e453]:
+                      - generic [ref=e454]: Testnet Hub
+                      - generic [ref=e455]: Testnet Hub
+                - listitem [ref=e456]:
+                  - link "Block Explorer" [ref=e457]:
+                    - /url: https://apescan.io
+                    - generic [ref=e459]:
+                      - generic [ref=e460]: Block Explorer
+                      - generic [ref=e461]: Block Explorer
+                - listitem [ref=e462]:
+                  - link "Ape Portal" [ref=e463]:
+                    - /url: https://github.com/yuga-labs/ape-portal-public
+                    - generic [ref=e465]:
+                      - generic [ref=e466]: Ape Portal
+                      - generic [ref=e467]: Ape Portal
+          - generic [ref=e468]:
+            - heading "ApeCoin" [level=4] [ref=e469]
+            - navigation "Footer navigation links" [ref=e470]:
+              - list [ref=e471]:
+                - listitem [ref=e472]:
+                  - link "Discord" [ref=e473]:
+                    - /url: https://discord.gg/apecoindao
+                    - generic [ref=e475]:
+                      - generic [ref=e476]: Discord
+                      - generic [ref=e477]: Discord
+                - listitem [ref=e478]:
+                  - link "Twitter / X" [ref=e479]:
+                    - /url: https://x.com/apecoin
+                    - generic [ref=e481]:
+                      - generic [ref=e482]: Twitter / X
+                      - generic [ref=e483]: Twitter / X
+                - listitem [ref=e484]:
+                  - link "Otherside Calendar" [ref=e485]:
+                    - /url: https://othersidecalendar.apechain.com/
+                    - generic [ref=e487]:
+                      - generic [ref=e488]: Otherside Calendar
+                      - generic [ref=e489]: Otherside Calendar
+          - generic [ref=e490]:
+            - heading "ApeChain" [level=4] [ref=e491]
+            - navigation "Footer navigation links" [ref=e492]:
+              - list [ref=e493]:
+                - listitem [ref=e494]:
+                  - link "Bridge" [ref=e495]:
+                    - /url: /portal#bridge
+                    - generic [ref=e497]:
+                      - generic [ref=e498]: Bridge
+                      - generic [ref=e499]: Bridge
+                - listitem [ref=e500]:
+                  - link "Relay Bridge" [ref=e501]:
+                    - /url: /relay-bridge
+                    - generic [ref=e503]:
+                      - generic [ref=e504]: Relay Bridge
+                      - generic [ref=e505]: Relay Bridge
+                - listitem [ref=e506]:
+                  - link "The Blueprint" [ref=e507]:
+                    - /url: /the-blueprint
+                    - generic [ref=e509]:
+                      - generic [ref=e510]: The Blueprint
+                      - generic [ref=e511]: The Blueprint
+                - listitem [ref=e512]:
+                  - link "Telegram" [ref=e513]:
+                    - /url: https://t.me/apechainofficial
+                    - generic [ref=e515]:
+                      - generic [ref=e516]: Telegram
+                      - generic [ref=e517]: Telegram
+                - listitem [ref=e518]:
+                  - link "Twitter / X" [ref=e519]:
+                    - /url: https://x.com/ApeChainHUB
+                    - generic [ref=e521]:
+                      - generic [ref=e522]: Twitter / X
+                      - generic [ref=e523]: Twitter / X
+                - listitem [ref=e524]:
+                  - link "Brand Kit" [ref=e525]:
+                    - /url: https://live.standards.site/apechain/
+                    - generic [ref=e527]:
+                      - generic [ref=e528]: Brand Kit
+                      - generic [ref=e529]: Brand Kit
+        - generic [ref=e531]:
+          - generic [ref=e532]: © 2026 Ape Foundation
+          - navigation "Footer navigation links" [ref=e533]:
+            - list [ref=e534]:
+              - listitem [ref=e535]:
+                - link "Terms of Service |" [ref=e536]:
+                  - /url: /terms-of-service
+                  - generic [ref=e538]:
+                    - generic [ref=e539]: Terms of Service
+                    - generic [ref=e540]: Terms of Service
+                  - text: "|"
+              - listitem [ref=e541]:
+                - link "Privacy Notice" [ref=e542]:
+                  - /url: /privacy-notice
+                  - generic [ref=e544]:
+                    - generic [ref=e545]: Privacy Notice
+                    - generic [ref=e546]: Privacy Notice
+  - generic [ref=e547]:
+    - img [ref=e548]
+    - img [ref=e549]
+  - alert [ref=e562]
