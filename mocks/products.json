@@ -21,7 +21,7 @@
           "values": [
             { "id": "optval_black", "value": "Wakanda Black", "option_id": "opt_color" },
             { "id": "optval_grey", "value": "Batman Grey", "option_id": "opt_color" },
-            {id: "optval_teal", "value": "Captain Teal", "option_id": "opt_color" }
+            { "id": "optval_teal", "value": "Captain Teal", "option_id": "opt_color" }
           ]
         }
       ],
