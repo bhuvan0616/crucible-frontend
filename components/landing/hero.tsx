@@ -1,244 +1,379 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
-export function Hero() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"]
-  });
+function MagneticButton({ children, href }: { children: React.ReactNode; href: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.6], [1, 0.95]);
+  const springX = useSpring(x, { stiffness: 150, damping: 15 });
+  const springY = useSpring(y, { stiffness: 150, damping: 15 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    x.set((e.clientX - centerX) * 0.25);
+    y.set((e.clientY - centerY) * 0.25);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   return (
-    <section ref={ref} className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden bg-[#0a0f1a]">
-      {/* Parallax atmospheric background */}
+    <Link href={href}>
       <motion.div
-        style={{ y }}
-        className="absolute inset-0"
+        ref={ref}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ x: springX, y: springY }}
+        className="inline-block cursor-pointer"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1a] via-[#0f172a] to-[#0a0f1a]" />
-        {/* Floating glow orbs */}
-        <motion.div
-          animate={{
-            y: [0, -20, 0],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#14b8a6]/8 rounded-full blur-[140px]"
-        />
-        <motion.div
-          animate={{
-            y: [0, 20, 0],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#f97316]/6 rounded-full blur-[100px]"
-        />
-        <motion.div
-          animate={{
-            y: [0, -15, 0],
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute top-1/2 right-1/3 w-48 h-48 bg-[#14b8a6]/5 rounded-full blur-[80px]"
-        />
+        {children}
+      </motion.div>
+    </Link>
+  );
+}
+
+export default function V4Hero() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
+  const y = useTransform(scrollYProgress, [0, 0.5], [0, -100]);
+
+  const blob1Y = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const blob2Y = useTransform(scrollYProgress, [0, 1], [0, -150]);
+
+  return (
+    <section
+      ref={containerRef}
+      className="relative min-h-screen flex items-center overflow-hidden bg-[var(--color-surface-night)]"
+    >
+      {/* Starfield Background */}
+      <motion.div
+        style={{ opacity }}
+        className="absolute inset-0 starfield"
+      />
+
+      {/* Gradient Blobs */}
+      <motion.div
+        style={{ y: blob1Y }}
+        className="absolute -top-60 -right-60 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-[var(--color-violet-deep)]/40 to-transparent blur-[120px]"
+      />
+      <motion.div
+        style={{ y: blob2Y }}
+        className="absolute top-1/3 -left-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[var(--color-violet)]/20 to-transparent blur-[100px]"
+      />
+
+      {/* Floating Sticker Mascots */}
+      <motion.div
+        animate={{ y: [0, -25, 0], rotate: [-5, 5, -5] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-40 right-32 opacity-80"
+      >
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+          <circle cx="60" cy="60" r="50" fill="var(--color-lime)" opacity="0.9"/>
+          <circle cx="60" cy="60" r="45" fill="var(--color-lime-dark)"/>
+          <circle cx="45" cy="50" r="8" fill="var(--color-ink-deep)"/>
+          <circle cx="75" cy="50" r="8" fill="var(--color-ink-deep)"/>
+          <circle cx="47" cy="48" r="3" fill="white"/>
+          <circle cx="77" cy="48" r="3" fill="white"/>
+          <path d="M45 75 Q60 90 75 75" stroke="var(--color-ink-deep)" strokeWidth="4" strokeLinecap="round" fill="none"/>
+        </svg>
       </motion.div>
 
-      {/* Grid texture */}
       <motion.div
-        style={{ opacity: 0.015 }}
-        className="absolute inset-0"
-        data-nowebp="true"
+        animate={{ y: [0, 20, 0], rotate: [5, -5, 5] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-40 left-20 opacity-70"
       >
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-                             linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
-            backgroundSize: '80px 80px'
-          }}
-        />
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="35" fill="var(--color-pink)" opacity="0.9"/>
+          <circle cx="40" cy="40" r="30" fill="var(--color-pink-light)"/>
+          <circle cx="30" cy="35" r="6" fill="var(--color-ink-deep)"/>
+          <circle cx="50" cy="35" r="6" fill="var(--color-ink-deep)"/>
+          <path d="M28 52 Q40 62 52 52" stroke="var(--color-ink-deep)" strokeWidth="3" strokeLinecap="round" fill="none"/>
+        </svg>
       </motion.div>
 
-      {/* Content */}
+      {/* Decorative SVG Elements */}
       <motion.div
-        style={{ opacity, scale }}
-        className="relative z-10 max-w-6xl mx-auto px-6 lg:px-8"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        className="absolute top-20 left-1/4 w-32 h-32"
       >
-        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          {/* Left: Text content */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: [0.32, 0.72, 0, 1] }}
-            className="flex-1 text-center lg:text-left max-w-xl"
-          >
+        <svg viewBox="0 0 100 100" className="w-full h-full opacity-30">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="var(--color-lime)" strokeWidth="1" strokeDasharray="10 5" />
+        </svg>
+      </motion.div>
+
+      <motion.div
+        animate={{ rotate: -360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        className="absolute bottom-32 right-1/4 w-24 h-24"
+      >
+        <svg viewBox="0 0 100 100" className="w-full h-full opacity-20">
+          <rect x="10" y="10" width="80" height="80" fill="none" stroke="var(--color-pink)" strokeWidth="1" rx="8" transform="rotate(45 50 50)" />
+        </svg>
+      </motion.div>
+
+      {/* Lime Accent Circles */}
+      <motion.div
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+        transition={{ duration: 4, repeat: Infinity }}
+        className="absolute top-1/2 right-1/3 w-4 h-4 rounded-full bg-[var(--color-lime)]"
+      />
+      <motion.div
+        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.5, 0.2] }}
+        transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+        className="absolute bottom-1/3 left-1/4 w-3 h-3 rounded-full bg-[var(--color-pink)]"
+      />
+
+      <motion.div style={{ opacity, scale, y }} className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="space-y-10">
             {/* Eyebrow */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1, ease: [0.32, 0.72, 0, 1] }}
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-flex items-center gap-3"
             >
-              <span className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-[10px] uppercase tracking-[0.25em] text-[#94a3b8]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#14b8a6] animate-pulse" />
-                Premium 3D Printed Products
+              <motion.div
+                animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-3 h-3 rounded-full bg-[var(--color-lime)]"
+              />
+              <span className="eyebrow text-white/70">
+                Premium 3D Printed
               </span>
             </motion.div>
 
-            {/* Headline with staggered word reveal */}
-            <h1 className="text-5xl lg:text-7xl font-semibold tracking-tight text-white leading-[1.05] mb-6 mt-8 overflow-hidden">
-              <motion.span
-                className="block"
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.9, delay: 0.15, ease: [0.32, 0.72, 0, 1] }}
+            {/* Headline with Lime Chips */}
+            <div className="space-y-4">
+              <motion.h1
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="text-7xl lg:text-9xl font-bold tracking-tight leading-[0.85]"
               >
-                Portable Keychain
-              </motion.span>
-              <motion.span
-                className="block text-[#14b8a6]"
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.9, delay: 0.25, ease: [0.32, 0.72, 0, 1] }}
-              >
-                Phone Stand
-              </motion.span>
-            </h1>
+                <motion.span
+                  className="block text-white"
+                  initial={{ clipPath: "inset(0 100% 0 0)" }}
+                  animate={{ clipPath: "inset(0 0% 0 0)" }}
+                  transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  Pocket-Sized
+                </motion.span>
+                <motion.span
+                  className="block"
+                  initial={{ clipPath: "inset(0 100% 0 0)" }}
+                  animate={{ clipPath: "inset(0 0% 0 0)" }}
+                  transition={{ duration: 1.2, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <span className="text-[var(--color-lime)] chip-lime">Elegance</span>
+                </motion.span>
+              </motion.h1>
+            </div>
 
             {/* Subheadline */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: [0.32, 0.72, 0, 1] }}
-              className="text-lg text-[#94a3b8] leading-relaxed mb-10 tracking-wide"
+              transition={{ duration: 0.8, delay: 0.7 }}
+              className="text-xl text-white/70 max-w-md leading-relaxed"
             >
-              Foldable. Compact. Customizable.
+              A phone stand that fits on your keychain.{" "}
+              <span className="text-[var(--color-lime)] font-semibold">Personalized with your name.</span>{" "}
+              Yours forever.
             </motion.p>
 
-            {/* CTA */}
+            {/* CTA Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.55, ease: [0.32, 0.72, 0, 1] }}
+              transition={{ duration: 0.8, delay: 0.9 }}
+              className="flex flex-wrap items-center gap-5 pt-4"
             >
-              <Link href="/shop" className="inline-flex group">
-                <Button
-                  size="lg"
-                  className="group relative bg-[#f97316] hover:bg-[#f97316]/90 text-white font-medium px-8 py-6 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.97] overflow-hidden"
+              <MagneticButton href="/shop">
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group px-10 py-5 bg-[var(--color-lime)] text-[var(--color-ink-deep)] rounded-lg font-bold flex items-center gap-4 shadow-lg shadow-[var(--color-lime)]/30 animate-pulse-glow"
                 >
-                  <span className="relative z-10">Shop Now</span>
-                  {/* Arrow icon with magnetic effect */}
-                  <span className="relative z-10 ml-3 inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M2 12L12 2M12 2H5M12 2V9" />
-                    </svg>
-                  </span>
-                  {/* Shine effect */}
+                  <span className="text-lg uppercase tracking-wider">Shop Now</span>
+                  <motion.svg
+                    animate={{ x: [0, 8, 0], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </motion.svg>
+                </motion.div>
+              </MagneticButton>
+
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-ghost-dark px-8 py-5 flex items-center gap-3"
+              >
+                <motion.svg
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 6.668a.555.555 0 11-1.11 0 .555.555 0 011.11 0z" />
+                  <path d="M10 12a1 1 0 100-2 1 1 0 000 2z" fillRule="evenodd" clipRule="evenodd" />
+                </motion.svg>
+                Watch Demo
+              </motion.button>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1.2 }}
+              className="flex gap-16 pt-12 border-t border-[var(--color-hairline-violet)]"
+            >
+              {[
+                { value: "3", label: "Variants" },
+                { value: "12", label: "Max Chars" },
+                { value: "₹449", label: "Starting" },
+              ].map((stat, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.3 + i * 0.1 }}
+                  className="text-center"
+                >
                   <motion.span
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
-                    animate={{ x: ["100%", "-100%"] }}
-                    transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
-                  />
-                </Button>
-              </Link>
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}
+                    className="text-4xl font-bold text-white block"
+                  >
+                    {stat.value}
+                  </motion.span>
+                  <span className="text-xs text-white/50 uppercase tracking-widest mt-1 block">
+                    {stat.label}
+                  </span>
+                </motion.div>
+              ))}
             </motion.div>
-          </motion.div>
+          </div>
 
-          {/* Right: Product image with parallax */}
+          {/* Product Showcase */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.4, delay: 0.2, ease: [0.32, 0.72, 0, 1] }}
-            className="flex-1 relative w-full max-w-md lg:max-w-none"
+            initial={{ opacity: 0, scale: 0.7, rotate: -10 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="relative"
           >
-            {/* Double-bezel frame */}
-            <div className="relative p-1.5 rounded-[2rem] bg-white/[0.02] border border-white/[0.06]">
-              <div className="relative rounded-[calc(2rem-0.375rem)] overflow-hidden bg-gradient-to-br from-[#1e293b] to-[#0f172a] shadow-2xl shadow-black/50">
-                {/* Product image with zoom on hover */}
-                <Link href="/shop" className="block group">
-                  <div className="aspect-square relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/80 via-transparent to-transparent z-10" />
-                    <motion.img
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
-                      src="/images/keychain-stand-lifestyle.jpg"
-                      alt="Portable Keychain Phone Stand in Captain Teal"
-                      className="w-full h-full object-cover"
-                    />
-                    {/* Product info overlay */}
-                    <div className="absolute bottom-6 left-6 right-6 z-20">
-                      <p className="text-[10px] uppercase tracking-[0.15em] text-[#14b8a6] mb-1">Captain Teal Edition</p>
-                      <p className="text-white text-lg font-medium">₹449</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            </div>
-
-            {/* Floating badge with float animation */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
               animate={{
-                opacity: 1,
-                x: 0,
-                y: [0, -8, 0],
+                boxShadow: [
+                  "0 50px 100px -20px rgba(21, 15, 35, 0.8)",
+                  "0 50px 120px -20px rgba(194, 239, 78, 0.3)",
+                  "0 50px 100px -20px rgba(21, 15, 35, 0.8)",
+                ],
               }}
-              transition={{
-                x: { duration: 0.8, delay: 0.8, ease: [0.32, 0.72, 0, 1] },
-                opacity: { duration: 0.8, delay: 0.8 },
-                y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-              }}
-              className="absolute -right-4 top-12 px-4 py-3 rounded-2xl bg-[#0f172a]/90 backdrop-blur-xl border border-white/[0.1] shadow-2xl shadow-black/30"
+              transition={{ duration: 4, repeat: Infinity }}
+              className="relative bg-gradient-to-br from-[var(--color-surface-dark)] to-[var(--color-surface-night)] rounded-[2.5rem] p-10 border border-[var(--color-hairline-violet)]"
             >
-              <p className="text-[10px] uppercase tracking-[0.15em] text-[#64748b]">3 Variants</p>
-              <p className="text-white text-sm font-medium">Available</p>
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="relative overflow-hidden rounded-[2rem]"
+              >
+                <img
+                  src="/images/captain.png"
+                  alt="Portable Keychain Phone Stand"
+                  className="w-full aspect-square object-cover"
+                />
+
+                <motion.div
+                  animate={{ y: [0, -12, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -right-6 top-10 px-6 py-4 bg-[var(--color-surface-night)] rounded-2xl border border-[var(--color-hairline-violet)] shadow-xl"
+                >
+                  <p className="text-[10px] uppercase tracking-widest text-white/50">Price</p>
+                  <p className="text-3xl font-bold text-[var(--color-lime)]">₹449</p>
+                </motion.div>
+
+                <motion.div
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  className="absolute -left-4 bottom-24 px-5 py-2.5 bg-[var(--color-lime)] text-[var(--color-ink-deep)] rounded-full shadow-lg"
+                >
+                  <span className="text-sm font-bold uppercase tracking-wider">Captain Teal</span>
+                </motion.div>
+              </motion.div>
             </motion.div>
 
-            {/* Second floating badge */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{
-                opacity: 1,
-                x: 0,
-                y: [0, 6, 0],
-              }}
-              transition={{
-                x: { duration: 0.8, delay: 1, ease: [0.32, 0.72, 0, 1] },
-                opacity: { duration: 0.8, delay: 1 },
-                y: { duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 },
-              }}
-              className="absolute -left-4 bottom-20 px-4 py-3 rounded-2xl bg-[#0f172a]/90 backdrop-blur-xl border border-[#14b8a6]/20 shadow-xl"
-            >
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#14b8a6] animate-pulse" />
-                <span className="text-[10px] uppercase tracking-[0.1em] text-[#94a3b8]">In Stock</span>
-              </div>
-            </motion.div>
+              animate={{ rotate: 360 }}
+              transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+              className="absolute -inset-16 border-2 border-dashed border-[var(--color-hairline-violet)]/50 rounded-full -z-10"
+            />
+
+            <motion.div
+              animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="absolute -bottom-12 -right-12 w-32 h-32 bg-[var(--color-pink)]/10 rounded-full blur-3xl"
+            />
           </motion.div>
         </div>
       </motion.div>
 
-      {/* Scroll indicator */}
+      {/* Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.4, ease: [0.32, 0.72, 0, 1] }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2"
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-16 left-1/2 -translate-x-1/2"
       >
-        <div className="flex flex-col items-center gap-3">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[#475569]">Scroll</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2.5, ease: [0.32, 0.72, 0, 1] }}
-            className="w-5 h-9 rounded-full border border-white/10 flex items-start justify-center p-1.5"
-          >
-            <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-          </motion.div>
-        </div>
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="flex flex-col items-center gap-3"
+        >
+          <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 eyebrow">Scroll</span>
+          <div className="w-10 h-16 border-2 border-white/20 rounded-full flex items-start justify-center p-2">
+            <motion.div className="w-1.5 h-3 bg-gradient-to-b from-[var(--color-lime)] to-[var(--color-pink)] rounded-full" />
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Large Background Text */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.05 }}
+        transition={{ delay: 1.8 }}
+        className="absolute top-1/4 right-16 text-[12rem] font-bold text-white whitespace-nowrap"
+      >
+        C
       </motion.div>
     </section>
   );

@@ -1,27 +1,23 @@
-import { Hero } from "@/components/landing/hero";
-import { HowItWorks } from "@/components/landing/how-it-works";
-import { UsageScenarios } from "@/components/landing/usage-scenarios";
-import { FeaturedProducts } from "@/components/landing/featured-products";
-import { Testimonials } from "@/components/landing/testimonials";
-import { Benefits } from "@/components/landing/benefits";
-import { Newsletter } from "@/components/landing/newsletter";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
+import Navbar from "@/components/landing/navbar";
+import Hero from "@/components/landing/hero";
+import Showcase from "@/components/landing/showcase";
+import Features from "@/components/landing/features";
+import HowItWorks from "@/components/landing/how-it-works";
+import Testimonials from "@/components/landing/testimonials";
+import Newsletter from "@/components/landing/newsletter";
+import Footer from "@/components/landing/footer";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--background)]">
+    <main className="overflow-x-hidden">
       <Navbar />
-      <main className="flex-1">
-        <Hero />
-        <HowItWorks />
-        <UsageScenarios />
-        <FeaturedProducts />
-        <Testimonials />
-        <Benefits />
-        <Newsletter />
-      </main>
+      <Hero />
+      <Showcase />
+      <Features />
+      <HowItWorks />
+      <Testimonials />
+      <Newsletter />
       <Footer />
-    </div>
+    </main>
   );
 }

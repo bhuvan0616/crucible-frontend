@@ -4,116 +4,187 @@ import { motion } from "framer-motion";
 
 const testimonials = [
   {
-    name: "Priya Sharma",
-    role: "Software Engineer",
-    location: "Bangalore",
-    quote: "This phone stand is genius. I use it daily for video calls and it's so convenient to have on my keychain. The print quality is impressive.",
-    product: "Captain Teal Edition",
+    quote: "This phone stand is genuinely the best impulse purchase I've made. The quality blew my mind for the price.",
+    name: "Priya S.",
+    role: "Software Engineer, Bangalore",
+    product: "Captain Teal",
+    avatar: "PS",
   },
   {
-    name: "Rahul Mehta",
-    role: "Digital Nomad",
-    location: "Goa",
-    quote: "Perfect for my travel setup. It's so compact and the custom engraving makes it uniquely mine. Worth every rupee.",
-    product: "Wakanda Black Edition",
+    quote: "I bought three as gifts. Everyone loved the engraving and the compact design. Highly recommend!",
+    name: "Rahul M.",
+    role: "Digital Nomad, Goa",
+    product: "Wakanda Black",
+    avatar: "RM",
   },
   {
-    name: "Ananya Krishnan",
-    role: "Content Creator",
-    location: "Mumbai",
-    quote: "The best impulse buy. My audience always asks about my phone stand and I love showing it off. The teal color is stunning.",
-    product: "Captain Teal Edition",
+    quote: "My audience on Instagram kept asking about my phone stand. Now I have a link to share with them!",
+    name: "Ananya K.",
+    role: "Content Creator, Mumbai",
+    product: "Captain Teal",
+    avatar: "AK",
   },
 ];
 
-export function Testimonials() {
+function StarRating({ delay = 0 }: { delay?: number }) {
   return (
-    <section className="relative py-40 bg-[#0a0f1a]">
-      {/* Top divider */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#14b8a6]/20 to-transparent" />
+    <div className="flex gap-1">
+      {[...Array(5)].map((_, i) => (
+        <motion.svg
+          key={i}
+          initial={{ scale: 0, rotate: -180 }}
+          whileInView={{ scale: 1, rotate: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: delay + i * 0.1, type: "spring", stiffness: 300, damping: 15 }}
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="#c2ef4e"
+          className="drop-shadow-lg"
+        >
+          <path d="M10 1l2.47 5.19L18 6.82l-4 3.88 1 5.55L10 13.5l-5 2.75 1-5.55-4-3.88 5.53-.63L10 1z" />
+        </motion.svg>
+      ))}
+    </div>
+  );
+}
+
+function Avatar({ initials, delay }: { initials: string; delay: number }) {
+  return (
+    <motion.div
+      initial={{ scale: 0, opacity: 0 }}
+      whileInView={{ scale: 1, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay, type: "spring", stiffness: 300 }}
+      className="w-12 h-12 rounded-full bg-gradient-to-br from-[var(--color-violet)] to-[var(--color-violet-deep)] flex items-center justify-center shadow-lg"
+    >
+      <span className="text-white font-bold text-sm">{initials}</span>
+    </motion.div>
+  );
+}
+
+export default function V4Testimonials() {
+  return (
+    <section id="reviews" className="relative py-32 bg-[var(--color-cream)] overflow-hidden">
+      <motion.div
+        animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-[var(--color-pink)]/10 rounded-full blur-[120px]"
+      />
+      <motion.div
+        animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.4, 0.2] }}
+        transition={{ duration: 12, repeat: Infinity }}
+        className="absolute -bottom-40 -right-40 w-[400px] h-[400px] bg-[var(--color-lime)]/10 rounded-full blur-[100px]"
+      />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Section header */}
         <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <p className="text-[11px] uppercase tracking-[0.25em] text-[#14b8a6] mb-4">Real Reviews</p>
-          <h2 className="text-4xl lg:text-5xl font-semibold tracking-tight text-white mb-5">
-            What People Say
+          <span className="inline-flex items-center gap-3 eyebrow text-[var(--color-violet)]">
+            <motion.span
+              animate={{ scale: [1, 1.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              ★
+            </motion.span>
+            Reviews
+          </span>
+          <h2 className="text-5xl lg:text-7xl font-bold text-[var(--color-text-dark)] mt-6 tracking-tight">
+            Real People, <span className="chip-lime">Real Love</span>
           </h2>
         </motion.div>
 
-        {/* Testimonial cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((t, index) => (
             <motion.div
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{
-                duration: 0.9,
-                delay: index * 0.12,
-                ease: [0.32, 0.72, 0, 1]
-              }}
-              whileHover={{ y: -6, borderColor: "rgba(20, 184, 166, 0.4)" }}
-              className="relative p-8 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] transition-all duration-500"
+              key={t.name}
+              initial={{ opacity: 0, y: 60, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: index * 0.15 }}
+              whileHover={{ y: -10, scale: 1.02 }}
+              className="group relative bg-white rounded-[1.5rem] p-8 border border-[var(--color-hairline-cloud)] shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden"
             >
-              {/* Quote mark */}
-              <div className="text-[#14b8a6]/20 text-6xl font-serif leading-none mb-4">"</div>
+              <motion.div
+                className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[var(--color-lime)]/10 to-[var(--color-pink)]/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              />
 
-              {/* Quote text */}
-              <p className="text-[#e2e8f0] text-sm leading-relaxed mb-8">
-                {testimonial.quote}
-              </p>
-
-              {/* Divider */}
-              <div className="h-px bg-white/[0.06] mb-6" />
-
-              {/* Author info */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white font-medium text-sm">{testimonial.name}</p>
-                  <p className="text-[#64748b] text-xs">{testimonial.role}, {testimonial.location}</p>
-                </div>
-                {/* Star rating with animation */}
+              <div className="relative z-10">
                 <motion.div
-                  className="flex gap-0.5"
+                  initial={{ opacity: 0, y: -10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 + 0.2 }}
+                  className="text-7xl text-[var(--color-violet)]/20 font-serif leading-none mb-4"
+                >
+                  "
+                </motion.div>
+
+                <StarRating delay={index * 0.15 + 0.3} />
+
+                <motion.p
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
-                  transition={{ delay: index * 0.12 + 0.3, duration: 0.5 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 + 0.4 }}
+                  className="text-[var(--color-text-dark)] text-lg leading-relaxed mt-6 mb-8"
                 >
-                  {[...Array(5)].map((_, i) => (
-                    <motion.svg
-                      key={i}
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.05, type: "spring", stiffness: 300 }}
-                      width="12"
-                      height="12"
-                      viewBox="0 0 12 12"
-                      fill="#f97316"
-                    >
-                      <path d="M6 0L7.347 4.145H11.708L8.181 6.705L9.528 10.854L6 8.29L2.472 10.854L3.819 6.705L0.292 4.145H4.653L6 0Z" />
-                    </motion.svg>
-                  ))}
-                </motion.div>
-              </div>
+                  {t.quote}
+                </motion.p>
 
-              {/* Product tag */}
-              <div className="mt-6">
-                <span className="text-[10px] uppercase tracking-[0.15em] text-[#14b8a6]">
-                  {testimonial.product}
-                </span>
+                <motion.div
+                  className="h-px bg-gradient-to-r from-[var(--color-hairline-cloud)] via-[var(--color-lime)]/50 to-transparent mb-6"
+                />
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Avatar initials={t.avatar} delay={index * 0.15 + 0.5} />
+                    <div>
+                      <p className="font-bold text-[var(--color-text-dark)]">{t.name}</p>
+                      <p className="text-[var(--color-text-light)] text-sm">{t.role}</p>
+                    </div>
+                  </div>
+                  <motion.span
+                    whileHover={{ scale: 1.05 }}
+                    className="px-4 py-2 bg-gradient-to-r from-[var(--color-violet)]/10 to-[var(--color-lime)]/10 text-[var(--color-violet)] text-xs rounded-full font-semibold border border-[var(--color-violet)]/20"
+                  >
+                    {t.product}
+                  </motion.span>
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-16 text-center"
+        >
+          <div className="inline-flex items-center gap-8 text-[var(--color-text-light)] text-sm">
+            <div className="flex items-center gap-2">
+              <motion.span
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="text-[var(--color-lime)]"
+              >
+                ★
+              </motion.span>
+              <span>4.9/5 Average Rating</span>
+            </div>
+            <div className="w-px h-4 bg-[var(--color-hairline-cloud)]" />
+            <span>500+ Happy Customers</span>
+            <div className="w-px h-4 bg-[var(--color-hairline-cloud)]" />
+            <span>100% Satisfaction</span>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -10,7 +10,7 @@ const products = [
     title: "Portable Keychain Phone Stand",
     variant: "Wakanda Black",
     price: 449,
-    imageUrl: "/images/keychain-stand-front.jpg",
+    imageUrl: "/images/batman.png",
     handle: "portable-keychain-phone-stand",
     description: "Bold and sleek, engineered for everyday carry."
   },
@@ -19,7 +19,7 @@ const products = [
     title: "Portable Keychain Phone Stand",
     variant: "Batman Grey",
     price: 449,
-    imageUrl: "/images/keychain-stand-side.jpg",
+    imageUrl: "/images/black panther.png",
     handle: "portable-keychain-phone-stand",
     description: "Understated elegance with premium finish."
   },
@@ -28,7 +28,7 @@ const products = [
     title: "Portable Keychain Phone Stand",
     variant: "Captain Teal",
     price: 449,
-    imageUrl: "/images/keychain-stand-lifestyle.jpg",
+    imageUrl: "/images/captain.png",
     handle: "portable-keychain-phone-stand",
     description: "Distinctive teal for those who stand out."
   },
