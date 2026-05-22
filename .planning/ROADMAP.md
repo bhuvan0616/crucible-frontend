@@ -55,7 +55,10 @@
 4. Product images load from Medusa Media module URLs
 5. `lib/data/products.ts` no longer imports mock data — all calls go to Medusa API
 
-**Plans:** TBD
+**Plans:** 1 plan
+
+**Plan list:**
+- [ ] 05-01-PLAN.md — Replace mock data with Medusa SDK calls (lib/data/products.ts, shop page to Server Component)
 
 **UI hint:** yes
 
@@ -154,8 +157,8 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 4. SDK Foundation | 0/1 | Not started | - |
-| 5. Product Integration | 0/1 | Not started | - |
+| Phase 4: SDK Foundation | 1/1 | ✓ Complete | 2026-05-22 |
+| Phase 5: Product Integration | 1/1 | ✓ Complete | 2026-05-22 |
 | 6. Cart Operations & Medusa Sync | 0/1 | Not started | - |
 | 7. Authentication Flow | 0/1 | Not started | - |
 | 8. Checkout & Order Completion | 0/1 | Not started | - |
