@@ -1,85 +1,166 @@
-# Roadmap: Crucible Creations Storefront
+# Roadmap: v1.1 MedusaJS Backend Integration
 
-**Phases:** 3 | **Requirements:** 35 | **Mode:** mvp
-
-## Phase 1: Foundation & Landing Page
-
-**Goal:** Set up project infrastructure, design system, and landing page with hero, benefits, testimonials, and newsletter.
-
-**Mode:** mvp
-
-**Success Criteria:**
-1. Next.js 16 project with Tailwind CSS and shadcn/ui configured
-2. Dark mode design system with brand colors (deep slate, teal, orange)
-3. Framer Motion animations working on landing page
-4. Hero section with lifestyle imagery and CTA button
-5. Benefits, How it Works, and Usage Scenarios sections
-6. Testimonials section with mock data
-7. Newsletter signup form (UI only)
-8. Mock products.json with MedusaJS-compatible data structure
-
-**Plans:** 3 plans
-
-Plans:
-- [ ] 01-foundation-landing-page/01-01-PLAN.md — Design system, CSS variables, mock data
-- [ ] 01-foundation-landing-page/01-02-PLAN.md — Hero, Featured Products, Benefits sections
-- [ ] 01-foundation-landing-page/01-03-PLAN.md — How It Works, Testimonials, Newsletter sections
+**Milestone:** v1.1
+**Status:** In Progress
+**Started:** 2026-05-22
+**Granularity:** Coarse
 
 ---
 
-## Phase 2: Product Gallery & PDP
+## Phases
 
-**Goal:** Implement product browsing and product detail page with customization.
-
-**Mode:** mvp
-
-**Success Criteria:**
-1. Product gallery page with grid layout and variant cards
-2. Filter by Edition/Color working
-3. Quick add to cart from gallery
-4. Search and sort functionality
-5. PDP with two-column layout (image gallery left, details right)
-6. Sticky product details panel
-7. Variant selector with color swatches
-8. Customization input with 12-char limit and live counter
-9. Quantity selector and Add to Cart button
-10. Product description, specs, shipping info displayed
-
-**Requirements:** GALL-01, GALL-02, GALL-03, GALL-04, PDP-01, PDP-02, PDP-03, PDP-04, PDP-05, PDP-06, PDP-07, PDP-08, PDP-09, PDP-10, PDP-11, PDP-12, ARCH-02, ARCH-03, ARCH-04
+- [ ] **Phase 4: SDK Foundation** — Install and configure MedusaJS SDK client
+- [ ] **Phase 5: Product Integration** — Replace mock data with live Medusa product API
+- [ ] **Phase 6: Cart Operations & Medusa Sync** — Real-time cart state sync with Medusa backend
+- [ ] **Phase 7: Authentication Flow** — Customer login, register, logout with JWT management
+- [ ] **Phase 8: Checkout & Order Completion** — Full checkout flow with Medusa payment
+- [ ] **Phase 9: SEO Implementation** — sitemap, robots, OG tags, structured data
 
 ---
 
-## Phase 3: Cart, Checkout & Analytics
+## Phase Details
 
-**Goal:** Implement shopping cart, mock checkout flow, and GA4 analytics integration.
+### Phase 4: SDK Foundation
 
-**Mode:** mvp
+**Goal:** Install and configure the MedusaJS SDK client with foundational utilities
 
-**Success Criteria:**
-1. Cart page displaying items with variant and read-only custom name
-2. Quantity controls and subtotal calculation working
-3. Estimated shipping display
-4. Proceed to Checkout button navigates to checkout
-5. Checkout page with shipping form (mock), delivery options, order summary
-6. Promo code field (mock validation)
-7. Payment method selection (Razorpay, UPI, Cards)
-8. Place Order leads to success confirmation page
-9. GA4 script injected in layout.tsx with afterInteractive
-10. add_to_cart, begin_checkout, purchase events firing correctly
-11. proxy.ts configured for Next.js 16 middleware replacement
+**Depends on:** Phase 3 (v1.0 completion)
 
-**Requirements:** CART-01, CART-02, CART-03, CART-04, CART-05, CHKT-01, CHKT-02, CHKT-03, CHKT-04, CHKT-05, CHKT-06, CHKT-07, ANLY-01, ANLY-02, ANLY-03, ANLY-04, ANLY-05, ARCH-05, ARCH-06
+**Requirements:** SDK-01, SDK-02, SDK-03, SDK-04
+
+**Success Criteria** (what must be TRUE):
+1. `@medusajs/js-sdk` and `@medusajs/types` packages are installed and importable
+2. `lib/medusa.ts` exports a configured SDK client singleton with auth and publishable key config
+3. Environment variables `NEXT_PUBLIC_MEDUSA_BACKEND_URL` and `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` are documented and validated
+4. `formatPrice()` utility correctly converts paise amounts (44900 → "₹449") for INR display
+
+**Plans:** TBD
+
+**UI hint:** no
+
+---
+
+### Phase 5: Product Integration
+
+**Goal:** Replace mock product data with live Medusa product API calls
+
+**Depends on:** Phase 4
+
+**Requirements:** PROD-01, PROD-02, PROD-03, PROD-04, PROD-05
+
+**Success Criteria** (what must be TRUE):
+1. Product listing page fetches from `sdk.store.product.list()` with pagination
+2. PDP fetches single product via `sdk.store.product.retrieve(id)` with variants
+3. Variant selector displays Medusa inventory quantities (when available)
+4. Product images load from Medusa Media module URLs
+5. `lib/data/products.ts` no longer imports mock data — all calls go to Medusa API
+
+**Plans:** TBD
+
+**UI hint:** yes
 
 ---
 
-## Execution Summary
+### Phase 6: Cart Operations & Medusa Sync
 
-| Phase | Status | Requirements | Success Criteria |
-|-------|--------|--------------|------------------|
-| 1 | ○ Pending | 8 | 8 |
-| 2 | ○ Pending | 18 | 10 |
-| 3 | ○ Pending | 17 | 12 |
+**Goal:** Cart state synced with Medusa backend — server is source of truth
+
+**Depends on:** Phase 5
+
+**Requirements:** CART-11, CART-12, CART-13, CART-14, CART-15, CART-16, CART-17
+
+**Success Criteria** (what must be TRUE):
+1. New visitors get a Medusa cart created via `sdk.store.cart.create()`
+2. Returning visitors' cart ID restored from localStorage
+3. "Add to Cart" immediately calls Medusa API and reconciles Zustand state with response
+4. Quantity changes sync with `sdk.store.cart.updateLineItem()` — no local-only state
+5. Item removal calls `sdk.store.cart.removeLineItem()`
+6. Cart totals (subtotal, shipping, tax, total) come from Medusa response, not local calculation
+7. Customization text stored in line item `metadata` and displayed in cart
+
+**Plans:** TBD
+
+**UI hint:** yes
 
 ---
-*Roadmap created: 2026-05-16*
-*Last updated: 2026-05-16 after initial roadmap creation*
+
+### Phase 7: Authentication Flow
+
+**Goal:** Customers can create accounts, log in, and maintain auth state across sessions
+
+**Depends on:** Phase 6
+
+**Requirements:** AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, AUTH-06
+
+**Success Criteria** (what must be TRUE):
+1. Login form submits to `sdk.auth.login("customer", email, password)` and receives JWT
+2. Registration form submits to `sdk.auth.register()` and creates customer account
+3. JWT token auto-attached to subsequent SDK requests via SDK client interceptors
+4. Logout removes token from localStorage and clears auth context
+5. Page refresh preserves auth state by rehydrating token from localStorage
+6. Login/Register UI components display appropriate form and error states
+
+**Plans:** TBD
+
+**UI hint:** yes
+
+---
+
+### Phase 8: Checkout & Order Completion
+
+**Goal:** Full checkout flow with real Medusa payment processing and order creation
+
+**Depends on:** Phase 7
+
+**Requirements:** CHKT-11, CHKT-12, CHKT-13, CHKT-14, CHKT-15, CHKT-16
+
+**Success Criteria** (what must be TRUE):
+1. Shipping address form submits to Medusa cart via `sdk.store.cart.update()`
+2. Shipping method selection displays options from `sdk.store.cart.retrieve()` available_shipping_methods
+3. Payment step shows configured Medusa payment providers (not mock selection)
+4. `cart.complete()` atomically processes payment and creates Medusa order
+5. Order confirmation page displays real order data from Medusa response
+6. Post-checkout cart cleared and localStorage cart ID removed for fresh cart on next visit
+
+**Plans:** TBD
+
+**UI hint:** yes
+
+---
+
+### Phase 9: SEO Implementation
+
+**Goal:** Search engine visibility via sitemap, robots, OG tags, and structured data
+
+**Depends on:** Phase 8
+
+**Requirements:** SEO-01, SEO-02, SEO-03, SEO-04, SEO-05, SEO-06
+
+**Success Criteria** (what must be TRUE):
+1. `sitemap.xml` includes all product pages fetched from Medusa product list
+2. `robots.txt` allows crawlers and points to sitemap location
+3. All pages have Open Graph meta tags (og:title, og:description, og:image, og:url)
+4. All pages have Twitter Card meta tags (twitter:card, twitter:title, twitter:description)
+5. PDP renders JSON-LD Product schema with name, image, price, availability
+6. Product pages have dynamic `<title>` and `<meta name="description">` from Medusa product data
+
+**Plans:** TBD
+
+**UI hint:** yes
+
+---
+
+## Progress Table
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 4. SDK Foundation | 0/1 | Not started | - |
+| 5. Product Integration | 0/1 | Not started | - |
+| 6. Cart Operations & Medusa Sync | 0/1 | Not started | - |
+| 7. Authentication Flow | 0/1 | Not started | - |
+| 8. Checkout & Order Completion | 0/1 | Not started | - |
+| 9. SEO Implementation | 0/1 | Not started | - |
+
+---
+
+*Created: 2026-05-22 for v1.1 MedusaJS Backend Integration*
