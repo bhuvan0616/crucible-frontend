@@ -1,12 +1,22 @@
-import { sdk } from "@/lib/sdk"
+import { sdk, initRegion, getRegionId } from "@/lib/sdk"
 import { formatPrice } from "@/lib/utils/formatPrice"
 import type { Product, ColorVariant } from "@/types"
 import type { HttpTypes } from "@medusajs/types"
 
+async function ensureRegion() {
+  try {
+    await initRegion()
+  } catch {
+    // Region init is optional, products may still load
+  }
+}
+
 // Helper to transform Medusa product to our Product type
 function transformProduct(medusaProduct: HttpTypes.StoreProduct): Product {
   const firstVariant = medusaProduct.variants?.[0]
-  const calculatedPrice = firstVariant?.calculated_price ?? 0
+  const calculatedPrice = typeof firstVariant?.calculated_price?.calculated_amount === 'number' 
+    ? firstVariant.calculated_price.calculated_amount 
+    : 0
 
   // Extract edition from tags or collection
   let edition: "standard" | "pro" | "limited" = "standard"
@@ -32,21 +42,22 @@ function transformProduct(medusaProduct: HttpTypes.StoreProduct): Product {
       name: colorName,
       hex,
       available: isAvailable,
+      medusaVariantId: variant.id,
     }
   }) || []
 
-  // Build specs from product attributes or metadata
+  // Build specs from product options or metadata
   const specs: Record<string, string> = {}
-  if (medusaProduct.attributes) {
-    medusaProduct.attributes.forEach((attr) => {
-      if (attr.value) {
-        specs[attr.title || attr.attribute || ""] = String(attr.value)
+  if (medusaProduct.options) {
+    medusaProduct.options.forEach((opt) => {
+      if (opt.values?.length) {
+        specs[opt.title || ""] = opt.values.map(v => v.value).join(", ")
       }
     })
   }
 
   // Use thumbnail or first image
-  const imageUrl = medusaProduct.thumbnail || medusaProduct.images?.[0]?.url || "/placeholder-product.png"
+  const imageUrl = medusaProduct.thumbnail || medusaProduct.images?.[0]?.url || "/placeholder.jpg"
   const allImages = medusaProduct.images?.length
     ? medusaProduct.images.map((img) => img.url)
     : [imageUrl]
@@ -114,21 +125,40 @@ function getColorHex(colorName: string): string {
   return colorMap.default
 }
 
-export async function getProducts(): Promise<Product[]> {
-  const { products } = await sdk.store.product.list({
+export async function getProducts(): Promise<HttpTypes.StoreProduct[]> {
+  let regionId: string | null = null
+  try {
+    const { regions } = await sdk.store.region.list({ limit: 1 })
+    regionId = regions?.[0]?.id || null
+  } catch {}
+  
+  const params: Record<string, any> = {
     limit: 100,
-    fields: "*variants.calculated_price,+variants.inventory_quantity",
-  })
-
-  return products.map(transformProduct)
+    fields: "id,title,description,handle,thumbnail,images,*variants,*collection,*tags",
+  }
+  if (regionId) {
+    params.region_id = regionId
+  }
+  const { products } = await sdk.store.product.list(params)
+  return products
 }
 
-export async function getProductById(id: string): Promise<Product | undefined> {
+export async function getProductById(id: string): Promise<HttpTypes.StoreProduct | undefined> {
+  let regionId: string | null = null
   try {
-    const { product } = await sdk.store.product.retrieve(id, {
-      fields: "*variants.calculated_price,+variants.inventory_quantity",
-    })
-    return transformProduct(product)
+    const { regions } = await sdk.store.region.list({ limit: 1 })
+    regionId = regions?.[0]?.id || null
+  } catch {}
+
+  const params: Record<string, any> = {
+    fields: "id,title,description,handle,*images,*variants,*variants.options,*options,*collection,*tags",
+  }
+  if (regionId) {
+    params.region_id = regionId
+  }
+  try {
+    const { product } = await sdk.store.product.retrieve(id, params)
+    return product
   } catch {
     return undefined
   }

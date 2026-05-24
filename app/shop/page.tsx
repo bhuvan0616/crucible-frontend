@@ -1,5 +1,17 @@
+import type { Metadata } from "next";
 import { getProducts } from "@/lib/data/products"
 import { ShopClient } from "./ShopClient"
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Shop All Products | Crucible Creations",
+    description: "Browse our complete collection of premium 3D printed products. Find the perfect portable keychain phone stand for your lifestyle.",
+    openGraph: {
+      title: "Shop All Products | Crucible Creations",
+      description: "Browse our complete collection of premium 3D printed products.",
+    },
+  };
+}
 
 export default async function ShopPage() {
   const products = await getProducts()

@@ -58,3 +58,47 @@ Mock data structure mirrors MedusaJS v2 schema. Phase 2 will swap `lib/services/
 - **Accent:** `#14B8A6` (Teal)
 - **CTA:** `#F97316` (Orange)
 - **Dark mode default**, light mode supported
+
+## Debugging & Fix Workflow
+
+When fixing issues related to backend (Medusa) API responses:
+
+### Step 1: Inspect API Response
+Before writing any code, fetch and examine the actual API response:
+```bash
+curl -s "http://localhost:9000/store/products/<id>?fields=*" \
+  -H "x-publishable-api-key: pk_5ccc6cbe53e1b7ca11d15c311915cb67470f731074b4c14ab56d5b857a873951" \
+  | jq '.'
+```
+
+### Step 2: Verify with Playwright MCP
+Navigate to the page and use `playwright_browser_snapshot` to see actual rendered UI:
+```
+/product/<id> or /cart
+```
+
+### Step 3: Identify the Issue
+Compare API field names and values with what the UI displays. Common patterns:
+- **Price fields:** `calculated_price.calculated_amount` vs `unit_price` (may be in rupees, not paise)
+- **Option titles:** Check `options[*].title` vs `variant.options[*].option` (may be ID or object)
+- **Null checks:** Always verify nested properties exist before accessing
+
+### Step 4: Implement Fix
+Update the relevant component/service to handle the actual API structure.
+
+### Step 5: Verify Fix
+Use Playwright MCP to confirm the fix works:
+```
+playwright_browser_navigate → URL
+playwright_browser_snapshot → Verify UI shows correct values
+```
+
+### Medusa API Field Patterns
+
+| Data | Field Path | Notes |
+|------|-----------|-------|
+| Product options | `options[*].title` | Use `*options` in fields param |
+| Option ID | `options[*].id` | Use `option_id` from variant options |
+| Variant price | `variant.calculated_price.calculated_amount` | Already in rupees |
+| Cart item price | `item.unit_price` or `variant.calculated_price.calculated_amount` | Verify units |
+| Cart totals | `cart.subtotal/total/shipping_total/tax_total` | May have `.numeric` subfield |

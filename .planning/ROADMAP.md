@@ -81,7 +81,11 @@
 6. Cart totals (subtotal, shipping, tax, total) come from Medusa response, not local calculation
 7. Customization text stored in line item `metadata` and displayed in cart
 
-**Plans:** TBD
+**Plans:** 2 plans
+
+**Plan list:**
+- [ ] 06-01-PLAN.md — Rewrite cartStore with Medusa sync (store/cartStore.ts, types/index.ts)
+- [ ] 06-02-PLAN.md — Wire cart mutations to Medusa APIs (PDP, ShopProductCard, CartSlideOver)
 
 **UI hint:** yes
 
@@ -159,7 +163,7 @@
 |-------|----------------|--------|-----------|
 | Phase 4: SDK Foundation | 1/1 | ✓ Complete | 2026-05-22 |
 | Phase 5: Product Integration | 1/1 | ✓ Complete | 2026-05-22 |
-| 6. Cart Operations & Medusa Sync | 0/1 | Not started | - |
+| Phase 6: Cart Operations & Medusa Sync | 2/2 | ✓ Planned | 2026-05-22 |
 | 7. Authentication Flow | 0/1 | Not started | - |
 | 8. Checkout & Order Completion | 0/1 | Not started | - |
 | 9. SEO Implementation | 0/1 | Not started | - |

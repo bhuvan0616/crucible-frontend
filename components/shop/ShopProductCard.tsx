@@ -1,9 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
 import { useCartStore } from "@/store/cartStore";
 import { trackAddToCart } from "@/lib/analytics/ga4";
 import type { HttpTypes } from "@medusajs/types";
@@ -17,8 +15,7 @@ export function ShopProductCard({ product }: ShopProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
 
   const firstVariant = product.variants?.[0];
-  const price = firstVariant?.calculated_price ?? 0;
-  const imageUrl = product.thumbnail || product.images?.[0]?.url || "/placeholder-product.png";
+  const imageUrl = product.thumbnail || product.images?.[0]?.url || "/placeholder.jpg";
 
   // Extract edition from collection or tags
   const collectionTitle = product.collection?.title?.toLowerCase() || "";
@@ -29,79 +26,75 @@ export function ShopProductCard({ product }: ShopProductCardProps) {
     ? "limited"
     : "standard";
 
-  const handleQuickAdd = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem({
-      productId: product.id,
-      variant: firstVariant?.title || "Default",
-      customization: "",
-      quantity: 1,
-      price,
-      imageUrl,
-    });
-    trackAddToCart(product.id, product.title, price, 1);
-  };
+  // Find the lowest price among all variants
+  const lowestPrice = product.variants?.reduce((min, variant) => {
+    const price = variant.calculated_price?.calculated_amount ?? Infinity;
+    return price < min ? price : min;
+  }, Infinity) ?? 0;
+
+  const priceDisplay = lowestPrice > 0 ? formatPrice(lowestPrice) : "Contact for price";
 
   return (
     <Link href={`/product/${product.id}`}>
       <motion.div
-        whileHover={{ y: -4 }}
-        transition={{ duration: 0.2 }}
+        whileHover={{ y: -12 }}
+        transition={{ duration: 0.3 }}
+        className="group relative z-[10] h-full"
       >
-        <Card className="bg-[var(--color-ink-deep)] border-[var(--color-hairline-violet)] hover:border-[var(--color-lime)] transition-colors overflow-hidden group h-full">
-          <CardContent className="p-0 flex flex-col h-full">
-            <div className="relative aspect-square bg-[var(--color-surface-dark)] overflow-hidden">
-              <Image
-                src={imageUrl}
-                alt={product.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-              {edition === "limited" && (
-                <span className="absolute top-2 left-2 px-2 py-1 bg-[var(--color-pink)] text-white text-xs font-bold rounded">
-                  LIMITED
-                </span>
-              )}
-              <motion.button
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                onClick={handleQuickAdd}
-                className="absolute bottom-3 right-3 px-3 py-2 bg-[var(--color-lime)] text-[var(--color-ink-deep)] text-sm font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                Quick Add
-              </motion.button>
-            </div>
-            <div className="p-4 flex flex-col flex-grow">
-              <div className="flex-grow">
-                <p className="text-xs text-[var(--color-on-dark-muted)] uppercase tracking-wider mb-1">
-                  {edition}
-                </p>
-                <h3 className="text-base font-semibold text-white mb-1 line-clamp-1">
+        <div className="relative bg-[var(--color-surface-night)] rounded-[1.5rem] overflow-hidden border border-[var(--color-hairline-violet)] shadow-2xl transition-all duration-500 group-hover:border-[var(--color-lime)]/50">
+          <div className="relative aspect-square overflow-hidden">
+            <motion.img
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              src={imageUrl}
+              alt={product.title}
+              className="w-full h-full object-cover"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface-night)] via-transparent to-transparent opacity-70" />
+
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileHover={{ opacity: 1, x: 0 }}
+              className="absolute inset-0 bg-[var(--color-lime)]/10 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            >
+              <span className="text-white font-bold tracking-wider uppercase">View Product</span>
+            </motion.div>
+          </div>
+
+          <div className="p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold text-white mb-1 line-clamp-1">
                   {product.title}
                 </h3>
-                <p className="text-sm text-[var(--color-on-dark-faint)] mb-3 line-clamp-1">
-                  {firstVariant?.title || "Default"}
+                <p className="text-white/50 line-clamp-1">
+                  {product.description}
                 </p>
-              </div>
-              <div className="flex items-center justify-between mt-auto">
-                <p className="text-[var(--color-lime)] font-bold text-lg">
-                  {formatPrice(price)}
-                </p>
-                <div className="flex gap-1">
-                  {product.variants?.slice(0, 3).map((variant, index) => (
-                    <span
-                      key={index}
-                      className="w-4 h-4 rounded-full border border-[var(--color-hairline-violet)]"
-                      style={{ backgroundColor: getColorHex(variant.title || "") }}
-                      title={variant.title || ""}
-                    />
-                  ))}
-                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+
+            <div className="flex items-center justify-between pt-4 border-t border-[var(--color-hairline-violet)]">
+              <div className="flex flex-row items-center gap-2">
+                <span className="text-xs text-white/50">Starts from</span>
+                <span className="text-xl font-bold text-[var(--color-accent)]">{priceDisplay}</span>
+              </div>
+              <motion.div
+                whileHover={{ x: 5 }}
+                transition={{ duration: 0.3 }}
+                className="text-white/30"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </motion.div>
+            </div>
+          </div>
+
+          <motion.div
+            className="absolute inset-0 border-2 border-transparent group-hover:border-[var(--color-lime)]/30 rounded-[1.5rem] transition-colors duration-500 pointer-events-none"
+          />
+        </div>
       </motion.div>
     </Link>
   );
