@@ -9,7 +9,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 
 interface Order {
   id: string;
-  display_id?: string;
+  display_id?: number;
   created_at: string;
   status: string;
   total?: number;
@@ -28,7 +28,7 @@ const STATUS_COLORS: Record<string, string> = {
 const PAGE_SIZE = 10;
 
 export function OrderListClient() {
-  const { customer, isAuthenticated } = useAuthStore();
+  const { user: customer, isAuthenticated } = useAuthStore();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +53,7 @@ export function OrderListClient() {
         offset,
       });
 
-      const orderList = response.orders || [];
+      const orderList = (response.orders || []) as unknown as Order[];
       setOrders(orderList);
       setTotalPages(Math.ceil((response.count || 0) / PAGE_SIZE) || 1);
     } catch (err: any) {
@@ -83,7 +83,7 @@ export function OrderListClient() {
   const filteredOrders = orders.filter((order) => {
     const matchesStatus = activeStatus === "all" || order.status === activeStatus;
     const matchesSearch = !searchQuery || 
-      (order.display_id || order.id).toLowerCase().includes(searchQuery.toLowerCase());
+      ((order.display_id?.toString() || order.id).toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesStatus && matchesSearch;
   });
 
@@ -199,7 +199,7 @@ export function OrderListClient() {
                   <div className="flex justify-between items-start">
                     <div>
                       <CardTitle className="text-base">
-                        Order #{(order.display_id || order.id).slice(-8).toUpperCase()}
+                        Order #{(order.display_id?.toString() || order.id).slice(-8).toUpperCase()}
                       </CardTitle>
                       <CardDescription className="mt-1">
                         {formatDate(order.created_at)}
