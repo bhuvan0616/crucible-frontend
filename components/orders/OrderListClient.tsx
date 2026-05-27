@@ -5,6 +5,7 @@ import Link from "next/link";
 import { sdk } from "@/lib/sdk";
 import { useAuthStore } from "@/store/authStore";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { StatusBadge } from "./StatusBadge";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
 interface Order {
@@ -16,14 +17,6 @@ interface Order {
 }
 
 const STATUS_TABS = ["all", "pending", "processing", "shipped", "delivered", "cancelled"] as const;
-
-const STATUS_COLORS: Record<string, string> = {
-  pending: "bg-amber-100 text-amber-800",
-  processing: "bg-blue-100 text-blue-800",
-  shipped: "bg-purple-100 text-purple-800",
-  delivered: "bg-green-100 text-green-800",
-  cancelled: "bg-red-100 text-red-800",
-};
 
 const PAGE_SIZE = 10;
 
@@ -205,13 +198,7 @@ export function OrderListClient() {
                         {formatDate(order.created_at)}
                       </CardDescription>
                     </div>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        STATUS_COLORS[order.status] || "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                    </span>
+                    <StatusBadge status={order.status} />
                   </div>
                 </CardHeader>
                 <CardContent>
