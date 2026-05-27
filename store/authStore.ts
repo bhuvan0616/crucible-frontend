@@ -63,7 +63,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       await sdk.auth.register("customer", "emailpass", data);
-      const { customer } = await sdk.store.customer.retrieve();
+      const { customer } = await sdk.store.customer.create({
+        email: data.email,
+        first_name: data.first_name,
+        last_name: data.last_name,
+      });
+      await sdk.auth.login("customer", "emailpass", {
+        email: data.email,
+        password: data.password,
+      });
       set({
         isAuthenticated: true,
         user: {
