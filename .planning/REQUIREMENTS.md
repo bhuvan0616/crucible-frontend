@@ -1,7 +1,7 @@
 # Requirements: Crucible Creations Storefront
 
 **Defined:** 2026-05-16
-**Updated:** 2026-05-22 for v1.1 milestone
+**Updated:** 2026-05-27 for v1.3 milestone
 **Core Value:** A visually stunning, high-converting storefront that showcases 3D printed products with premium aesthetic and seamless customization options.
 
 ---
@@ -79,70 +79,89 @@ These requirements shipped in v1.0 and are marked as validated.
 
 ---
 
-## v1.1 Requirements (Active — MedusaJS Backend Integration)
+## v1.1 Requirements (Validated — MedusaJS Backend Integration)
 
 ### SDK Setup
 
-- [ ] **SDK-01**: Install @medusajs/js-sdk and @medusajs/types packages
-- [ ] **SDK-02**: Create lib/medusa.ts with SDK client singleton configuration
-- [ ] **SDK-03**: Configure environment variables (NEXT_PUBLIC_MEDUSA_BACKEND_URL, NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY)
-- [ ] **SDK-04**: Create formatPrice() utility for INR paise-to-display conversion
+- [x] **SDK-01**: Install @medusajs/js-sdk and @medusajs/types packages — Phase 4
+- [x] **SDK-02**: Create lib/medusa.ts with SDK client singleton configuration — Phase 4
+- [x] **SDK-03**: Configure environment variables — Phase 4
+- [x] **SDK-04**: Create formatPrice() utility for INR paise-to-display conversion — Phase 4
 
 ### Product Integration
 
-- [ ] **PROD-01**: Replace lib/data/products.ts mock with Medusa product API calls
-- [ ] **PROD-02**: Product list page fetches from Medusa with pagination
-- [ ] **PROD-03**: PDP fetches product details from Medusa API
-- [ ] **PROD-04**: Variant selection uses Medusa variant data with inventory quantities
-- [ ] **PROD-05**: Product images served from Medusa Media module
+- [x] **PROD-01**: Replace mock with Medusa product API calls — Phase 5
+- [x] **PROD-02**: Product list page fetches from Medusa with pagination — Phase 5
+- [x] **PROD-03**: PDP fetches product details from Medusa API — Phase 5
+- [x] **PROD-04**: Variant selection uses Medusa variant data — Phase 5
+- [x] **PROD-05**: Product images served from Medusa Media module — Phase 5
 
 ### Cart Sync
 
-- [ ] **CART-11**: Cart initialized from Medusa on first visit (cart.create or cart retrieval)
-- [ ] **CART-12**: Cart ID persisted in localStorage
-- [ ] **CART-13**: Add to cart syncs immediately with Medusa cart API
-- [ ] **CART-14**: Quantity updates sync with Medusa cart API
-- [ ] **CART-15**: Remove item syncs with Medusa cart API
-- [ ] **CART-16**: Cart totals fetched from Medusa (not calculated locally)
-- [ ] **CART-17**: Customization text stored in line item metadata
+- [x] **CART-11**: Cart initialized from Medusa on first visit — Phase 6
+- [x] **CART-12**: Cart ID persisted in localStorage — Phase 6
+- [x] **CART-13**: Add to cart syncs immediately with Medusa cart API — Phase 6
+- [x] **CART-14**: Quantity updates sync with Medusa cart API — Phase 6
+- [x] **CART-15**: Remove item syncs with Medusa cart API — Phase 6
+- [x] **CART-16**: Cart totals fetched from Medusa — Phase 6
+- [x] **CART-17**: Customization text stored in line item metadata — Phase 6
 
 ### Authentication
 
-- [ ] **AUTH-01**: Customer login via sdk.auth.login()
-- [ ] **AUTH-02**: Customer registration via sdk.auth.register()
-- [ ] **AUTH-03**: JWT token auto-stored and attached to requests
-- [ ] **AUTH-04**: Customer logout (token removal from localStorage)
-- [ ] **AUTH-05**: Auth state preserved across page refresh
-- [ ] **AUTH-06**: Login/Register UI components
+- [x] **AUTH-01**: Customer login via sdk.auth.login() — Phase 7
+- [x] **AUTH-02**: Customer registration via sdk.auth.register() — Phase 7
+- [x] **AUTH-03**: JWT token auto-stored and attached to requests — Phase 7
+- [x] **AUTH-04**: Customer logout — Phase 7
+- [x] **AUTH-05**: Auth state preserved across page refresh — Phase 7
+- [x] **AUTH-06**: Login/Register UI components — Phase 7
 
 ### Checkout & Orders
 
-- [ ] **CHKT-11**: Checkout address form submits to Medusa cart
-- [ ] **CHKT-12**: Shipping method selection from Medusa available options
-- [ ] **CHKT-13**: Payment step using Medusa payment providers
-- [ ] **CHKT-14**: cart.complete() creates Medusa order
-- [ ] **CHKT-15**: Order confirmation page displays real order data from Medusa
-- [ ] **CHKT-16**: Post-checkout cart cleared for new order
+- [x] **CHKT-11**: Checkout address form submits to Medusa cart — Phase 8
+- [x] **CHKT-12**: Shipping method selection from Medusa — Phase 8
+- [x] **CHKT-13**: Payment step using Medusa payment providers — Phase 8
+- [x] **CHKT-14**: cart.complete() creates Medusa order — Phase 8
+- [x] **CHKT-15**: Order confirmation page displays real order data — Phase 8
+- [x] **CHKT-16**: Post-checkout cart cleared — Phase 8
 
-### SEO
+---
 
-- [ ] **SEO-01**: sitemap.xml generated from Medusa product catalog
-- [ ] **SEO-02**: robots.txt allowing crawlers
-- [ ] **SEO-03**: Open Graph meta tags on all pages
-- [ ] **SEO-04**: Twitter Card meta tags
-- [ ] **SEO-05**: Product JSON-LD structured data
-- [ ] **SEO-06**: Dynamic metadata for product pages
+## v1.3 Requirements (Active — Order History)
+
+### Order List
+
+- [ ] **ORDR-01**: Order history page with paginated list of user orders
+- [ ] **ORDR-02**: Order card displays order number, date, status badge, and total
+- [ ] **ORDR-03**: Status filtering (All, Pending, Processing, Shipped, Delivered, Cancelled)
+- [ ] **ORDR-04**: Search orders by order number
+
+### Order Detail
+
+- [ ] **ORDR-05**: Order detail page with full order information
+- [ ] **ORDR-06**: Line items display (product name, variant, customization, quantity, price)
+- [ ] **ORDR-07**: Order totals (subtotal, shipping, tax, total)
+- [ ] **ORDR-08**: Shipping address display
+- [ ] **ORDR-09**: Payment method display
+
+### Order Status
+
+- [ ] **ORDR-10**: Status badge component with color coding (Medusa statuses)
+- [ ] **ORDR-11**: Order timeline showing fulfillment progress
+
+### UI/UX
+
+- [ ] **ORDR-12**: Industry-standard order list design with table/card hybrid layout
+- [ ] **ORDR-13**: Mobile-responsive order history views
+- [ ] **ORDR-14**: Loading skeleton states for order list/detail pages
 
 ---
 
 ## v2 Requirements (Deferred)
 
-- **MEDUSA-01**: Live MedusaJS backend integration — **NOW IN v1.1**
 - **PAY-01**: Real payment processing with Razorpay live keys
-- **USER-01**: User accounts and order history
 - **ADMIN-01**: Admin dashboard and inventory management
 - **CHKV-01**: Checkout form validation and error handling
-- **SEO-01 to SEO-06**: SEO implementation — **NOW IN v1.1**
+- **SEO-01 to SEO-06**: SEO implementation
 
 ---
 
@@ -150,9 +169,10 @@ These requirements shipped in v1.0 and are marked as validated.
 
 | Feature | Reason |
 |---------|--------|
+| Order cancellation | Not requested by user |
+| Return/refund requests | Separate feature, not in scope |
 | Admin dashboard | Out of scope for frontend milestone |
 | Inventory management | Backend admin feature, not storefront |
-| User order history page | Deferred to future phase |
 | 3D model viewer | PRD explicitly excludes |
 
 ---
@@ -161,19 +181,17 @@ These requirements shipped in v1.0 and are marked as validated.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SDK-01, SDK-02, SDK-03, SDK-04 | Phase 4 | Pending |
-| PROD-01, PROD-02, PROD-03, PROD-04, PROD-05 | Phase 5 | Pending |
-| CART-11, CART-12, CART-13, CART-14, CART-15, CART-16, CART-17 | Phase 6 | Pending |
-| AUTH-01, AUTH-02, AUTH-03, AUTH-04, AUTH-05, AUTH-06 | Phase 7 | Pending |
-| CHKT-11, CHKT-12, CHKT-13, CHKT-14, CHKT-15, CHKT-16 | Phase 8 | Pending |
-| SEO-01, SEO-02, SEO-03, SEO-04, SEO-05, SEO-06 | Phase 9 | Pending |
+| ORDR-01, ORDR-02, ORDR-03, ORDR-04 | Phase 1 | Pending |
+| ORDR-05, ORDR-06, ORDR-07, ORDR-08, ORDR-09 | Phase 2 | Pending |
+| ORDR-10, ORDR-11 | Phase 3 | Pending |
+| ORDR-12, ORDR-13, ORDR-14 | Phase 4 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 27 total (SDK: 4, PROD: 5, CART: 7, AUTH: 6, CHKT: 6, SEO: 6)
-- Mapped to phases: 27
+- v1.3 requirements: 14 total (List: 4, Detail: 5, Status: 2, UI/UX: 3)
+- Mapped to phases: 14
 - Unmapped: 0 ✓
 
 ---
 
-*Requirements updated: 2026-05-22 for v1.1 MedusaJS Backend Integration milestone*
-*Previous update: 2026-05-16 after initial definition*
+*Requirements updated: 2026-05-27 for v1.3 Order History milestone*
+*Previous update: 2026-05-22 for v1.1 MedusaJS Backend Integration milestone*
