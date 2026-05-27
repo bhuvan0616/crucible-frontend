@@ -86,7 +86,10 @@ Plans:
 2. Order timeline component shows fulfillment stages with timestamps
 3. Timeline displays: Order placed → Payment confirmed → Items prepared → Shipped → Delivered
 
-**Plans:** TBD
+**Plans:** 1 plan
+
+Plans:
+- [x] 03-status-display/03-01-PLAN.md — StatusBadge and OrderTimeline components
 
 **UI hint:** yes
 
@@ -119,7 +122,7 @@ Plans:
 |-------|-------|--------|-----------|
 | Phase 1: Order List Page | 1/1 | Not started | - |
 | Phase 2: Order Detail Page | 0/1 | Not started | - |
-| Phase 3: Status Display | 0/1 | Not started | - |
+| Phase 3: Status Display | 1/1 | Planned | - |
 | Phase 4: UI Polish | 0/1 | Not started | - |
 
 ---
