@@ -26,13 +26,11 @@ A visually stunning, high-converting storefront that showcases 3D printed produc
 - [ ] MedusaJS backend integration (store/cart sync, product fetch, auth, real checkout)
 - [ ] Real payment processing via MedusaJS payment endpoints
 - [ ] SEO implementation (sitemap, robots, OG tags, structured data)
-- [ ] Order management (order history, status tracking)
+- [ ] Order history and status tracking
 
 ### Out of Scope
 
-- Live MedusaJS backend integration — **NOW IN PROGRESS (v1.1)**
 - Real payment processing — mock only in Phase 1
-- User accounts and order history — deferred to v1.1
 - Admin dashboard / inventory management
 - Checkout form validation & error handling
 - 3D model viewer
@@ -64,12 +62,12 @@ A visually stunning, high-converting storefront that showcases 3D printed produc
 | MedusaJS mock data | Enable zero-effort SDK swap | ✓ Good |
 | Zustand for cart | Lightweight, TypeScript-friendly state management | ✓ Good |
 | Coarse granularity | Single product storefront, focused execution | ✓ Good |
-| @medusajs/js-sdk | Official MedusaJS v2 Storefront SDK | — Pending |
-| MedusaJS payment | Use MedusaJS existing payment plugins | — Pending |
+| @medusajs/js-sdk | Official MedusaJS v2 Storefront SDK | ✓ Good |
+| MedusaJS payment | Use MedusaJS existing payment plugins | ✓ Good |
 
 ---
 
-*Last updated: 2026-05-16 after initialization*
+*Last updated: 2026-05-27 after v1.3 milestone start*
 
 ## Evolution
 
@@ -88,13 +86,12 @@ This document evolves at phase transitions and milestone boundaries.
 3. Audit Out of Scope — reasons still valid?
 4. Update Context with current state
 
-## Current Milestone: v1.1 MedusaJS Backend Integration
+## Current Milestone: v1.3 Order History
 
-**Goal:** Integrate live MedusaJS backend at http://localhost:9000 to replace mock data with real product catalog, cart sync, authentication, and payment processing.
+**Goal:** Display user's order history with status tracking, using industry-standard UI/UX patterns.
 
 **Target features:**
-- Product catalog fetch from MedusaJS API
-- Cart state sync with MedusaJS cart API
-- Customer authentication (signup/login/logout)
-- Real checkout with MedusaJS payment
-- Order creation and confirmation
+- Order list view with status badges
+- Order detail page with line items and totals
+- Status filtering and search
+- Industry-standard order management UI
