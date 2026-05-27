@@ -2,11 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Order History
+current_phase: Not started
 status: planning
-last_updated: "2026-05-27"
-last_activity: 2026-05-27
+last_updated: "2026-05-27T12:21:39.885Z"
+last_activity: 2026-05-27 — Milestone v1.3 started
 progress:
-  total_phases: 0
+  total_phases: 4
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
