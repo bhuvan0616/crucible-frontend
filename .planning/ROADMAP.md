@@ -34,7 +34,10 @@
 4. Search input filters orders by order number (client-side)
 5. Pagination controls navigate through order pages (10 per page)
 
-**Plans:** TBD
+**Plans:** 1 plan
+
+Plans:
+- [ ] 01-order-list-page/01-01-PLAN.md — Paginated order list with filtering
 
 **UI hint:** yes
 
@@ -111,7 +114,7 @@
 
 | Phase | Plans | Status | Completed |
 |-------|-------|--------|-----------|
-| Phase 1: Order List Page | 0/1 | Not started | - |
+| Phase 1: Order List Page | 1/1 | Not started | - |
 | Phase 2: Order Detail Page | 0/1 | Not started | - |
 | Phase 3: Status Display | 0/1 | Not started | - |
 | Phase 4: UI Polish | 0/1 | Not started | - |
