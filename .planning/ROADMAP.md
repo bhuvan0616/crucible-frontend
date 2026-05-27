@@ -57,11 +57,14 @@ Plans:
 3. Order totals section shows: subtotal, shipping cost, tax amount, grand total
 4. Shipping address section displays delivery address from order
 5. Payment method section shows payment provider and last 4 digits (if applicable)
-6. "Back to Orders" link navigates to order list page
+ 6. "Back to Orders" link navigates to order list page
 
-**Plans:** TBD
+ **Plans:** 1 plan
 
-**UI hint:** yes
+ Plans:
+ - [ ] 02-order-detail-page/02-01-PLAN.md — Full order information with line items, totals, shipping/payment details
+
+ **UI hint:** yes
 
 ---
 
