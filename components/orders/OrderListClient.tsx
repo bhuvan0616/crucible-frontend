@@ -137,18 +137,18 @@ export function OrderListClient() {
         ))}
       </div>
 
-      {/* Loading State */}
+      {/* Loading State - 5 shimmer skeleton cards */}
       {isLoading && (
         <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="animate-pulse">
               <Card className="bg-muted/50">
                 <CardHeader>
-                  <div className="h-4 bg-muted rounded w-1/4 mb-2" />
-                  <div className="h-3 bg-muted rounded w-1/3" />
+                  <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/4 mb-2" />
+                  <div className="h-3 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/3" />
                 </CardHeader>
                 <CardContent>
-                  <div className="h-5 bg-muted rounded w-1/6" />
+                  <div className="h-5 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/6" />
                 </CardContent>
               </Card>
             </div>

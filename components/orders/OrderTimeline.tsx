@@ -54,7 +54,52 @@ export function OrderTimeline({ order }: { order: TimelineOrder }) {
 
   return (
     <div className="w-full">
-      {/* Desktop: Horizontal timeline */}
+      {/* Mobile: Vertical timeline - shown on sm/md, hidden on lg+ */}
+      <div className="flex md:hidden flex-col gap-3">
+        {TIMELINE_STAGES.map((stage, index) => {
+          const isCompleted = index < activeStageIndex;
+          const isActive = index === activeStageIndex;
+          const isPending = index > activeStageIndex;
+
+          return (
+            <div key={stage.key} className="flex items-center gap-3">
+              {/* Circle indicator */}
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${
+                  isActive
+                    ? "bg-teal-500 text-white"
+                    : isCompleted
+                    ? "bg-teal-500/30 text-teal-400 border border-teal-500/30"
+                    : "bg-muted text-muted-foreground border border-border"
+                }`}
+              >
+                {isActive ? stage.icon : isCompleted ? "✓" : ""}
+              </div>
+              {/* Label */}
+              <div className="flex flex-col">
+                <span
+                  className={`text-sm font-medium ${
+                    isActive ? "text-teal-400" : isCompleted ? "text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  {stage.label}
+                </span>
+                {isCompleted && index === 0 && (
+                  <span className="text-xs text-muted-foreground">
+                    {formatTimestamp(order.created_at)}
+                  </span>
+                )}
+                {isPending && <span className="text-xs text-muted-foreground">Pending</span>}
+              </div>
+            </div>
+          );
+        })}
+        {isCancelled && (
+          <div className="mt-2 text-sm text-red-500">Order cancelled</div>
+        )}
+      </div>
+
+      {/* Desktop: Horizontal timeline - hidden on sm/md, shown on lg+ */}
       <div className="hidden md:flex items-center justify-between relative">
 {TIMELINE_STAGES.map((stage, index) => {
           const isCompleted = index < activeStageIndex;

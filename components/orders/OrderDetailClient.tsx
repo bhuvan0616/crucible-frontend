@@ -102,34 +102,117 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
     );
   }
 
-  // Loading skeleton
+  // Loading skeleton - shimmer placeholders mirroring actual page layout
   if (isLoading) {
     return (
       <div className="space-y-6">
+        {/* Order header skeleton */}
         <div className="animate-pulse">
           <Card className="bg-muted/50">
             <CardHeader>
-              <div className="h-6 bg-muted rounded w-1/4 mb-2" />
-              <div className="h-4 bg-muted rounded w-1/3" />
+              <div className="flex justify-between items-start flex-wrap gap-4">
+                <div>
+                  <div className="h-6 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/4 mb-2" />
+                  <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/3" />
+                </div>
+                <div className="h-7 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded-full w-24" />
+              </div>
             </CardHeader>
           </Card>
         </div>
+        {/* Timeline skeleton */}
         <div className="animate-pulse">
           <Card className="bg-muted/50">
             <CardHeader>
-              <div className="h-4 bg-muted rounded w-1/6" />
+              <div className="h-5 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/3 mb-2" />
             </CardHeader>
             <CardContent>
-              <div className="h-32 bg-muted rounded" />
+              <div className="flex gap-8">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="flex flex-col items-center gap-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded-full" />
+                    <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-16" />
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>
+        {/* Line items table skeleton */}
         <div className="animate-pulse">
           <Card className="bg-muted/50">
-            <CardContent className="py-8">
-              <div className="h-20 bg-muted rounded" />
+            <CardHeader>
+              <div className="h-5 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/6 mb-2" />
+            </CardHeader>
+            <CardContent className="px-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b bg-muted/50">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <th key={i} className="text-left px-4 py-3 font-medium">
+                          <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-16" />
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[1, 2, 3].map((row) => (
+                      <tr key={row} className="border-b">
+                        {[1, 2, 3, 4, 5].map((col) => (
+                          <td key={col} className="px-4 py-3">
+                            <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded" style={{ width: `${Math.random() * 40 + 60}%` }} />
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </CardContent>
           </Card>
+        </div>
+        {/* Order totals skeleton */}
+        <div className="animate-pulse">
+          <Card className="bg-muted/50">
+            <CardHeader>
+              <div className="h-5 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/4 mb-2" />
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex justify-between">
+                  <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/4" />
+                  <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/6" />
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+        {/* Address/payment skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="animate-pulse">
+            <Card className="bg-muted/50">
+              <CardHeader>
+                <div className="h-5 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/3 mb-2" />
+              </CardHeader>
+              <CardContent className="space-y-1 text-sm">
+                <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-2/3" />
+                <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-full" />
+                <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-3/4" />
+              </CardContent>
+            </Card>
+          </div>
+          <div className="animate-pulse">
+            <Card className="bg-muted/50">
+              <CardHeader>
+                <div className="h-5 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/3 mb-2" />
+              </CardHeader>
+              <CardContent className="space-y-1 text-sm">
+                <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-1/2" />
+                <div className="h-4 bg-gradient-to-r from-muted via-muted/60 to-muted bg-[length:200%_100%] animate-shimmer-lime rounded w-2/3" />
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     );
@@ -224,7 +307,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
                     "Standard";
                   return (
                     <tr key={item.id} className="border-b last:border-0">
-                      <td className="px-4 py-3">{item.title}</td>
+                      <td className="px-4 py-3 line-clamp-2">{item.title}</td>
                       <td className="px-4 py-3">{variantColor}</td>
                       <td className="px-4 py-3">{item.metadata?.customization || "—"}</td>
                       <td className="px-4 py-3 text-right">{item.quantity}</td>
