@@ -126,33 +126,33 @@ These requirements shipped in v1.0 and are marked as validated.
 
 ---
 
-## v1.3 Requirements (Active — Order History)
+## v1.3 Requirements (Validated — Order History)
 
 ### Order List
 
-- [ ] **ORDR-01**: Order history page with paginated list of user orders
-- [ ] **ORDR-02**: Order card displays order number, date, status badge, and total
-- [ ] **ORDR-03**: Status filtering (All, Pending, Processing, Shipped, Delivered, Cancelled)
-- [ ] **ORDR-04**: Search orders by order number
+- [x] **ORDR-01**: Order history page with paginated list of user orders — Phase 1
+- [x] **ORDR-02**: Order card displays order number, date, status badge, and total — Phase 1
+- [x] **ORDR-03**: Status filtering (All, Pending, Processing, Shipped, Delivered, Cancelled) — Phase 1
+- [x] **ORDR-04**: Search orders by order number — Phase 1
 
 ### Order Detail
 
-- [ ] **ORDR-05**: Order detail page with full order information
-- [ ] **ORDR-06**: Line items display (product name, variant, customization, quantity, price)
-- [ ] **ORDR-07**: Order totals (subtotal, shipping, tax, total)
-- [ ] **ORDR-08**: Shipping address display
-- [ ] **ORDR-09**: Payment method display
+- [x] **ORDR-05**: Order detail page with full order information — Phase 2
+- [x] **ORDR-06**: Line items display (product name, variant, customization, quantity, price) — Phase 2
+- [x] **ORDR-07**: Order totals (subtotal, shipping, tax, total) — Phase 2
+- [x] **ORDR-08**: Shipping address display — Phase 2
+- [x] **ORDR-09**: Payment method display — Phase 2
 
 ### Order Status
 
-- [ ] **ORDR-10**: Status badge component with color coding (Medusa statuses)
-- [ ] **ORDR-11**: Order timeline showing fulfillment progress
+- [x] **ORDR-10**: Status badge component with color coding (Medusa statuses) — Phase 3
+- [x] **ORDR-11**: Order timeline showing fulfillment progress — Phase 3
 
 ### UI/UX
 
-- [ ] **ORDR-12**: Industry-standard order list design with table/card hybrid layout
-- [ ] **ORDR-13**: Mobile-responsive order history views
-- [ ] **ORDR-14**: Loading skeleton states for order list/detail pages
+- [x] **ORDR-12**: Industry-standard order list design with table/card hybrid layout — Phase 4
+- [x] **ORDR-13**: Mobile-responsive order history views — Phase 4
+- [x] **ORDR-14**: Loading skeleton states for order list/detail pages — Phase 4
 
 ---
 
@@ -181,10 +181,10 @@ These requirements shipped in v1.0 and are marked as validated.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ORDR-01, ORDR-02, ORDR-03, ORDR-04 | Phase 1 | Pending |
-| ORDR-05, ORDR-06, ORDR-07, ORDR-08, ORDR-09 | Phase 2 | Pending |
-| ORDR-10, ORDR-11 | Phase 3 | Pending |
-| ORDR-12, ORDR-13, ORDR-14 | Phase 4 | Pending |
+| ORDR-01, ORDR-02, ORDR-03, ORDR-04 | Phase 1 | Validated |
+| ORDR-05, ORDR-06, ORDR-07, ORDR-08, ORDR-09 | Phase 2 | Validated |
+| ORDR-10, ORDR-11 | Phase 3 | Validated |
+| ORDR-12, ORDR-13, ORDR-14 | Phase 4 | Validated |
 
 **Coverage:**
 - v1.3 requirements: 14 total (List: 4, Detail: 5, Status: 2, UI/UX: 3)
@@ -193,5 +193,5 @@ These requirements shipped in v1.0 and are marked as validated.
 
 ---
 
-*Requirements updated: 2026-05-27 for v1.3 Order History milestone*
-*Previous update: 2026-05-22 for v1.1 MedusaJS Backend Integration milestone*
+*Requirements updated: 2026-05-30 — v1.3 Order History validated*
+*Previous update: 2026-05-27 for v1.3 Order History milestone*

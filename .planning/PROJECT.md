@@ -20,13 +20,15 @@ A visually stunning, high-converting storefront that showcases 3D printed produc
 - ✓ GA4 analytics integration (add_to_cart, begin_checkout, purchase) — Phase 3
 - ✓ MedusaJS-compatible mock data structure — Phase 1
 - ✓ Dark mode default with light mode support — Phase 1
+- ✓ MedusaJS backend integration (store/cart sync, product fetch, auth, checkout) — v1.1
+- ✓ Order history and status tracking — v1.3
 
 ### Active
 
-- [ ] MedusaJS backend integration (store/cart sync, product fetch, auth, real checkout)
-- [ ] Real payment processing via MedusaJS payment endpoints
+- [ ] Account page with logout (v1.2 — in progress, uncommitted)
+- [ ] Google / Firebase sign-in (uncommitted)
 - [ ] SEO implementation (sitemap, robots, OG tags, structured data)
-- [ ] Order history and status tracking
+- [ ] Cart slide-over product image fix (v1.2)
 
 ### Out of Scope
 
@@ -64,10 +66,35 @@ A visually stunning, high-converting storefront that showcases 3D printed produc
 | Coarse granularity | Single product storefront, focused execution | ✓ Good |
 | @medusajs/js-sdk | Official MedusaJS v2 Storefront SDK | ✓ Good |
 | MedusaJS payment | Use MedusaJS existing payment plugins | ✓ Good |
+| StatusBadge + OrderTimeline | Reusable order status components | ✓ Good |
+| auth.refresh() after register | Keeps JWT aligned with created customer | ✓ Good |
 
 ---
 
-*Last updated: 2026-05-27 after v1.3 milestone start*
+## Current State (after v1.3)
+
+**Shipped:** Full order history UX integrated with Medusa — list, detail, status badges, timeline, responsive polish.
+
+**Codebase highlights:**
+- `/orders` and `/orders/[id]` routes with Medusa SDK
+- `components/orders/` — OrderListClient, OrderDetailClient, StatusBadge, OrderTimeline
+- 17 files changed in v1.3 execution range (~2,400 LOC added in order components)
+
+**Open work (uncommitted / deferred):**
+- v1.2 account page and cart drawer image
+- Google / Firebase sign-in
+- SEO implementation
+
+## Next Milestone Goals
+
+Candidates for `/gsd-new-milestone`:
+1. **Complete v1.2** — account page, cart drawer image fix
+2. **Auth expansion** — Google sign-in, profile management
+3. **SEO** — sitemap, robots, OG tags, structured data
+
+---
+
+*Last updated: 2026-05-30 after v1.3 milestone archive*
 
 ## Evolution
 
@@ -85,13 +112,3 @@ This document evolves at phase transitions and milestone boundaries.
 2. Core Value check — still the right priority?
 3. Audit Out of Scope — reasons still valid?
 4. Update Context with current state
-
-## Current Milestone: v1.3 Order History
-
-**Goal:** Display user's order history with status tracking, using industry-standard UI/UX patterns.
-
-**Target features:**
-- Order list view with status badges
-- Order detail page with line items and totals
-- Status filtering and search
-- Industry-standard order management UI

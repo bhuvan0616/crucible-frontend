@@ -1,60 +1,65 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.3
-milestone_name: Order History
-current_phase: Not started
-status: planning
-last_updated: "2026-05-27T12:21:39.885Z"
-last_activity: 2026-05-27 — Milestone v1.3 started
+milestone: null
+milestone_name: null
+current_phase: null
+status: between_milestones
+last_updated: "2026-05-30T00:00:00.000Z"
+last_activity: 2026-05-30 -- v1.3 milestone archived and tagged
 progress:
-  total_phases: 4
+  total_phases: 0
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
   percent: 0
 ---
 
-# State: v1.3 Order History
+# State: Between Milestones
 
-**Milestone:** v1.3
-**Started:** 2026-05-27
-**Current Phase:** Not started
-
-**Status:** Planning (defining requirements)
-
-**Progress:** [░░░░░░░░░░] 0%
+**Last completed milestone:** v1.3 Order History (2026-05-27)
+**Status:** Between milestones — ready for `/gsd-new-milestone`
 
 ---
 
-## Current Position
+## Project Reference
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-05-27 — Milestone v1.3 started
+See: `.planning/PROJECT.md` (updated 2026-05-30)
+
+**Core value:** A visually stunning, high-converting storefront that showcases 3D printed products with premium aesthetic and seamless customization options.
+
+**Current focus:** Plan next milestone (v1.2 leftovers or new scope)
+
+---
+
+## Deferred Items
+
+Items acknowledged and deferred at milestone close on 2026-05-30:
+
+| Category | Item | Status |
+|----------|------|--------|
+| debug | add-to-cart-is-not-working | root_cause_found |
+| debug | email-missing-orders | fix_applied — UAT pending |
+| milestone | v1.2 account page | uncommitted work |
+| milestone | v1.2 cart drawer image | not started |
+| auth | Google / Firebase sign-in | uncommitted work |
+| audit | v1.3 milestone audit | skipped at close |
 
 ---
 
 ## Accumulated Context
 
-### Key Decisions
+### Key Decisions (v1.3)
 
 | Decision | Rationale |
 |----------|-----------|
-| Single SDK client (`lib/medusa.ts`) | Centralized Medusa communication with auth interceptors |
-| Server cart as source of truth | Prevents desync between local Zustand and Medusa state |
-| formatPrice() for paise conversion | Medusa returns smallest unit — must divide by 100 for display |
-| localStorage for cart ID persistence | Restore cart across sessions without re-creation |
+| Reusable StatusBadge + OrderTimeline | Consistent status UX across list and detail |
+| `fields: '*'` on order retrieve | Full payload for line items, address, payment |
+| Shimmer skeleton loading | Premium feel vs basic pulse spinners |
+| `auth.refresh()` after registration | Aligns JWT with created customer (Google parity) |
 
 ### Blockers
 
-| Blocker | Impact | Resolution |
-|---------|--------|------------|
-| None identified yet | - | - |
-
-### Notes
-
-- Order History milestone focuses on displaying user order history with status tracking
+None for v1.3 close.
 
 ---
 
