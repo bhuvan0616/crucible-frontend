@@ -1,30 +1,33 @@
 # Architecture
 
-**Analysis Date:** 2026-05-12
+**Analysis Date:** 2026-05-27
 
 ## System Overview
 
-```
+This is a Next.js 16 storefront for "Crucible Creations" — a premium 3D printed products e-commerce site. The application follows the **Next.js App Router** architecture with a clear separation between server and client components.
+
+```text
 ┌─────────────────────────────────────────────────────────────┐
-│                         Next.js App Router                   │
-│                   (React 19, Next.js 16.2.6)                  │
+│                      Browser / Client                       │
 ├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │                    app/layout.tsx                     │   │
-│  │            (Root Layout + Fonts + Metadata)           │   │
-│  └──────────────────────────┬───────────────────────────┘   │
-│                             │                                │
-│                             ▼                                │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │                    app/page.tsx                       │   │
-│  │                  (Home Page - RSC)                   │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │               app/globals.css (Tailwind v4)          │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                              │
+│  React 19 (Client Components) + Zustand (State)             │
+│  └── components/ (UI layer)                                  │
+│      └── shop/, product/, cart/, checkout/, landing/        │
+├─────────────────────────────────────────────────────────────┤
+│                    Next.js App Router                        │
+│  └── app/ (Pages + Server Components)                       │
+│      ├── page.tsx (Landing)                                 │
+│      ├── shop/, product/[id]/, cart/, checkout/            │
+│      └── auth/customer/google/callback/                     │
+├─────────────────────────────────────────────────────────────┤
+│                      API Layer                               │
+│  └── lib/sdk.ts (MedusaJS SDK)                             │
+│  └── lib/firebase.ts (Google Auth)                         │
+├─────────────────────────────────────────────────────────────┤
+│                   External Services                          │
+│  └── Medusa Backend (localhost:9000)                        │
+│  └── Firebase Auth                                          │
+│  └── Google Analytics 4                                     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -32,95 +35,166 @@
 
 | Component | Responsibility | File |
 |-----------|----------------|------|
-| RootLayout | Defines HTML structure, loads fonts, exports metadata | `app/layout.tsx` |
-| HomePage | Default landing page (Server Component) | `app/page.tsx` |
-| GlobalStyles | Tailwind v4 CSS imports and theme configuration | `app/globals.css` |
-| NextConfig | Next.js configuration (currently minimal) | `next.config.ts` |
+| `useAuthStore` | Authentication state (login, register, logout, checkAuth) | `store/authStore.ts` |
+| `useCartStore` | Cart state with Medusa sync (add, update, remove items) | `store/cartStore.ts` |
+| `sdk` | MedusaJS SDK singleton for API calls | `lib/sdk.ts` |
+| `getProducts`, `getProductById` | Product data fetching with Medusa API transformation | `lib/data/products.ts` |
+| `Providers` | Client-side initialization wrapper (auth check + cart init) | `app/providers.tsx` |
 
 ## Pattern Overview
 
-**Overall:** Next.js App Router with React Server Components
+**Overall:** Next.js App Router + MedusaJS + Zustand
 
 **Key Characteristics:**
-- App Router uses file-system based routing in `app/` directory
-- Default to Server Components (RSC) - no "use client" directive needed
-- Tailwind CSS v4 with `@import "tailwindcss"` (no separate config file)
-- CSS custom properties for theming with `@theme inline` block
-- Path alias `@/*` maps to project root for clean imports
+- Server Components for data fetching (product pages, layouts)
+- Client Components for interactivity ("use client" directive)
+- Zustand stores for client-side state (cart persisted to localStorage)
+- MedusaJS SDK for type-safe backend communication
+- shadcn/ui + Tailwind for UI components
 
 ## Layers
 
-**Pages Layer:**
-- Purpose: Route definitions and page components
-- Location: `app/` directory
-- Contains: `layout.tsx`, `page.tsx`, `globals.css`, `favicon.ico`
-- Depends on: Next.js framework, React
-- Used by: Next.js router
+**UI Components Layer:**
+- Purpose: Render pages and handle user interaction
+- Location: `components/`
+- Contains: Landing, shop, product, cart, checkout, auth components
+- Depends on: Zustand stores, lib utilities
+- Used by: App Router pages
 
-**Static Assets:**
-- Purpose: Public files served directly
-- Location: `public/` directory
-- Contains: Static images, fonts
+**Page/Route Layer (Next.js App Router):**
+- Purpose: Define routes and coordinate data fetching
+- Location: `app/`
+- Contains: `page.tsx`, `[id]/page.tsx`, `shop/page.tsx`, etc.
+- Depends on: `lib/data/products.ts`, component layer
+- Used by: Next.js routing
+
+**State Management Layer:**
+- Purpose: Client-side state (auth, cart) with persistence
+- Location: `store/`
+- Contains: `authStore.ts`, `cartStore.ts`
+- Depends on: `lib/sdk.ts` (for API calls)
+- Used by: Client components
+
+**API/Service Layer:**
+- Purpose: Backend communication abstraction
+- Location: `lib/sdk.ts`, `lib/firebase.ts`, `lib/data/products.ts`
+- Contains: MedusaJS SDK instance, Firebase auth, product transformers
+- Depends on: External Medusa backend, Firebase
+- Used by: Stores, pages, components
 
 ## Data Flow
 
-### Page Request Path
+### Primary Request Path (Product Page)
 
-1. **Request** → Next.js router matches URL to `app/page.tsx`
-2. **Layout** → `app/layout.tsx` wraps page, loads fonts (`Geist`, `Geist_Mono`)
-3. **Render** → `page.tsx` returns React Server Component tree
-4. **Styles** → Tailwind v4 processes `globals.css` with `@theme inline` variables
+1. **Server Component** (`app/product/[id]/page.tsx:54`)
+   - Calls `getProductById(id)` to fetch product data from Medusa
+   - Generates metadata (SEO) and JSON-LD structured data
+   - Renders `ProductPageClient` with product data
 
-### Font Loading
+2. **Client Component** (`components/product/ProductPageClient.tsx:129`)
+   - Receives product as prop
+   - Manages local state: `selectedOptions`, `customization`, `quantity`
+   - Calls `useCartStore.addItem()` to add to cart
 
-1. `layout.tsx` imports `Geist`, `Geist_Mono` from `next/font/google`
-2. CSS variables `--font-geist-sans` and `--font-geist-mono` injected
-3. Applied via `className` on `<html>` element
+3. **Zustand Store** (`store/cartStore.ts:96`)
+   - Calls `sdk.store.cart.createLineItem()` via MedusaJS SDK
+   - Updates local state with cart items and totals
+
+### Cart Initialization Flow
+
+1. `app/providers.tsx` mounts → calls `checkAuth()` and `initCart()`
+2. `initCart()` checks localStorage for existing `cart_id`
+3. If exists, retrieves cart from Medusa; if not, creates new cart
+4. Cart ID persisted to localStorage for session continuity
 
 ## Key Abstractions
 
-**Metadata API:**
-- Export `metadata` object from `layout.tsx` for page metadata
-- Type: `Metadata` from `next`
+**MedusaJS SDK Singleton:**
+- Purpose: Centralized API client for all backend operations
+- Examples: `lib/sdk.ts`
+- Pattern: Singleton export with auth token storage via localStorage
 
-**CSS Theme System:**
-- CSS custom properties defined in `:root` and `@media (prefers-color-scheme: dark)`
-- Tailwind v4 `@theme inline` block maps CSS vars to Tailwind tokens
+**Zustand Stores:**
+- Purpose: Client-side state management with persistence
+- Examples: `store/authStore.ts`, `store/cartStore.ts`
+- Pattern: `create<StoreType>()((set, get) => ...))` with persist middleware for cart
+
+**Product Data Transformers:**
+- Purpose: Transform Medusa API responses to internal types
+- Examples: `lib/data/products.ts:transformProduct()`
+- Pattern: Accept Medusa types, return internal `Product` type
+
+**GA4 Analytics Wrapper:**
+- Purpose: Type-safe analytics tracking
+- Examples: `lib/analytics/ga4.ts`
+- Pattern: `trackAddToCart()`, `trackPurchase()` functions
 
 ## Entry Points
 
 **Root Layout:**
 - Location: `app/layout.tsx`
-- Triggers: Every page request (wraps all pages)
-- Responsibilities: HTML structure, font loading, metadata export, dark mode class
+- Triggers: Every page navigation
+- Responsibilities: Font loading (Rubik), metadata, GA4 script injection, Navbar render
 
 **Home Page:**
 - Location: `app/page.tsx`
-- Triggers: `GET /` (root URL)
-- Responsibilities: Landing page content with Next.js Image components
+- Triggers: Navigation to `/`
+- Responsibilities: Render landing page sections (Hero, Showcase, Features, etc.)
+
+**Product Page:**
+- Location: `app/product/[id]/page.tsx`
+- Triggers: Navigation to `/product/{id}`
+- Responsibilities: SEO metadata, JSON-LD, product data fetch, render ProductPageClient
+
+**Shop Page:**
+- Location: `app/shop/page.tsx`
+- Triggers: Navigation to `/shop`
+- Responsibilities: Product listing with client-side filtering
+
+**Checkout Page:**
+- Location: `app/checkout/page.tsx`
+- Triggers: Navigation to `/checkout`
+- Responsibilities: Multi-step checkout form (address, shipping, payment)
 
 ## Architectural Constraints
 
-- **Rendering:** Default to React Server Components (no client-side JS unless explicitly marked)
-- **Styling:** Tailwind v4 only (no traditional CSS classes or CSS-in-JS)
-- **No custom components:** Project is barebones scaffold from `create-next-app`
-- **No API routes:** Currently no `app/api/` directory
-- **No lib/ or utils/:** No shared utility code yet
+- **Server Components default:** Pages are server-rendered unless marked "use client"
+- **Client state:** Only cart and auth use Zustand; no global client state library
+- **Cart persistence:** Cart ID stored in localStorage, synced with Medusa on init
+- **No middleware.ts:** Auth redirects handled via `proxy.ts`
+- **Prices in paise:** Internal calculations use paise (₹449.00 = 44900), formatted on display
+
+## Anti-Patterns
+
+### Direct Store Access in Server Components
+
+**What happens:** Stores like `useCartStore` are imported and accessed directly in server contexts
+**Why it's wrong:** Zustand stores use client-side APIs (localStorage); server components run on the server where these APIs don't exist
+**Do this instead:** Pass data as props from server components to client components
+
+### Mixed Responsibility in Pages
+
+**What happens:** Some pages both fetch data and manage client state
+**Why it's wrong:** Makes testing and caching harder
+**Do this instead:** Separate data fetching (server component) from interactivity (child client component)
 
 ## Error Handling
 
-**Strategy:** Next.js default error boundaries and React error handling
+**Strategy:** Try-catch with user-facing error messages
 
 **Patterns:**
-- Next.js provides default error pages (`error.tsx`, `not-found.tsx`)
-- ESLint configured with `eslint-config-next` for TypeScript and core web vitals
+- Auth errors: Parse error messages and show specific feedback ("Invalid email or password")
+- Cart errors: Silently fail cart operations, log to console
+- Product fetch errors: Show 404 page via `notFound()`
 
 ## Cross-Cutting Concerns
 
-**Styling:** Tailwind CSS v4 with PostCSS plugin (`@tailwindcss/postcss`)
-**Linting:** ESLint flat config with `eslint-config-next`
-**Type Safety:** TypeScript strict mode enabled
+**SEO:** Metadata exported from pages with OpenGraph, Twitter cards, JSON-LD
+
+**Analytics:** GA4 configured globally in `app/layout.tsx`, event tracking functions in `lib/analytics/ga4.ts`
+
+**Authentication:** Firebase for Google OAuth, Medusa for email/password auth
 
 ---
 
-*Architecture analysis: 2026-05-12*
+*Architecture analysis: 2026-05-27*

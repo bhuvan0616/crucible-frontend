@@ -80,7 +80,10 @@ export const useCartStore = create<CartStore>()(
           }
         }
         try {
-          const { cart } = await sdk.store.cart.create({});
+          const regionId = await initRegion();
+          const { cart } = await sdk.store.cart.create({
+            region_id: regionId || undefined,
+          });
           localStorage.setItem("cart_id", cart.id);
           set({
             cartId: cart.id,
@@ -98,10 +101,13 @@ export const useCartStore = create<CartStore>()(
         if (!cartId) return;
         set({ isLoading: true });
         try {
-          const { cart } = await sdk.store.cart.createLineItem(cartId, {
+          await sdk.store.cart.createLineItem(cartId, {
             variant_id: variantId,
             quantity,
             metadata: { customization: customization.slice(0, 12) },
+          });
+          const { cart } = await sdk.store.cart.retrieve(cartId, {
+            fields: "id,*items,*items.variant,*items.variant.product,subtotal,shipping_total,tax_total,total",
           });
           set({
             items: cart.items?.map(transformLineItem) ?? [],
@@ -117,7 +123,10 @@ export const useCartStore = create<CartStore>()(
         if (!cartId) return;
         set({ isLoading: true });
         try {
-          const { cart } = await sdk.store.cart.updateLineItem(cartId, lineItemId, { quantity });
+          await sdk.store.cart.updateLineItem(cartId, lineItemId, { quantity });
+          const { cart } = await sdk.store.cart.retrieve(cartId, {
+            fields: "id,*items,*items.variant,*items.variant.product,subtotal,shipping_total,tax_total,total",
+          });
           set({
             items: cart.items?.map(transformLineItem) ?? [],
             totals: extractTotals(cart),
@@ -132,13 +141,14 @@ export const useCartStore = create<CartStore>()(
         if (!cartId) return;
         set({ isLoading: true });
         try {
-          const { deleted, parent: cart } = await sdk.store.cart.deleteLineItem(cartId, lineItemId);
-          if (deleted && cart) {
-            set({
-              items: cart.items?.map(transformLineItem) ?? [],
-              totals: extractTotals(cart),
-            });
-          }
+          await sdk.store.cart.deleteLineItem(cartId, lineItemId);
+          const { cart } = await sdk.store.cart.retrieve(cartId, {
+            fields: "id,*items,*items.variant,*items.variant.product,subtotal,shipping_total,tax_total,total",
+          });
+          set({
+            items: cart.items?.map(transformLineItem) ?? [],
+            totals: extractTotals(cart),
+          });
         } finally {
           set({ isLoading: false });
         }

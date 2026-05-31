@@ -18,15 +18,12 @@ const footerLinks = {
   legal: [
     { href: "#", label: "Privacy" },
     { href: "#", label: "Terms" },
-    { href: "/", label: "v1 Design" },
-    { href: "/v2", label: "v2 Design" },
-    { href: "/v3", label: "v3 Design" },
   ],
 };
 
 export default function V4Footer() {
   return (
-    <footer className="relative bg-[var(--color-surface-dark)] text-white pt-16 pb-8 overflow-hidden">
+    <footer className="relative bg-[var(--color-surface-dark)] text-white mt-[-10px] pt-16 pb-8 overflow-hidden">
       {/* Lime Squiggly Divider */}
       <div className="absolute top-0 left-0 right-0 h-3 squiggly-divider" />
 

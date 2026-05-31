@@ -229,25 +229,6 @@ export default function V4Hero() {
                   </motion.svg>
                 </motion.div>
               </MagneticButton>
-
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn-ghost-dark px-8 py-5 flex items-center gap-3"
-              >
-                <motion.svg
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 6.668a.555.555 0 11-1.11 0 .555.555 0 011.11 0z" />
-                  <path d="M10 12a1 1 0 100-2 1 1 0 000 2z" fillRule="evenodd" clipRule="evenodd" />
-                </motion.svg>
-                Watch Demo
-              </motion.button>
             </motion.div>
 
             {/* Stats */}

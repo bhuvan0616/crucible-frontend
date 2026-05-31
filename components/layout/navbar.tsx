@@ -9,6 +9,7 @@ import { useCartStore, selectCartItemCount } from "@/store/cartStore";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/shop", label: "Shop" },
+  { href: "/account", label: "Account" },
 ];
 
 export default function Navbar() {
@@ -89,30 +90,6 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </button>
-
-              <div className="hidden md:block">
-                <Link href="/shop">
-                  <motion.button
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="btn-inverted flex items-center gap-2"
-                  >
-                    <span>Shop Now</span>
-                    <motion.svg
-                      animate={{ x: [0, 5, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M3 8h10M9 4l4 4-4 4" />
-                    </motion.svg>
-                  </motion.button>
-                </Link>
-              </div>
 
               <button
                 onClick={() => setIsOpen(!isOpen)}

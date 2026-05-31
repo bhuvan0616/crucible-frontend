@@ -32,6 +32,7 @@ vi.mock("next/link", () => ({
 const mockOrder = {
   id: "order_123",
   display_id: 1001,
+  custom_display_id: "CC-20260520-1001",
   status: "processing",
   created_at: "2026-05-20T10:00:00Z",
   items: [
@@ -89,7 +90,7 @@ describe("OrderDetailClient", () => {
     render(<OrderDetailClient orderId="order_123" />);
 
     await waitFor(() => {
-      expect(screen.getByText(/Order #1001/i)).toBeTruthy();
+      expect(screen.getByText(/Order #CC-20260520-1001/i)).toBeTruthy();
     });
     expect(screen.getByText(/Portable Keychain Phone Stand/i)).toBeTruthy();
     expect(screen.getByText(/MYSTAND/i)).toBeTruthy();

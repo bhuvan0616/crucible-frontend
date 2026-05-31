@@ -130,7 +130,12 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
                   </span>
                 </div>
                 <p className="text-xs text-[var(--color-on-dark-muted)]">Shipping calculated at checkout</p>
-                <Link href="/checkout" onClick={onClose}>
+                <Link href="/checkout" onClick={() => {
+                  onClose();
+                  if (typeof window !== "undefined") {
+                    sessionStorage.setItem("checkout_return_url", window.location.pathname);
+                  }
+                }}>
                   <Button className="w-full bg-[var(--color-lime)] text-[var(--color-ink-deep)] hover:bg-[var(--color-lime-dark)] py-3 text-lg font-bold">
                     Proceed to Checkout
                   </Button>

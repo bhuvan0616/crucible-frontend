@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { sdk } from "@/lib/sdk";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils/formatPrice";
@@ -20,21 +20,6 @@ interface ShippingOption {
   amount: number;
 }
 
-const MOCK_SHIPPING_OPTIONS: ShippingOption[] = [
-  {
-    id: "so_standard",
-    name: "Standard Shipping",
-    description: "Delivery in 5-7 business days",
-    amount: 499,
-  },
-  {
-    id: "so_express",
-    name: "Express Shipping",
-    description: "Delivery in 2-3 business days",
-    amount: 999,
-  },
-];
-
 export function ShippingMethodForm({
   cartId,
   onSubmit,
@@ -42,9 +27,74 @@ export function ShippingMethodForm({
   onBack,
   isLoading = false,
 }: ShippingMethodFormProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(selectedOptionId ?? MOCK_SHIPPING_OPTIONS[0].id);
+  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(selectedOptionId ?? null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFetchingOptions, setIsFetchingOptions] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    
+    async function fetchShippingOptions() {
+      if (!cartId || cancelled) {
+        if (!cancelled) {
+          setIsFetchingOptions(false);
+        }
+        return;
+      }
+      
+      try {
+        if (!cancelled) {
+          setIsFetchingOptions(true);
+          setError(null);
+        }
+        
+        const queryParams = { cart_id: cartId };
+        console.log("Fetching shipping options with params:", queryParams);
+        
+        const response = await sdk.store.fulfillment.listCartOptions(queryParams);
+        console.log("Shipping options response:", response);
+        
+        if (cancelled) return;
+        
+        if (response.error) {
+          throw new Error(response.error.message || "Failed to load shipping options");
+        }
+        
+        const shippingOptions = response.shipping_options || [];
+        const options: ShippingOption[] = shippingOptions.map((opt: any) => ({
+          id: opt.id,
+          name: opt.name,
+          description: opt.type?.description,
+          amount: opt.calculated_price?.calculated_amount ?? opt.amount ?? 0,
+        }));
+        
+        if (cancelled) return;
+        
+        setShippingOptions(options);
+        
+        if (options.length > 0 && !selectedOptionId) {
+          setSelectedId(options[0].id);
+        }
+      } catch (err: any) {
+        if (!cancelled) {
+          console.error("Failed to fetch shipping options:", err);
+          setError(err.message || "Failed to load shipping options");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsFetchingOptions(false);
+        }
+      }
+    }
+    
+    fetchShippingOptions();
+    
+    return () => {
+      cancelled = true;
+    };
+  }, [cartId, selectedOptionId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,44 +116,63 @@ export function ShippingMethodForm({
     }
   };
 
+  if (isFetchingOptions) {
+    return (
+      <div className="space-y-6">
+        <h3 className="text-xl font-bold text-white mb-4">Select Shipping Method</h3>
+        <div className="animate-pulse space-y-3">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-20 bg-[var(--color-surface-dark)] rounded-lg" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <h3 className="text-xl font-bold text-white mb-4">Select Shipping Method</h3>
 
-      <div className="space-y-3">
-        {MOCK_SHIPPING_OPTIONS.map((option) => (
-          <label
-            key={option.id}
-            className={`flex items-start gap-4 p-4 rounded-lg border cursor-pointer transition-colors ${
-              selectedId === option.id
-                ? "border-[var(--color-lime)] bg-[var(--color-lime)]/10"
-                : "border-[var(--color-hairline-violet)] bg-[var(--color-surface-dark)] hover:border-[var(--color-lime)]/50"
-            }`}
-          >
-            <input
-              type="radio"
-              name="shipping_method"
-              value={option.id}
-              checked={selectedId === option.id}
-              onChange={() => setSelectedId(option.id)}
-              className="mt-1 accent-[var(--color-lime)]"
-            />
-            <div className="flex-grow">
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-white">{option.name}</span>
-                <span className="text-[var(--color-lime)] font-bold">
-                  {formatPrice(option.amount)}
-                </span>
+      {shippingOptions.length === 0 ? (
+        <div className="text-center py-8 text-[var(--color-on-dark-muted)]">
+          No shipping options available for your address.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {shippingOptions.map((option) => (
+            <label
+              key={option.id}
+              className={`flex items-start gap-4 p-4 rounded-lg border cursor-pointer transition-colors ${
+                selectedId === option.id
+                  ? "border-[var(--color-lime)] bg-[var(--color-lime)]/10"
+                  : "border-[var(--color-hairline-violet)] bg-[var(--color-surface-dark)] hover:border-[var(--color-lime)]/50"
+              }`}
+            >
+              <input
+                type="radio"
+                name="shipping_method"
+                value={option.id}
+                checked={selectedId === option.id}
+                onChange={() => setSelectedId(option.id)}
+                className="mt-1 accent-[var(--color-lime)]"
+              />
+              <div className="flex-grow">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-white">{option.name}</span>
+                  <span className="text-[var(--color-lime)] font-bold">
+                    {formatPrice(option.amount)}
+                  </span>
+                </div>
+                {option.description && (
+                  <p className="text-sm text-[var(--color-on-dark-muted)] mt-1">
+                    {option.description}
+                  </p>
+                )}
               </div>
-              {option.description && (
-                <p className="text-sm text-[var(--color-on-dark-muted)] mt-1">
-                  {option.description}
-                </p>
-              )}
-            </div>
-          </label>
-        ))}
-      </div>
+            </label>
+          ))}
+        </div>
+      )}
 
       {error && (
         <div className="text-sm text-red-500 bg-red-500/10 p-3 rounded-lg">
@@ -123,7 +192,7 @@ export function ShippingMethodForm({
         </Button>
         <Button
           type="submit"
-          disabled={!selectedId || isSubmitting || isLoading}
+          disabled={!selectedId || isSubmitting || isLoading || shippingOptions.length === 0}
           className="flex-1 bg-[var(--color-lime)] text-[var(--color-ink-deep)] hover:bg-[var(--color-lime-dark)] disabled:opacity-50"
         >
           {isSubmitting ? "Processing..." : "Continue to Payment"}

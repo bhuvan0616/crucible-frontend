@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/layout/navbar";
 import { Providers } from "./providers";
+import Footer from "@/components/landing/footer";
 
 const rubik = Rubik({
   subsets: ["latin"],
@@ -78,10 +79,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-full flex flex-col antialiased" style={{ fontFamily: "'Rubik', sans-serif" }}>
+      <body className="min-h-screen flex flex-col antialiased" style={{ fontFamily: "'Rubik', sans-serif" }}>
         <Providers>
           <Navbar />
           {children}
+          <Footer />
         </Providers>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"

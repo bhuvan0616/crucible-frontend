@@ -43,7 +43,11 @@ export function CartSummary({ subtotal, shippingCost, total, itemCount, onChecko
         </div>
       </div>
 
-      <Link href="/checkout">
+      <Link href="/checkout" onClick={() => {
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("checkout_return_url", "/cart");
+          }
+        }}>
         <Button className="w-full bg-[var(--color-lime)] text-[var(--color-ink-deep)] hover:bg-[var(--color-lime-dark)] py-3 text-lg font-bold">
           Proceed to Checkout
         </Button>

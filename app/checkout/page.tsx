@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useCartStore, selectCartItemCount } from "@/store/cartStore";
@@ -58,10 +58,32 @@ export default function CheckoutPage() {
   }, [checkAuth]);
 
   useEffect(() => {
+    const returnUrl = sessionStorage.getItem("checkout_return_url") || "/cart";
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("checkout_return_url", returnUrl);
+    }
+  }, []);
+
+  useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push("/login?returnUrl=/checkout");
     }
   }, [isLoading, isAuthenticated, router]);
+
+  const handleBackNavigation = useCallback(() => {
+    const returnUrl = sessionStorage.getItem("checkout_return_url") || "/cart";
+    sessionStorage.removeItem("checkout_return_url");
+    router.push(returnUrl);
+  }, [router]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handlePopState = () => {
+      handleBackNavigation();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [handleBackNavigation]);
 
   useEffect(() => {
     if (isAuthenticated && items.length === 0 && cartId) {
@@ -88,9 +110,25 @@ export default function CheckoutPage() {
     setIsProcessing(true);
 
     try {
-      const response = await sdk.store.cart.complete(cartId);
-      const order = "order" in response ? response.order : null;
-      const error = "error" in response ? response.error : null;
+      const cartResponse = await sdk.store.cart.retrieve(cartId, {
+        fields: "id,payment_collection,payment_sessions",
+      });
+      
+      const cartData = cartResponse.cart;
+      
+      if (!cartData.payment_collection) {
+        const pcResponse = await sdk.store.payment.initiatePaymentSession(cartData, {
+          provider_id: "pp_system_default",
+        });
+        
+        if (pcResponse.error) {
+          throw new Error(pcResponse.error.message || "Failed to create payment collection");
+        }
+      }
+      
+      const completeResponse = await sdk.store.cart.complete(cartId);
+      const order = "order" in completeResponse ? completeResponse.order : null;
+      const error = "error" in completeResponse ? completeResponse.error : null;
 
       if (order) {
         setOrderData(order);

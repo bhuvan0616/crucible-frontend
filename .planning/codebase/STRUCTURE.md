@@ -1,122 +1,178 @@
 # Codebase Structure
 
-**Analysis Date:** 2026-05-12
+**Analysis Date:** 2026-05-27
 
 ## Directory Layout
 
 ```
-crucible/
-├── app/                 # Next.js App Router (pages, layouts, styles)
-├── public/              # Static assets (served as-is)
-├── .next/               # Next.js build output (generated, not committed)
-├── .planning/           # GSD planning documents
-├── node_modules/        # Dependencies (generated)
-├── package.json        # Project manifest
-├── package-lock.json   # Dependency lockfile
-├── tsconfig.json       # TypeScript configuration
-├── next.config.ts       # Next.js configuration
-├── postcss.config.mjs   # PostCSS (Tailwind v4)
-├── eslint.config.mjs    # ESLint flat config
-└── .gitignore           # Git ignore rules
+apps/frontend/
+├── app/                    # Next.js App Router pages
+│   ├── layout.tsx          # Root layout (font, metadata, GA4, Navbar)
+│   ├── page.tsx            # Home/landing page
+│   ├── providers.tsx       # Client providers wrapper (auth + cart init)
+│   ├── sitemap.ts          # Sitemap generation
+│   ├── robots.ts           # Robots.txt generation
+│   ├── auth/               # Auth callback routes
+│   │   └── customer/google/callback/
+│   ├── cart/               # Cart page
+│   ├── checkout/           # Checkout flow
+│   ├── login/              # Login page
+│   ├── order-confirmation/ # Post-checkout confirmation
+│   ├── order-success/      # Order success page
+│   ├── product/            # Product pages
+│   │   └── [id]/page.tsx   # Dynamic product detail route
+│   ├── register/           # Registration page
+│   └── shop/               # Product catalog/shop page
+├── components/             # React components
+│   ├── auth/               # LoginForm, RegisterForm
+│   ├── cart/               # CartItemCard, CartSummary
+│   ├── checkout/           # CheckoutForm, PaymentForm, AddressForm, etc.
+│   ├── landing/           # Landing page sections (Hero, Features, etc.)
+│   ├── layout/             # Navbar, Footer
+│   ├── product/           # ProductPageClient, ProductGallery, VariantSelector, etc.
+│   ├── shop/               # ShopProductCard, ProductGrid, FilterBar, CartSlideOver
+│   └── ui/                 # shadcn/ui base components (Button, Input, Label, Card)
+├── lib/                    # Utilities and SDK setup
+│   ├── sdk.ts              # MedusaJS SDK singleton
+│   ├── firebase.ts         # Firebase auth setup
+│   ├── utils.ts            # cn() utility (clsx + tailwind-merge)
+│   ├── analytics/          # GA4 tracking functions
+│   │   └── ga4.ts
+│   ├── data/               # Product data fetching
+│   │   └── products.ts
+│   ├── providers/          # React context providers
+│   │   └── MedusaProvider.tsx
+│   └── utils/              # Utility functions
+│       └── formatPrice.ts
+├── store/                  # Zustand state stores
+│   ├── authStore.ts         # Authentication state
+│   └── cartStore.ts        # Cart state with localStorage persistence
+├── types/                  # TypeScript type definitions
+│   └── index.ts            # CartItem, Product, ProductVariant, etc.
+├── public/                 # Static assets (SVGs, placeholder.jpg)
+│   └── images/
+├── images/                 # Static product images
+├── mocks/                  # Mock data for development
+├── .env.local              # Environment variables (not committed)
+├── next.config.ts          # Next.js configuration
+├── tsconfig.json           # TypeScript configuration
+├── package.json            # Dependencies
+├── components.json         # shadcn/ui component configuration
+├── eslint.config.mjs       # ESLint configuration
+└── crucible-creations-prd.md  # Product requirements document
 ```
 
 ## Directory Purposes
 
 **`app/`:**
-- Purpose: Next.js App Router directory - contains all pages, layouts, and global styles
-- Contains: `layout.tsx`, `page.tsx`, `globals.css`, `favicon.ico`
-- Key files: `layout.tsx` (root layout), `page.tsx` (home page)
+- Purpose: Next.js App Router page structure
+- Contains: Route pages, layouts, API route handlers
+- Key files: `layout.tsx`, `page.tsx`, `providers.tsx`
 
-**`public/`:**
-- Purpose: Static assets served directly
-- Contains: Static images and files
-- Note: Currently has `next.svg` and `vercel.svg`
+**`components/`:**
+- Purpose: React UI components organized by feature
+- Contains: Feature-specific components and shadcn/ui base components
+- Key files: `landing/hero.tsx`, `shop/ShopProductCard.tsx`, `product/ProductPageClient.tsx`
 
-**`.planning/`:**
-- Purpose: GSD planning artifacts and codebase maps
-- Contains: `codebase/` subdirectory with architecture documentation
+**`lib/`:**
+- Purpose: Utilities, SDK initialization, data fetching
+- Contains: MedusaJS SDK, Firebase setup, analytics, product data
+- Key files: `sdk.ts`, `firebase.ts`, `analytics/ga4.ts`, `data/products.ts`
+
+**`store/`:**
+- Purpose: Zustand client-side state management
+- Contains: `authStore.ts` (auth state), `cartStore.ts` (cart state with persistence)
+- Key files: `authStore.ts`, `cartStore.ts`
+
+**`types/`:**
+- Purpose: TypeScript type definitions
+- Contains: `CartItem`, `Product`, `ProductVariant`, `ColorVariant`
+- Key files: `index.ts`
 
 ## Key File Locations
 
 **Entry Points:**
-- `app/page.tsx`: Home page route (`/`)
-- `app/layout.tsx`: Root layout (wraps all pages)
+- `app/layout.tsx` — Root layout with font, metadata, GA4, Navbar
+- `app/page.tsx` — Home/landing page
+- `app/providers.tsx` — Client initialization (auth check + cart init)
 
 **Configuration:**
-- `tsconfig.json`: TypeScript with path alias `@/*` → `./*`
-- `next.config.ts`: Next.js configuration (empty config object)
-- `postcss.config.mjs`: PostCSS with `@tailwindcss/postcss` plugin
-- `eslint.config.mjs`: ESLint flat config extending `eslint-config-next`
+- `next.config.ts` — Next.js config (image domains)
+- `tsconfig.json` — TypeScript with path alias `@/*` → `./`
+- `package.json` — Dependencies (Next.js 16, React 19, MedusaJS, Zustand, Firebase, shadcn)
 
 **Core Logic:**
-- `app/page.tsx`: Main landing page (65 lines)
-- `app/layout.tsx`: Root layout with font loading and metadata (33 lines)
+- `lib/sdk.ts` — MedusaJS SDK singleton
+- `lib/data/products.ts` — Product fetching functions
+- `store/authStore.ts` — Auth state management
+- `store/cartStore.ts` — Cart state with Medusa sync
 
-**Styling:**
-- `app/globals.css`: Tailwind v4 import and theme variables (26 lines)
+**Testing (none found):**
+- No test directory or test files detected
 
 ## Naming Conventions
 
 **Files:**
-- PascalCase for React components: `layout.tsx`, `page.tsx`
-- kebab-case for config files: `postcss.config.mjs`, `eslint.config.mjs`
-- camelCase for JSON configs: `tsconfig.json`
+- PascalCase for components: `ShopProductCard.tsx`, `ProductPageClient.tsx`
+- camelCase for utilities and stores: `cartStore.ts`, `formatPrice.ts`
+- kebab-case for directories: `components/landing/`, `components/product/`
 
-**Directories:**
-- lowercase for standard dirs: `app/`, `public/`, `node_modules/`
-- kebab-case for config dirs: `.next/`, `.planning/`
+**Functions:**
+- camelCase: `getProducts()`, `addItem()`, `trackAddToCart()`
+- PascalCase for React components: `ProductGallery`, `VariantSelector`
 
-**TypeScript:**
-- Uppercase types when applicable: `Metadata`, `React.ReactNode`
-- Interface colocation in same file as usage
+**Variables:**
+- camelCase: `cartId`, `selectedOptions`, `customization`
+- PascalCase for types/interfaces: `CartItem`, `ProductVariant`, `AuthStore`
+
+**Types:**
+- TypeScript interfaces: `interface CartItem { ... }`
+- Exported from: `types/index.ts`
 
 ## Where to Add New Code
 
-**New Page:**
-- Location: `app/[route]/page.tsx`
-- Create directory under `app/` matching route segment
-- Example: `app/about/page.tsx` for `/about` route
-
-**New Layout (nested route):**
-- Location: `app/[route]/layout.tsx`
-- Creates shared layout for that route segment
-
-**New API Route:**
-- Location: `app/api/[route]/route.ts`
-- Example: `app/api/users/route.ts` for `/api/users`
+**New Feature:**
+- Primary code: `components/feature-name/` directory
+- Tests: No test directory structure exists
 
 **New Component:**
-- Recommended: `components/` directory at root
-- Example: `components/Button.tsx`
-- Import path: `@/components/Button`
+- Implementation: `components/{category}/ComponentName.tsx`
+- Follow existing patterns: `"use client"` directive, props interface, motion wrappers
 
-**New Utility/Library:**
-- Recommended: `lib/` directory at root
-- Example: `lib/utils.ts`
-- Import path: `@/lib/utils`
+**New Store:**
+- Implementation: `store/featureStore.ts`
+- Pattern: Zustand with `create<StoreInterface>()((set, get) => ...))`
 
-**New Styles:**
-- Component-scoped: Use Tailwind classes directly in components
-- Page-level: Add to `app/globals.css` or create route-specific CSS
-- Global: Edit `app/globals.css`
+**New Utility:**
+- Implementation: `lib/utils/utilityName.ts`
+- Export from: `lib/utils.ts` or keep file-specific
+
+**New Page:**
+- Implementation: `app/{route}/page.tsx`
+- For dynamic routes: `app/{param}/[id]/page.tsx`
 
 ## Special Directories
 
+**`.next/`:**
+- Purpose: Next.js build output
+- Generated: Yes
+- Committed: No (.gitignore)
+
+**`.playwright-mcp/`:**
+- Purpose: Playwright browser automation logs
+- Generated: Yes
+- Committed: No
+
+**`.planning/`:**
+- Purpose: Project planning documents
+- Generated: No
+- Committed: Yes
+
 **`node_modules/`:**
 - Purpose: npm dependencies
-- Generated: Yes (managed by npm/yarn/pnpm)
-- Committed: No (.gitignore excludes it)
-
-**`.next/`:**
-- Purpose: Next.js build cache and output
-- Generated: Yes (by `next dev` or `next build`)
-- Committed: No (.gitignore excludes it)
-
-**`public/`:**
-- Purpose: Static assets served at root URL
-- Generated: No (manually maintained)
-- Committed: Yes (version controlled)
+- Generated: Yes
+- Committed: No
 
 ---
 
-*Structure analysis: 2026-05-12*
+*Structure analysis: 2026-05-27*

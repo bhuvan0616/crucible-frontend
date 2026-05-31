@@ -67,10 +67,10 @@ export function OrderTimeline({ order }: { order: TimelineOrder }) {
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 ${
                   isActive
-                    ? "bg-teal-500 text-white"
+                    ? "bg-[var(--color-lime)] text-[var(--color-ink-deep)]"
                     : isCompleted
-                    ? "bg-teal-500/30 text-teal-400 border border-teal-500/30"
-                    : "bg-muted text-muted-foreground border border-border"
+                    ? "bg-[var(--color-lime)]/30 text-[var(--color-lime)] border border-[var(--color-lime)]/30"
+                    : "bg-[var(--color-ink-deep)] text-[var(--color-on-dark-muted)] border border-[var(--color-hairline-violet)]"
                 }`}
               >
                 {isActive ? stage.icon : isCompleted ? "✓" : ""}
@@ -79,17 +79,17 @@ export function OrderTimeline({ order }: { order: TimelineOrder }) {
               <div className="flex flex-col">
                 <span
                   className={`text-sm font-medium ${
-                    isActive ? "text-teal-400" : isCompleted ? "text-foreground" : "text-muted-foreground"
+                    isActive ? "text-[var(--color-lime)]" : isCompleted ? "text-white" : "text-[var(--color-on-dark-muted)]"
                   }`}
                 >
                   {stage.label}
                 </span>
                 {isCompleted && index === 0 && (
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-[var(--color-on-dark-muted)]">
                     {formatTimestamp(order.created_at)}
                   </span>
                 )}
-                {isPending && <span className="text-xs text-muted-foreground">Pending</span>}
+                {isPending && <span className="text-xs text-[var(--color-on-dark-muted)]">Pending</span>}
               </div>
             </div>
           );
@@ -101,7 +101,7 @@ export function OrderTimeline({ order }: { order: TimelineOrder }) {
 
       {/* Desktop: Horizontal timeline - hidden on sm/md, shown on lg+ */}
       <div className="hidden md:flex items-center justify-between relative">
-{TIMELINE_STAGES.map((stage, index) => {
+        {TIMELINE_STAGES.map((stage, index) => {
           const isCompleted = index < activeStageIndex;
           const isActive = index === activeStageIndex;
 
@@ -111,7 +111,7 @@ export function OrderTimeline({ order }: { order: TimelineOrder }) {
               {index < TIMELINE_STAGES.length - 1 && (
                 <div
                   className={`absolute left-4 top-8 w-0.5 h-6 -z-10 ${
-                    isCompleted ? "bg-teal-500" : "bg-gray-200 border-dashed"
+                    isCompleted ? "bg-[var(--color-lime)]" : "bg-[var(--color-hairline-violet)] border-dashed"
                   }`}
                 />
               )}
@@ -120,10 +120,10 @@ export function OrderTimeline({ order }: { order: TimelineOrder }) {
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm border-2 flex-shrink-0 ${
                   isActive
-                    ? "bg-teal-500 border-teal-500 text-white"
+                    ? "bg-[var(--color-lime)] border-[var(--color-lime)] text-[var(--color-ink-deep)]"
                     : isCompleted
-                    ? "bg-gray-400 border-gray-400 text-white"
-                    : "bg-white border-gray-300 text-gray-400"
+                    ? "bg-[var(--color-lime)]/60 border-[var(--color-lime)]/60 text-white"
+                    : "bg-[var(--color-ink-deep)] border-[var(--color-hairline-violet)] text-[var(--color-on-dark-muted)]"
                 } ${isCancelled && !isCompleted ? "opacity-50" : ""}`}
               >
                 {isActive ? stage.icon : isCompleted ? "✓" : ""}
@@ -133,13 +133,13 @@ export function OrderTimeline({ order }: { order: TimelineOrder }) {
               <div className="flex flex-col">
                 <span
                   className={`text-sm font-medium ${
-                    isActive ? "text-teal-400" : isCompleted ? "text-foreground" : "text-muted-foreground"
+                    isActive ? "text-[var(--color-lime)]" : isCompleted ? "text-white" : "text-[var(--color-on-dark-muted)]"
                   }`}
                 >
                   {stage.label}
                 </span>
                 {isCompleted && index === 0 && (
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-[var(--color-on-dark-muted)]">
                     {formatTimestamp(order.created_at)}
                   </span>
                 )}

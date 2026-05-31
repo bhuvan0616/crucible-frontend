@@ -5,7 +5,6 @@ import Features from "@/components/landing/features";
 import HowItWorks from "@/components/landing/how-it-works";
 import Testimonials from "@/components/landing/testimonials";
 import Newsletter from "@/components/landing/newsletter";
-import Footer from "@/components/landing/footer";
 
 export const metadata: Metadata = {
   title: "Crucible Creations | Premium 3D Printed Products",
@@ -21,7 +20,6 @@ export default function HomePage() {
       <HowItWorks />
       <Testimonials />
       <Newsletter />
-      <Footer />
     </main>
   );
 }

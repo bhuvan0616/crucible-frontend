@@ -39,10 +39,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-[var(--color-on-dark-muted)] mb-1">
-          Email
+    <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="space-y-2">
+        <label htmlFor="email" className="block text-sm font-medium text-[var(--color-on-dark-muted)]">
+          Email address
         </label>
         <Input
           id="email"
@@ -56,10 +56,18 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         />
       </div>
 
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-[var(--color-on-dark-muted)] mb-1">
-          Password
-        </label>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label htmlFor="password" className="block text-sm font-medium text-[var(--color-on-dark-muted)]">
+            Password
+          </label>
+          <button
+            type="button"
+            className="text-xs text-[var(--color-lime)] hover:text-[var(--color-lime-dark)] transition-colors"
+          >
+            Forgot password?
+          </button>
+        </div>
         <Input
           id="password"
           type="password"
@@ -73,17 +81,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       </div>
 
       {error && (
-        <div className="text-sm text-red-500 bg-red-500/10 p-3 rounded-lg">
+        <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 p-3 rounded-xl">
           {error}
         </div>
       )}
 
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="w-full bg-[var(--color-lime)] text-[var(--color-ink-deep)] hover:bg-[var(--color-lime-dark)] disabled:opacity-50"
-      >
-        {isLoading ? "Signing in..." : "Sign In"}
+      <Button type="submit" disabled={isLoading} className="w-full">
+        {isLoading ? "Signing in..." : "Login"}
       </Button>
     </form>
   );

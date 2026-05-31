@@ -3,11 +3,26 @@
 import { create } from "zustand";
 import { sdk } from "@/lib/sdk";
 
+interface Address {
+  id: string;
+  first_name: string;
+  last_name: string;
+  address_1: string;
+  address_2?: string;
+  city: string;
+  province?: string;
+  postal_code: string;
+  country_code: string;
+  phone?: string;
+  address_name?: string;
+}
+
 interface AuthUser {
   id: string;
   email: string;
   first_name: string;
   last_name: string;
+  addresses?: Address[];
 }
 
 interface RegisterInput {
@@ -27,6 +42,8 @@ interface AuthStore {
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
   clearError: () => void;
+  addAddress: (address: Omit<Address, "id">) => Promise<Address>;
+  getAddresses: () => Promise<Address[]>;
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -47,6 +64,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
           email: customer.email || "",
           first_name: customer.first_name || "",
           last_name: customer.last_name || "",
+          addresses: (customer.addresses as Address[]) || [],
         },
         isLoading: false,
       });
@@ -76,6 +94,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
           email: customer.email || "",
           first_name: customer.first_name || "",
           last_name: customer.last_name || "",
+          addresses: (customer.addresses as Address[]) || [],
         },
         isLoading: false,
       });
@@ -104,6 +123,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
           email: customer.email || "",
           first_name: customer.first_name || "",
           last_name: customer.last_name || "",
+          addresses: (customer.addresses as Address[]) || [],
         },
         isLoading: false,
       });
@@ -113,6 +133,32 @@ export const useAuthStore = create<AuthStore>((set) => ({
       }
       set({ isAuthenticated: false, user: null, isLoading: false });
     }
+  },
+
+  addAddress: async (addressData) => {
+    const { customer } = await sdk.store.customer.createAddress({
+      first_name: addressData.first_name,
+      last_name: addressData.last_name,
+      address_1: addressData.address_1,
+      address_2: addressData.address_2,
+      city: addressData.city,
+      postal_code: addressData.postal_code,
+      country_code: addressData.country_code || "in",
+      phone: addressData.phone,
+      address_name: addressData.address_name,
+    });
+    set((state) => ({
+      user: state.user ? {
+        ...state.user,
+        addresses: (customer.addresses as Address[]) || [],
+      } : null,
+    }));
+    return (customer.addresses as Address[])[(customer.addresses as Address[]).length - 1];
+  },
+
+  getAddresses: async () => {
+    const { addresses } = await sdk.store.customer.listAddress();
+    return addresses as Address[];
   },
 
   clearError: () => set({ error: null }),
