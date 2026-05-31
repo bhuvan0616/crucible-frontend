@@ -6,6 +6,7 @@ import { sdk } from "@/lib/sdk";
 import { useAuthStore } from "@/store/authStore";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { formatOrderLabel } from "@/lib/utils/orderDisplayId";
+import { getOrderDisplayStatus } from "@/lib/utils/orderDisplayStatus";
 import { StatusBadge } from "./StatusBadge";
 import { OrderTimeline } from "./OrderTimeline";
 import { orderCardClassName, orderCardFooterClassName } from "./orderStyles";
@@ -48,7 +49,14 @@ interface OrderDetail {
   display_id?: number;
   custom_display_id?: string;
   status: string;
+  fulfillment_status?: string | null;
   created_at: string;
+  fulfillments?: Array<{
+    created_at?: string;
+    packed_at?: string | null;
+    shipped_at?: string | null;
+    delivered_at?: string | null;
+  }>;
   items: OrderLineItem[];
   shipping_address?: ShippingAddress | null;
   billing_address?: ShippingAddress | null;
@@ -72,7 +80,8 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
     setError(null);
     try {
       const response = await sdk.store.order.retrieve(orderId, {
-        fields: "+custom_display_id,*shipping_address,*items",
+        fields:
+          "+custom_display_id,+fulfillment_status,*shipping_address,*items,*fulfillments",
       });
       setOrder(response.order as unknown as OrderDetail);
     } catch (err: any) {
@@ -275,7 +284,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
                 {formatDate(order.created_at)}
               </CardDescription>
             </div>
-            <StatusBadge status={order.status} />
+            <StatusBadge status={getOrderDisplayStatus(order)} />
           </div>
         </CardHeader>
         <CardFooter className={orderCardFooterClassName}>

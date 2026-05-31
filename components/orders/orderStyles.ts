@@ -1,5 +1,6 @@
-export const orderPageClassName =
-  "min-h-screen bg-[var(--color-primary)] pt-24 pb-16";
+import { pageMainClassName } from "@/components/layout/pageShell";
+
+export const orderPageClassName = pageMainClassName;
 
 export const orderCardClassName =
   "bg-[var(--color-ink-deep)] border border-[var(--color-hairline-violet)] rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)] ring-1 ring-white/[0.06] transition-colors hover:border-[var(--color-hairline-violet)]";

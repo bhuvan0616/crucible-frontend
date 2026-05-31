@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { Button } from "@/components/ui/button";
+import { pageMainClassName } from "@/components/layout/pageShell";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function AccountPage() {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+      <main className={pageMainClassName}>
         <div className="container mx-auto px-4 flex items-center justify-center min-h-[50vh]">
           <div className="animate-pulse text-[var(--color-lime)]">Loading account...</div>
         </div>
@@ -47,7 +48,7 @@ export default function AccountPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+    <main className={pageMainClassName}>
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

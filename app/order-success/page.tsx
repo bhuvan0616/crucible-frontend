@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useCartStore } from "@/store/cartStore";
 import { trackPurchase } from "@/lib/analytics/ga4";
 import { Button } from "@/components/ui/button";
+import { pageMainClassName } from "@/components/layout/pageShell";
 
 interface OrderData {
   items: { productId: string; variant: string; quantity: number; price: number }[];
@@ -56,7 +57,7 @@ export default function OrderSuccessPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+    <main className={pageMainClassName}>
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}

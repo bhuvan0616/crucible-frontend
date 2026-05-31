@@ -6,38 +6,71 @@ interface TimelineStage {
   icon: string;
 }
 
+interface TimelineFulfillment {
+  created_at?: string;
+  packed_at?: string | null;
+  shipped_at?: string | null;
+  delivered_at?: string | null;
+  tracking_numbers?: string[];
+}
+
 interface TimelineOrder {
   status: string;
+  fulfillment_status?: string | null;
   created_at: string;
-  fulfillments?: Array<{
-    created_at: string;
-    tracking_numbers?: string[];
-  }>;
+  fulfillments?: TimelineFulfillment[];
 }
 
 const TIMELINE_STAGES: TimelineStage[] = [
   { key: "placed", label: "Order Placed", icon: "📋" },
-  { key: "confirmed", label: "Payment Confirmed", icon: "💳" },
   { key: "prepared", label: "Items Prepared", icon: "📦" },
   { key: "shipped", label: "Shipped", icon: "🚚" },
   { key: "delivered", label: "Delivered", icon: "🏠" },
 ];
 
-function getActiveStageIndex(status: string): number {
-  switch (status) {
-    case "pending":
-      return 0;
-    case "processing":
-      return 2;
-    case "shipped":
-      return 3;
+export function getActiveStageIndex(
+  fulfillmentStatus?: string | null,
+  orderStatus?: string
+): number {
+  if (orderStatus === "cancelled" || fulfillmentStatus === "canceled") {
+    return -1;
+  }
+
+  switch (fulfillmentStatus) {
     case "delivered":
-      return 4;
-    case "cancelled":
-      return -1;
+    case "partially_delivered":
+      return 3;
+    case "shipped":
+    case "partially_shipped":
+      return 2;
+    case "fulfilled":
+    case "partially_fulfilled":
+      return 1;
+    case "not_fulfilled":
+      return 0;
     default:
       return 0;
   }
+}
+
+function pickEarliest(dates: (string | null | undefined)[]): string | null {
+  const valid = dates.filter((date): date is string => Boolean(date));
+  if (!valid.length) return null;
+
+  return valid.reduce((earliest, date) =>
+    new Date(date) <= new Date(earliest) ? date : earliest
+  );
+}
+
+export function getStageTimestamps(order: TimelineOrder): (string | null)[] {
+  const fulfillments = order.fulfillments ?? [];
+
+  return [
+    order.created_at ?? null,
+    pickEarliest(fulfillments.flatMap((f) => [f.packed_at, f.created_at])),
+    pickEarliest(fulfillments.map((f) => f.shipped_at)),
+    pickEarliest(fulfillments.map((f) => f.delivered_at)),
+  ];
 }
 
 function formatTimestamp(dateStr: string): string {
@@ -49,8 +82,37 @@ function formatTimestamp(dateStr: string): string {
 }
 
 export function OrderTimeline({ order }: { order: TimelineOrder }) {
-  const activeStageIndex = getActiveStageIndex(order.status);
-  const isCancelled = order.status === "cancelled";
+  const activeStageIndex = getActiveStageIndex(order.fulfillment_status, order.status);
+  const stageTimestamps = getStageTimestamps(order);
+  const isCancelled =
+    order.status === "cancelled" || order.fulfillment_status === "canceled";
+
+  const renderStageTimestamp = (
+    index: number,
+    isCompleted: boolean,
+    isActive: boolean,
+    isPending: boolean
+  ) => {
+    const timestamp = stageTimestamps[index];
+
+    if ((isCompleted || isActive) && timestamp) {
+      return (
+        <span className="text-xs text-[var(--color-on-dark-muted)]">
+          {formatTimestamp(timestamp)}
+        </span>
+      );
+    }
+
+    if (isPending) {
+      return (
+        <span className="text-xs text-[var(--color-on-dark-muted)] md:hidden">
+          Pending
+        </span>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className="w-full">
@@ -84,12 +146,7 @@ export function OrderTimeline({ order }: { order: TimelineOrder }) {
                 >
                   {stage.label}
                 </span>
-                {isCompleted && index === 0 && (
-                  <span className="text-xs text-[var(--color-on-dark-muted)]">
-                    {formatTimestamp(order.created_at)}
-                  </span>
-                )}
-                {isPending && <span className="text-xs text-[var(--color-on-dark-muted)]">Pending</span>}
+                {renderStageTimestamp(index, isCompleted, isActive, isPending)}
               </div>
             </div>
           );
@@ -138,11 +195,7 @@ export function OrderTimeline({ order }: { order: TimelineOrder }) {
                 >
                   {stage.label}
                 </span>
-                {isCompleted && index === 0 && (
-                  <span className="text-xs text-[var(--color-on-dark-muted)]">
-                    {formatTimestamp(order.created_at)}
-                  </span>
-                )}
+                {renderStageTimestamp(index, isCompleted, isActive, index > activeStageIndex)}
               </div>
             </div>
           );

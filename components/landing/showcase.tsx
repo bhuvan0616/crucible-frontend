@@ -48,7 +48,7 @@ export default function V4Showcase() {
     <section
       id="showcase"
       ref={containerRef}
-      className="relative py-32 bg-[var(--color-surface-dark)] min-h-screen z-[1000]"
+      className="relative py-32 bg-[var(--color-surface-dark)] min-h-screen z-[20]"
     >
       {/* Starfield */}
       <div className="absolute inset-0 starfield opacity-50" />

@@ -11,6 +11,7 @@ import { PaymentForm } from "@/components/checkout/PaymentForm";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { Button } from "@/components/ui/button";
 import { sdk } from "@/lib/sdk";
+import { pageMainClassName } from "@/components/layout/pageShell";
 
 interface ShippingAddress {
   first_name: string;
@@ -147,7 +148,7 @@ export default function CheckoutPage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+      <main className={pageMainClassName}>
         <div className="container mx-auto px-4 flex items-center justify-center min-h-[50vh]">
           <div className="animate-pulse text-[var(--color-lime)]">Loading checkout...</div>
         </div>
@@ -160,7 +161,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+    <main className={pageMainClassName}>
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

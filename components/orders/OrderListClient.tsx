@@ -6,6 +6,10 @@ import { sdk } from "@/lib/sdk";
 import { useAuthStore } from "@/store/authStore";
 import { formatPrice } from "@/lib/utils/formatPrice";
 import { formatOrderLabel, orderMatchesSearchQuery } from "@/lib/utils/orderDisplayId";
+import {
+  getOrderDisplayStatus,
+  ORDER_DISPLAY_STATUS_TABS,
+} from "@/lib/utils/orderDisplayStatus";
 import { StatusBadge } from "./StatusBadge";
 import {
   orderCardClassName,
@@ -21,10 +25,9 @@ interface Order {
   custom_display_id?: string;
   created_at: string;
   status: string;
+  fulfillment_status?: string | null;
   total?: number;
 }
-
-const STATUS_TABS = ["all", "pending", "processing", "shipped", "delivered", "cancelled"] as const;
 
 const PAGE_SIZE = 10;
 
@@ -53,7 +56,7 @@ export function OrderListClient() {
         limit: PAGE_SIZE,
         offset,
         order: "-created_at",
-        fields: "+custom_display_id",
+        fields: "+custom_display_id,+fulfillment_status",
       });
 
       const orderList = (response.orders || []) as unknown as Order[];
@@ -85,7 +88,8 @@ export function OrderListClient() {
 
   const filteredOrders = orders
     .filter((order) => {
-      const matchesStatus = activeStatus === "all" || order.status === activeStatus;
+      const displayStatus = getOrderDisplayStatus(order);
+      const matchesStatus = activeStatus === "all" || displayStatus === activeStatus;
       const matchesSearch = orderMatchesSearchQuery(order, searchQuery);
       return matchesStatus && matchesSearch;
     })
@@ -154,7 +158,7 @@ export function OrderListClient() {
       <div className="flex items-center gap-3 flex-wrap">
         <span className="text-[var(--color-on-dark-muted)] text-sm">Status:</span>
         <div className="flex gap-2">
-          {STATUS_TABS.map((status) => (
+          {ORDER_DISPLAY_STATUS_TABS.map((status) => (
             <button
               key={status}
               onClick={() => handleStatusChange(status)}
@@ -232,7 +236,7 @@ export function OrderListClient() {
                         {formatDate(order.created_at)}
                       </CardDescription>
                     </div>
-                    <StatusBadge status={order.status} />
+                    <StatusBadge status={getOrderDisplayStatus(order)} />
                   </div>
                 </CardHeader>
                 <CardContent>

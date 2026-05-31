@@ -11,6 +11,7 @@ import { VariantSelector } from "@/components/product/VariantSelector";
 import { AddToCartSection } from "@/components/product/AddToCartSection";
 import { useCartStore } from "@/store/cartStore";
 import { trackAddToCart } from "@/lib/analytics/ga4";
+import { pageMainClassName } from "@/components/layout/pageShell";
 
 interface ProductPageClientProps {
   product: HttpTypes.StoreProduct;
@@ -166,7 +167,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+    <main className={pageMainClassName}>
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

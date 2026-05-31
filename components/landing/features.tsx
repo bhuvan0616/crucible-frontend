@@ -63,7 +63,7 @@ const features = [
 
 export default function V4Features() {
   return (
-    <section className="relative py-32 bg-[var(--color-cream)] z-[900]">
+    <section className="relative py-32 bg-[var(--color-cream)] z-[10]">
       <motion.div
         animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 8, repeat: Infinity }}

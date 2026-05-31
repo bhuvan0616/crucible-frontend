@@ -8,6 +8,7 @@ import { CartItemCard } from "@/components/cart/CartItemCard";
 import { CartSummary } from "@/components/cart/CartSummary";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { pageMainClassName } from "@/components/layout/pageShell";
 
 export default function CartPage() {
   const items = useCartStore((state) => state.items);
@@ -26,7 +27,7 @@ export default function CartPage() {
 
   if (!isInitialized) {
     return (
-      <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+      <main className={pageMainClassName}>
         <div className="container mx-auto px-4">
           <div className="animate-pulse">
             <div className="h-10 w-48 bg-[var(--color-ink-deep)] rounded mb-4" />
@@ -43,7 +44,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+      <main className={pageMainClassName}>
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -70,7 +71,7 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+    <main className={pageMainClassName}>
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

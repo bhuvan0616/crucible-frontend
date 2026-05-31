@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getProducts } from "@/lib/data/products"
 import { ShopClient } from "./ShopClient"
+import { pageMainClassName } from "@/components/layout/pageShell"
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -17,7 +18,7 @@ export default async function ShopPage() {
   const products = await getProducts()
 
   return (
-    <main className="min-h-screen bg-[var(--color-primary)] pt-24 pb-16">
+    <main className={pageMainClassName}>
       <div className="container mx-auto px-4">
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
