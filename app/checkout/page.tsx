@@ -118,9 +118,14 @@ export default function CheckoutPage() {
       const cartData = cartResponse.cart;
       
       if (!cartData.payment_collection) {
-        await sdk.store.payment.initiatePaymentSession(cartData, {
+        const pcResponse = await sdk.store.payment.initiatePaymentSession(cartData, {
           provider_id: "pp_system_default",
         });
+
+        if ("error" in pcResponse && pcResponse.error) {
+          const paymentError = pcResponse.error as { message?: string };
+          throw new Error(paymentError.message || "Failed to create payment collection");
+        }
       }
       
       const completeResponse = await sdk.store.cart.complete(cartId);

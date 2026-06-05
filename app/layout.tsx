@@ -14,6 +14,8 @@ const rubik = Rubik({
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
