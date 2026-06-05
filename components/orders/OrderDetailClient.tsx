@@ -11,6 +11,10 @@ import { StatusBadge } from "./StatusBadge";
 import { OrderTimeline } from "./OrderTimeline";
 import { orderCardClassName, orderCardFooterClassName } from "./orderStyles";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  parseLineItemCustomizations,
+  formatCustomizationDisplay,
+} from "@/lib/customization";
 
 interface OrderLineItem {
   id: string;
@@ -326,11 +330,24 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
               </thead>
               <tbody>
                 {order.items.map((item) => {
+                  const customizations = parseLineItemCustomizations(item.metadata);
                   return (
                     <tr key={item.id} className="border-b border-[var(--color-hairline-violet)] last:border-0">
                       <td className="px-4 py-3 text-white line-clamp-2">{item.title}</td>
                       <td className="px-4 py-3 text-[var(--color-on-dark-muted)]">{item.variant_title || "Standard"}</td>
-                      <td className="px-4 py-3 text-[var(--color-on-dark-muted)]">—</td>
+                      <td className="px-4 py-3 text-[var(--color-on-dark-muted)]">
+                        {customizations.length > 0 ? (
+                          <div className="space-y-1">
+                            {customizations.map((entry) => (
+                              <div key={entry.field_id}>
+                                {entry.label}: {formatCustomizationDisplay(entry)}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
                       <td className="px-4 py-3 text-right text-white">{item.quantity}</td>
                       <td className="px-4 py-3 text-right text-white">
                         {formatPrice(item.unit_price * item.quantity)}

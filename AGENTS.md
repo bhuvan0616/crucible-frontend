@@ -24,7 +24,7 @@
 
 ### Phase 2: Product Gallery & PDP
 - Product gallery with filtering and search
-- Product detail page with customization input (12-char max)
+- Product detail page with metadata-driven customization (text / select / logo); optional `when` gate for variant-priced Custom editions
 - Zustand cart store setup
 
 ### Phase 3: Cart, Checkout & Analytics
@@ -47,6 +47,17 @@
 - **Prices in paise** — 44900 = ₹449.00
 - **Customization on PDP only** — Cart shows read-only
 - **Node.js ≥ 20.9.0** — Required by Next.js 16
+
+## Product customization
+
+Per-product fields (text / select / logo) come from `metadata.customization_fields`:
+
+- **Array** — fields always shown (single price tier).
+- **Object** `{ when?, fields }` — **pricing via Custom variant**; UI gated with `when: { option, value }` or `"Edition:Custom"`.
+
+PDP must retrieve `+metadata`. Use `parseProductCustomizationConfig`, `isCustomizationEnabled`, `buildLineItemMetadata`.
+
+**Full guide:** [docs/product-customization.md](./docs/product-customization.md) — Path A/B Admin setup, troubleshooting, API reference.
 
 ## MedusaJS-Ready
 
@@ -102,6 +113,8 @@ playwright_browser_snapshot → Verify UI shows correct values
 | Variant price | `variant.calculated_price.calculated_amount` | Already in rupees |
 | Cart item price | `item.unit_price` or `variant.calculated_price.calculated_amount` | Verify units |
 | Cart totals | `cart.subtotal/total/shipping_total/tax_total` | May have `.numeric` subfield |
+| Customization schema | `product.metadata.customization_fields` | Request `+metadata` on product retrieve |
+| Line item customizations | `item.metadata.customizations` | Legacy: `item.metadata.customization` (single text) |
 
 ## MedusaJS API Call Guidelines
 

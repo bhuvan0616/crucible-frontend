@@ -5,19 +5,13 @@ import { motion } from "framer-motion";
 
 const footerLinks = {
   navigate: [
-    { href: "/v4", label: "Home" },
-    { href: "/v4#showcase", label: "Shop" },
-    { href: "/v4#features", label: "Features" },
-    { href: "/v4#reviews", label: "Reviews" },
-  ],
-  connect: [
-    { href: "#", label: "Instagram" },
-    { href: "#", label: "Twitter" },
-    { href: "#", label: "LinkedIn" },
+    { href: "/", label: "Home" },
+    { href: "/shop", label: "Shop" },
+    { href: "/contact", label: "Contact" },
   ],
   legal: [
-    { href: "#", label: "Privacy" },
-    { href: "#", label: "Terms" },
+    { href: "/privacy", label: "Privacy Policy" },
+    { href: "/terms", label: "Terms & Conditions" },
   ],
 };
 
@@ -39,9 +33,9 @@ export default function V4Footer() {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          <div className="lg:col-span-1">
-            <Link href="/v4" className="flex items-center gap-3 group">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16 mb-16">
+          <div className="md:col-span-2 lg:col-span-6">
+            <Link href="/" className="flex items-center gap-3 group">
               <motion.div
                 whileHover={{ rotate: 180, scale: 1.1 }}
                 transition={{ duration: 0.5, type: "spring", stiffness: 300 }}
@@ -56,32 +50,13 @@ export default function V4Footer() {
                 Crucible Creations
               </motion.span>
             </Link>
-            <p className="text-white/50 mt-6 leading-relaxed max-w-sm">
-              Premium 3D printed products crafted with precision. We believe in
-              quality over quantity, and every product tells a story.
+            <p className="text-white/50 mt-6 leading-relaxed max-w-md">
+              Carefully crafted 3D prints with premium materials — made to match
+              what you expect, for you or someone you love.
             </p>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="flex gap-4 mt-8"
-            >
-              {["IG", "TW", "LI"].map((social, i) => (
-                <motion.a
-                  key={social}
-                  href="#"
-                  whileHover={{ scale: 1.15, y: -3 }}
-                  className="w-10 h-10 rounded-full bg-white/5 border border-[var(--color-hairline-violet)] flex items-center justify-center text-sm font-bold text-white/70 hover:text-white hover:bg-white/10 transition-all"
-                >
-                  {social}
-                </motion.a>
-              ))}
-            </motion.div>
           </div>
 
-          <div>
+          <div className="lg:col-span-3">
             <h4 className="font-bold mb-6 text-sm uppercase tracking-wider text-white/80">
               Navigate
             </h4>
@@ -105,31 +80,7 @@ export default function V4Footer() {
             </div>
           </div>
 
-          <div>
-            <h4 className="font-bold mb-6 text-sm uppercase tracking-wider text-white/80">
-              Connect
-            </h4>
-            <div className="space-y-3">
-              {footerLinks.connect.map((link, i) => (
-                <motion.div
-                  key={link.label}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 + 0.1 }}
-                >
-                  <a
-                    href={link.href}
-                    className="block text-white/50 hover:text-[var(--color-lime)] transition-colors py-1"
-                  >
-                    {link.label}
-                  </a>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          <div>
+          <div className="lg:col-span-3">
             <h4 className="font-bold mb-6 text-sm uppercase tracking-wider text-white/80">
               Legal
             </h4>
@@ -140,7 +91,7 @@ export default function V4Footer() {
                   initial={{ opacity: 0, x: -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 + 0.2 }}
+                  transition={{ delay: i * 0.05 + 0.1 }}
                 >
                   <Link
                     href={link.href}
@@ -167,11 +118,11 @@ export default function V4Footer() {
               transition={{ duration: 3, repeat: Infinity }}
               className="w-2 h-2 rounded-full bg-[var(--color-lime)]"
             />
-            <p className="text-white/50 text-sm">
-              © 2026 Crucible Creations. All rights reserved.
+            <p className="text-white/50 text-sm text-center md:text-left">
+              © 2026 Crucible Creations · Part of COKUPA FOODS (OPC) PRIVATE LIMITED. All rights reserved.
             </p>
           </div>
-          <p className="text-white/30 text-xs">
+          <p className="text-white/30 text-xs shrink-0">
             Crafted with precision in India
           </p>
         </motion.div>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCartStore, selectCartTotal, selectCartItemCount } from "@/store/cartStore";
 import { Button } from "@/components/ui/button";
+import { CustomizationDisplay } from "@/components/product/CustomizationDisplay";
 
 interface CartSlideOverProps {
   isOpen: boolean;
@@ -83,9 +84,14 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
                       <div className="flex-grow min-w-0">
                         <h4 className="text-sm font-semibold text-white truncate">{item.product}</h4>
                         <p className="text-xs text-[var(--color-on-dark-muted)]">{item.variantTitle}</p>
-                        {item.customization && (
+                        {item.customizations.length > 0 ? (
+                          <CustomizationDisplay
+                            customizations={item.customizations}
+                            className="text-xs text-[var(--color-lime)] space-y-0.5"
+                          />
+                        ) : item.customization ? (
                           <p className="text-xs text-[var(--color-lime)]">Custom: {item.customization}</p>
-                        )}
+                        ) : null}
                         <div className="flex items-center justify-between mt-2">
                           <div className="flex items-center border border-[var(--color-hairline-violet)] rounded">
                             <button

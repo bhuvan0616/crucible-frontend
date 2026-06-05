@@ -10,6 +10,7 @@ import { useCartStore, selectCartItemCount } from "@/store/cartStore";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/shop", label: "Shop" },
+  { href: "/contact", label: "Contact" },
 ];
 
 const accountHref = "/account";

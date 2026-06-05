@@ -1,17 +1,24 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import type { HttpTypes } from "@medusajs/types";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductInfo } from "@/components/product/ProductInfo";
-import { CustomizationInput } from "@/components/product/CustomizationInput";
+import { CustomizationFields } from "@/components/product/CustomizationFields";
 import { VariantSelector } from "@/components/product/VariantSelector";
 import { AddToCartSection } from "@/components/product/AddToCartSection";
 import { useCartStore } from "@/store/cartStore";
 import { trackAddToCart } from "@/lib/analytics/ga4";
 import { pageMainClassName } from "@/components/layout/pageShell";
+import {
+  parseProductCustomizationConfig,
+  isCustomizationEnabled,
+  buildLineItemMetadata,
+  validateCustomizationValues,
+  type CustomizationFormValues,
+} from "@/lib/customization";
 
 interface ProductPageClientProps {
   product: HttpTypes.StoreProduct;
@@ -130,6 +137,13 @@ function getVariantPrice(product: HttpTypes.StoreProduct, variantId: string): nu
 export function ProductPageClient({ product }: ProductPageClientProps) {
   const options = extractOptions(product);
   const images = product.images?.map(img => img.url) || [];
+  const customizationConfig = useMemo(
+    () =>
+      parseProductCustomizationConfig(
+        product.metadata as Record<string, unknown> | undefined
+      ),
+    [product.metadata]
+  );
 
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
@@ -140,7 +154,8 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
     });
     return initial;
   });
-  const [customization, setCustomization] = useState("");
+  const [customizationValues, setCustomizationValues] = useState<CustomizationFormValues>({});
+  const [customizationErrors, setCustomizationErrors] = useState<Record<string, string>>({});
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -153,16 +168,66 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
   const selectedVariantId = findMatchingVariant(product, selectedOptions) || "";
   const price = getVariantPrice(product, selectedVariantId);
 
+  const customizationEnabled = useMemo(
+    () =>
+      isCustomizationEnabled(customizationConfig.when, selectedOptions),
+    [customizationConfig.when, selectedOptions]
+  );
+
+  const visibleCustomizationFields = customizationEnabled
+    ? customizationConfig.fields
+    : [];
+
   const handleSelectOption = (optionTitle: string, value: string) => {
-    setSelectedOptions(prev => ({ ...prev, [optionTitle]: value }));
+    const nextOptions = { ...selectedOptions, [optionTitle]: value };
+    setSelectedOptions(nextOptions);
+    if (
+      customizationConfig.when &&
+      !isCustomizationEnabled(customizationConfig.when, nextOptions)
+    ) {
+      setCustomizationValues({});
+      setCustomizationErrors({});
+    }
     setQuantity(1);
+  };
+
+  const handleCustomizationChange = (
+    fieldId: string,
+    value: CustomizationFormValues[string]
+  ) => {
+    setCustomizationValues((prev) => ({ ...prev, [fieldId]: value }));
+    setCustomizationErrors((prev) => {
+      if (!prev[fieldId]) return prev;
+      const next = { ...prev };
+      delete next[fieldId];
+      return next;
+    });
   };
 
   const handleAddToCart = () => {
     if (!selectedVariantId) return;
-    addItem(selectedVariantId, quantity, customization.slice(0, 12));
+
+    const validationErrors = validateCustomizationValues(
+      visibleCustomizationFields,
+      customizationValues
+    );
+    if (validationErrors.length > 0) {
+      setCustomizationErrors(
+        Object.fromEntries(
+          validationErrors.map((error) => [error.fieldId, error.message])
+        )
+      );
+      return;
+    }
+
+    const metadata = buildLineItemMetadata(
+      visibleCustomizationFields,
+      customizationValues
+    );
+    addItem(selectedVariantId, quantity, metadata);
     trackAddToCart(product.id, product.title, price, quantity);
-    setCustomization("");
+    setCustomizationValues({});
+    setCustomizationErrors({});
     setQuantity(1);
   };
 
@@ -198,11 +263,22 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
               />
             ))}
 
-            <CustomizationInput
-              value={customization}
-              onChange={setCustomization}
-              maxChars={12}
-            />
+            {customizationConfig.when &&
+              !customizationEnabled &&
+              customizationConfig.fields.length > 0 && (
+                <p className="text-sm text-[var(--color-on-dark-muted)]">
+                  Select {customizationConfig.when.value} to add personalization.
+                </p>
+              )}
+
+            {visibleCustomizationFields.length > 0 && (
+              <CustomizationFields
+                fields={visibleCustomizationFields}
+                values={customizationValues}
+                onChange={handleCustomizationChange}
+                errors={customizationErrors}
+              />
+            )}
 
             <AddToCartSection
               quantity={quantity}

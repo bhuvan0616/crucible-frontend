@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sdk } from "@/lib/sdk";
 
-export default function GoogleCallback() {
+function GoogleCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "creating" | "success" | "error">("loading");
@@ -77,5 +77,28 @@ export default function GoogleCallback() {
         </p>
       </div>
     </main>
+  );
+}
+
+function CallbackFallback() {
+  return (
+    <main className="min-h-screen bg-[var(--color-primary)] flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-[var(--color-lime)] text-sm tracking-[0.3em] uppercase animate-pulse mb-4">
+          Verifying...
+        </div>
+        <p className="text-[var(--color-on-dark-muted)] text-sm">
+          Please wait while we verify your account
+        </p>
+      </div>
+    </main>
+  );
+}
+
+export default function GoogleCallback() {
+  return (
+    <Suspense fallback={<CallbackFallback />}>
+      <GoogleCallbackContent />
+    </Suspense>
   );
 }

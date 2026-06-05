@@ -4,7 +4,9 @@ export interface CartItem {
   product: string;
   variantTitle: string;
   medusaVariantId: string;
+  /** @deprecated Use customizations instead */
   customization: string;
+  customizations: import("@/lib/customization").LineItemCustomization[];
   quantity: number;
   price: number;
   imageUrl: string;

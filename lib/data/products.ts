@@ -151,7 +151,8 @@ export async function getProductById(id: string): Promise<HttpTypes.StoreProduct
   } catch {}
 
   const params: Record<string, any> = {
-    fields: "id,title,description,handle,*images,*variants,*variants.options,*options,*collection,*tags",
+    fields:
+      "id,title,description,handle,*images,*variants,*variants.options,*options,*collection,*tags,+metadata",
   }
   if (regionId) {
     params.region_id = regionId
@@ -166,5 +167,5 @@ export async function getProductById(id: string): Promise<HttpTypes.StoreProduct
 
 export async function getFeaturedProducts(): Promise<Product[]> {
   const allProducts = await getProducts()
-  return allProducts.filter((p) => p.featured)
+  return allProducts.map(transformProduct).filter((p) => p.featured)
 }

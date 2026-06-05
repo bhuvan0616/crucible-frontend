@@ -72,10 +72,42 @@
       "metadata": {
         "dimensions": "73mm x 35mm x 12mm",
         "material": "Premium PLA / PETG",
-        "customization": true,
-        "max_chars": 12,
-        "customization_label": "Name / Text to Engrave",
-        "customization_helper": "This text will be 3D printed on your stand"
+        "customization_fields": [
+          {
+            "id": "engraving_text",
+            "type": "text",
+            "label": "Name / Text to Engrave",
+            "helper": "This text will be 3D printed on your stand",
+            "max_length": 12,
+            "required": false
+          },
+          {
+            "id": "logo",
+            "type": "logo",
+            "label": "Logo",
+            "helper": "Choose a preset logo or upload your own PNG/SVG (max 2 MB)",
+            "required": false,
+            "allow_upload": true,
+            "accept": ["image/png", "image/svg+xml", "image/jpeg"],
+            "max_size_mb": 2,
+            "options": [
+              {
+                "value": "none",
+                "label": "No Logo"
+              },
+              {
+                "value": "batman",
+                "label": "Batman",
+                "image_url": "https://medusa-public-images.s3.eu-west-1.amazonaws.com/batman-logo.png"
+              },
+              {
+                "value": "shield",
+                "label": "Shield",
+                "image_url": "https://medusa-public-images.s3.eu-west-1.amazonaws.com/shield-logo.png"
+              }
+            ]
+          }
+        ]
       }
     }
   ]

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import type { CartItem } from "@/types";
+import { CustomizationDisplay } from "@/components/product/CustomizationDisplay";
 
 interface CartItemCardProps {
   item: CartItem;
@@ -30,9 +31,11 @@ export function CartItemCard({ item, onUpdateQuantity, onRemove }: CartItemCardP
       <div className="flex-grow min-w-0">
         <h4 className="text-sm font-semibold text-white truncate">{item.product}</h4>
         <p className="text-xs text-[var(--color-on-dark-muted)]">{item.variantTitle}</p>
-        {item.customization && (
+        {item.customizations.length > 0 ? (
+          <CustomizationDisplay customizations={item.customizations} />
+        ) : item.customization ? (
           <p className="text-xs text-[var(--color-lime)] mt-1">Custom: {item.customization}</p>
-        )}
+        ) : null}
         <div className="flex items-center justify-between mt-3">
           <div className="flex items-center border border-[var(--color-hairline-violet)] rounded-lg">
             <button

@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Crucible Creations Storefront
 
-## Getting Started
+Next.js storefront for Crucible Creations (Medusa backend, dark-mode commerce UI).
 
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Configure Medusa in `.env.local` (`NEXT_PUBLIC_MEDUSA_BACKEND_URL`, `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Contact form (Resend)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The `/contact` page sends messages via [Resend](https://resend.com). Add to `.env.local`:
 
-## Learn More
+```bash
+RESEND_API_KEY=re_...
+CONTACT_FROM_EMAIL=onboarding@resend.dev   # or your verified domain sender
+CONTACT_TO_EMAIL=contact@cruciblecreations.studio
+```
 
-To learn more about Next.js, take a look at the following resources:
+Without `RESEND_API_KEY`, the form validates but returns a friendly error when submitting.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+See [AGENTS.md](./AGENTS.md) for project conventions, Medusa API notes, and phase workflow.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Product customization
 
-## Deploy on Vercel
+Per-product engraving, selects, and logos are configured in Medusa product metadata (`customization_fields`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Setup | Metadata shape | Pricing |
+|-------|----------------|---------|
+| Always-on fields | JSON **array** of fields | Variant price as usual |
+| Standard vs Custom | JSON **object** with `when` + `fields` | Price **Custom** variants higher in Admin |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Docs:** [docs/product-customization.md](./docs/product-customization.md) — Admin steps (Path A & B), `when` gate, field schema, line item metadata, API `+metadata`, troubleshooting.
+
+## Learn more
+
+- [Next.js documentation](https://nextjs.org/docs)
+- [Medusa storefront docs](https://docs.medusajs.com/resources/storefront-development)

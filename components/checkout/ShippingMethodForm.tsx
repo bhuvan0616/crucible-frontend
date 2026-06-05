@@ -58,10 +58,6 @@ export function ShippingMethodForm({
         
         if (cancelled) return;
         
-        if (response.error) {
-          throw new Error(response.error.message || "Failed to load shipping options");
-        }
-        
         const shippingOptions = response.shipping_options || [];
         const options: ShippingOption[] = shippingOptions.map((opt: any) => ({
           id: opt.id,

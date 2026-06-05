@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { Select } from "@/components/ui/select";
 
 interface ProductOption {
   title: string;
@@ -27,9 +28,6 @@ export function VariantSelector({
         <label className="text-sm font-semibold text-white uppercase tracking-wider">
           {option.title}
         </label>
-        <span className="text-sm text-[var(--color-on-dark-muted)]">
-          {selectedValue}
-        </span>
       </div>
 
       {isColor ? (
@@ -73,17 +71,14 @@ export function VariantSelector({
           ))}
         </div>
       ) : (
-        <select
+        <Select
           value={selectedValue}
-          onChange={(e) => onSelect(e.target.value)}
-          className="w-full bg-[var(--color-ink-deep)] border border-[var(--color-hairline-violet)] rounded-lg px-4 py-3 text-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--color-lime)]"
-        >
-          {option.values.map((val) => (
-            <option key={val.value} value={val.value}>
-              {val.value} {val.price > 0 ? `- ${formatPrice(val.price)}` : ""}
-            </option>
-          ))}
-        </select>
+          onValueChange={onSelect}
+          options={option.values.map((val) => ({
+            value: val.value,
+            label: val.value,
+          }))}
+        />
       )}
     </div>
   );

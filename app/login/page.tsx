@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -8,7 +8,7 @@ import { useAuthStore } from "@/store/authStore";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { sdk } from "@/lib/sdk";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get("returnUrl") || "/shop";
@@ -128,11 +128,11 @@ export default function LoginPage() {
           <div className="mt-8 pt-6 border-t border-[var(--color-hairline-violet)]/30 text-center">
             <p className="text-xs text-[var(--color-on-dark-faint)]">
               By logging in, you agree to our{" "}
-              <Link href="#" className="text-[var(--color-lime)]/70 hover:text-[var(--color-lime)] transition-colors">
+              <Link href="/terms" className="text-[var(--color-lime)]/70 hover:text-[var(--color-lime)] transition-colors">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="#" className="text-[var(--color-lime)]/70 hover:text-[var(--color-lime)] transition-colors">
+              <Link href="/privacy" className="text-[var(--color-lime)]/70 hover:text-[var(--color-lime)] transition-colors">
                 Privacy Policy
               </Link>
               .
@@ -141,5 +141,21 @@ export default function LoginPage() {
         </div>
       </motion.div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[var(--color-primary)] flex items-center justify-center">
+          <div className="animate-pulse text-[var(--color-lime)] text-sm tracking-[0.3em] uppercase">
+            Loading
+          </div>
+        </main>
+      }
+    >
+      <LoginPageContent />
+    </Suspense>
   );
 }

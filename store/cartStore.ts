@@ -5,6 +5,10 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { sdk, initRegion } from "@/lib/sdk";
 import type { CartItem } from "@/types";
 import type { HttpTypes } from "@medusajs/types";
+import {
+  parseLineItemCustomizations,
+  formatCustomizationDisplay,
+} from "@/lib/customization";
 
 interface CartTotals {
   subtotal: number;
@@ -20,7 +24,11 @@ interface CartStore {
   isLoading: boolean;
   isInitialized: boolean;
   initCart: () => Promise<void>;
-  addItem: (variantId: string, quantity: number, customization: string) => Promise<void>;
+  addItem: (
+    variantId: string,
+    quantity: number,
+    lineItemMetadata?: Record<string, unknown>
+  ) => Promise<void>;
   updateQuantity: (lineItemId: string, quantity: number) => Promise<void>;
   removeItem: (lineItemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -37,13 +45,22 @@ function extractTotals(cart: HttpTypes.StoreCart): CartTotals {
 
 function transformLineItem(item: HttpTypes.StoreCartLineItem): CartItem {
   const raw = item as any;
+  const customizations = parseLineItemCustomizations(
+    item.metadata as Record<string, unknown> | undefined
+  );
+  const legacyCustomization =
+    customizations.length > 0
+      ? customizations.map(formatCustomizationDisplay).join(", ")
+      : (item.metadata as Record<string, string>)?.customization || "";
+
   return {
     id: item.id,
     productId: item.product_id || "",
     product: raw.variant?.product?.title || "",
     variantTitle: raw.variant?.title || "Default",
     medusaVariantId: item.variant_id || "",
-    customization: (item.metadata as Record<string, string>)?.customization || "",
+    customization: legacyCustomization,
+    customizations,
     quantity: item.quantity,
     price: raw.variant?.calculated_price?.calculated_amount ?? item.unit_price ?? 0,
     imageUrl: raw.variant?.product?.thumbnail || raw.variant?.product?.images?.[0]?.url || "",
@@ -96,7 +113,11 @@ export const useCartStore = create<CartStore>()(
         }
       },
 
-      addItem: async (variantId: string, quantity: number, customization: string) => {
+      addItem: async (
+        variantId: string,
+        quantity: number,
+        lineItemMetadata: Record<string, unknown> = {}
+      ) => {
         const { cartId } = get();
         if (!cartId) return;
         set({ isLoading: true });
@@ -104,7 +125,7 @@ export const useCartStore = create<CartStore>()(
           await sdk.store.cart.createLineItem(cartId, {
             variant_id: variantId,
             quantity,
-            metadata: { customization: customization.slice(0, 12) },
+            metadata: lineItemMetadata,
           });
           const { cart } = await sdk.store.cart.retrieve(cartId, {
             fields: "id,*items,*items.variant,*items.variant.product,subtotal,shipping_total,tax_total,total",
