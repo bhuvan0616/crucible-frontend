@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
+    "@cashfreepayments/cashfree-js": "^1.0.7",
     "@medusajs/js-sdk": "^2.15.3",
     "@medusajs/types": "^2.15.3",
     "@types/uuid": "^10.0.0",

@@ -3,14 +3,25 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useCartStore, selectCartItemCount } from "@/store/cartStore";
+import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
 import { AddressForm } from "@/components/checkout/AddressForm";
 import { ShippingMethodForm } from "@/components/checkout/ShippingMethodForm";
 import { PaymentForm } from "@/components/checkout/PaymentForm";
 import { OrderSummary } from "@/components/checkout/OrderSummary";
 import { Button } from "@/components/ui/button";
-import { sdk } from "@/lib/sdk";
+import {
+  CASHFREE_CHECKOUT_CART_KEY,
+  CASHFREE_PROVIDER_ID,
+  openCashfreeCheckout,
+} from "@/lib/cashfree";
+import {
+  completeCodOrder,
+  getCashfreePaymentSessionId,
+  initiateProviderSession,
+  retrieveCheckoutCart,
+  validatePhoneOnCart,
+} from "@/lib/checkout/paymentFlow";
 import { pageMainClassName } from "@/components/layout/pageShell";
 
 interface ShippingAddress {
@@ -46,12 +57,11 @@ export default function CheckoutPage() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const checkAuth = useAuthStore((state) => state.checkAuth);
-  const itemCount = useCartStore(selectCartItemCount);
 
   const [currentStep, setCurrentStep] = useState<CheckoutStep>(CheckoutStep.Address);
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddress | null>(null);
   const [selectedShippingOption, setSelectedShippingOption] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
   const [orderData, setOrderData] = useState<any>(null);
 
   useEffect(() => {
@@ -92,8 +102,7 @@ export default function CheckoutPage() {
     }
   }, [isAuthenticated, items.length, cartId, router]);
 
-  const handleAddressSubmit = (address: ShippingAddress) => {
-    setShippingAddress(address);
+  const handleAddressSubmit = (_address: ShippingAddress) => {
     setCurrentStep(CheckoutStep.Shipping);
   };
 
@@ -102,33 +111,24 @@ export default function CheckoutPage() {
     setCurrentStep(CheckoutStep.Payment);
   };
 
-  const handlePaymentComplete = () => {
-    placeOrder();
+  const handlePaymentComplete = (providerId: string) => {
+    if (providerId === CASHFREE_PROVIDER_ID) {
+      placeCashfreeOrder();
+      return;
+    }
+    placeCodOrder();
   };
 
-  const placeOrder = async () => {
+  const placeCodOrder = async () => {
     if (!cartId) return;
     setIsProcessing(true);
+    setPaymentError(null);
 
     try {
-      const cartResponse = await sdk.store.cart.retrieve(cartId, {
-        fields: "id,payment_collection,payment_sessions",
-      });
-      
-      const cartData = cartResponse.cart;
-      
-      if (!cartData.payment_collection) {
-        const pcResponse = await sdk.store.payment.initiatePaymentSession(cartData, {
-          provider_id: "pp_system_default",
-        });
+      const cart = await retrieveCheckoutCart(cartId);
+      validatePhoneOnCart(cart);
 
-        if ("error" in pcResponse && pcResponse.error) {
-          const paymentError = pcResponse.error as { message?: string };
-          throw new Error(paymentError.message || "Failed to create payment collection");
-        }
-      }
-      
-      const completeResponse = await sdk.store.cart.complete(cartId);
+      const completeResponse = await completeCodOrder(cartId);
       const order = "order" in completeResponse ? completeResponse.order : null;
       const error = "error" in completeResponse ? completeResponse.error : null;
 
@@ -138,11 +138,42 @@ export default function CheckoutPage() {
         localStorage.removeItem("cart_id");
         clearCart();
       } else if (error) {
-        alert(error.message || "Failed to place order");
+        setPaymentError(error.message || "Failed to place order");
       }
     } catch (err: any) {
-      alert(err.message || "Failed to place order");
+      setPaymentError(err.message || "Failed to place order");
     } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const placeCashfreeOrder = async () => {
+    if (!cartId) return;
+    setIsProcessing(true);
+    setPaymentError(null);
+
+    try {
+      const cart = await retrieveCheckoutCart(cartId);
+      validatePhoneOnCart(cart);
+
+      if (!cart.email) {
+        throw new Error("Email is required for checkout. Go back to the address step.");
+      }
+
+      const { cart: updatedCart } = await initiateProviderSession(
+        cartId,
+        CASHFREE_PROVIDER_ID
+      );
+
+      const paymentSessionId = getCashfreePaymentSessionId(updatedCart);
+      if (!paymentSessionId) {
+        throw new Error("Failed to start Cashfree payment. Please try again.");
+      }
+
+      sessionStorage.setItem(CASHFREE_CHECKOUT_CART_KEY, cartId);
+      await openCashfreeCheckout(paymentSessionId);
+    } catch (err: any) {
+      setPaymentError(err.message || "Failed to start payment");
       setIsProcessing(false);
     }
   };
@@ -217,6 +248,7 @@ export default function CheckoutPage() {
                     onBack={() => setCurrentStep(CheckoutStep.Shipping)}
                     isProcessing={isProcessing}
                     cartId={cartId || ""}
+                    errorMessage={paymentError}
                   />
                 )}
 
@@ -231,12 +263,21 @@ export default function CheckoutPage() {
                     <p className="text-[var(--color-on-dark-muted)] mb-6">
                       Thank you for your order. Your order number is <span className="text-[var(--color-lime)] font-bold">#{orderData.display_id}</span>
                     </p>
-                    <Button
-                      onClick={() => router.push("/shop")}
-                      className="bg-[var(--color-lime)] text-[var(--color-ink-deep)] hover:bg-[var(--color-lime-dark)]"
-                    >
-                      Continue Shopping
-                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <Button
+                        onClick={() => router.push(`/orders/${orderData.id}`)}
+                        variant="outline"
+                        className="border-[var(--color-hairline-violet)]"
+                      >
+                        View Order
+                      </Button>
+                      <Button
+                        onClick={() => router.push("/shop")}
+                        className="bg-[var(--color-lime)] text-[var(--color-ink-deep)] hover:bg-[var(--color-lime-dark)]"
+                      >
+                        Continue Shopping
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>

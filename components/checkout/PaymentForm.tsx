@@ -1,28 +1,131 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { formatPrice } from "@/lib/utils/formatPrice";
+import { sdk } from "@/lib/sdk";
+import {
+  CASHFREE_PROVIDER_ID,
+  SYSTEM_PROVIDER_ID,
+} from "@/lib/cashfree";
 
 interface PaymentFormProps {
-  onComplete: () => void;
+  onComplete: (providerId: string) => void;
   onBack: () => void;
   isProcessing: boolean;
   cartId: string;
+  errorMessage?: string | null;
 }
 
-export function PaymentForm({ onComplete, onBack, isProcessing }: PaymentFormProps) {
+type PaymentChoice = "cashfree" | "system";
+
+export function PaymentForm({
+  onComplete,
+  onBack,
+  isProcessing,
+  cartId,
+  errorMessage,
+}: PaymentFormProps) {
+  const [selectedProvider, setSelectedProvider] = useState<PaymentChoice>("cashfree");
+  const [cashfreeAvailable, setCashfreeAvailable] = useState(true);
+  const [isLoadingCart, setIsLoadingCart] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCartCurrency() {
+      if (!cartId) {
+        setIsLoadingCart(false);
+        return;
+      }
+
+      try {
+        const { cart } = await sdk.store.cart.retrieve(cartId, {
+          fields: "currency_code",
+        });
+        if (cancelled) return;
+
+        const isInr = (cart.currency_code || "inr").toLowerCase() === "inr";
+        setCashfreeAvailable(isInr);
+        if (!isInr) {
+          setSelectedProvider("system");
+        }
+      } catch {
+        if (!cancelled) {
+          setCashfreeAvailable(false);
+          setSelectedProvider("system");
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoadingCart(false);
+        }
+      }
+    }
+
+    loadCartCurrency();
+    return () => {
+      cancelled = true;
+    };
+  }, [cartId]);
+
+  const handleSubmit = () => {
+    const providerId =
+      selectedProvider === "cashfree" ? CASHFREE_PROVIDER_ID : SYSTEM_PROVIDER_ID;
+    onComplete(providerId);
+  };
+
+  const buttonLabel =
+    selectedProvider === "cashfree"
+      ? isProcessing
+        ? "Redirecting..."
+        : "Pay now"
+      : isProcessing
+        ? "Processing..."
+        : "Place order";
+
   return (
     <div className="space-y-6">
       <h3 className="text-xl font-bold text-white mb-4">Payment</h3>
 
+      {errorMessage && (
+        <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-300">
+          {errorMessage}
+        </div>
+      )}
+
       <div className="space-y-4">
-        <div className="p-4 rounded-lg border border-[var(--color-hairline-violet)] bg-[var(--color-surface-dark)]">
+        {cashfreeAvailable && (
+          <label className="block p-4 rounded-lg border border-[var(--color-hairline-violet)] bg-[var(--color-surface-dark)] cursor-pointer">
+            <div className="flex items-center gap-3">
+              <input
+                type="radio"
+                name="payment_provider"
+                value="cashfree"
+                checked={selectedProvider === "cashfree"}
+                onChange={() => setSelectedProvider("cashfree")}
+                disabled={isProcessing || isLoadingCart}
+                className="accent-[var(--color-lime)]"
+              />
+              <div className="flex-grow">
+                <span className="font-medium text-white">
+                  Pay with UPI, Cards, Net Banking (Cashfree)
+                </span>
+                <p className="text-sm text-[var(--color-on-dark-muted)]">
+                  Secure online payment via Cashfree
+                </p>
+              </div>
+            </div>
+          </label>
+        )}
+
+        <label className="block p-4 rounded-lg border border-[var(--color-hairline-violet)] bg-[var(--color-surface-dark)] cursor-pointer">
           <div className="flex items-center gap-3">
             <input
               type="radio"
               name="payment_provider"
               value="system"
-              defaultChecked
+              checked={selectedProvider === "system"}
+              onChange={() => setSelectedProvider("system")}
+              disabled={isProcessing || isLoadingCart}
               className="accent-[var(--color-lime)]"
             />
             <div className="flex-grow">
@@ -35,30 +138,14 @@ export function PaymentForm({ onComplete, onBack, isProcessing }: PaymentFormPro
               COD Available
             </div>
           </div>
-        </div>
-
-        <div className="p-4 rounded-lg border border-[var(--color-hairline-violet)] bg-[var(--color-surface-dark)] opacity-60">
-          <div className="flex items-center gap-3">
-            <input
-              type="radio"
-              name="payment_provider"
-              value="stripe"
-              disabled
-              className="accent-[var(--color-lime)]"
-            />
-            <div className="flex-grow">
-              <span className="font-medium text-white">Stripe</span>
-              <p className="text-sm text-[var(--color-on-dark-muted)]">
-                Credit/Debit Card, UPI, etc. (Coming soon)
-              </p>
-            </div>
-          </div>
-        </div>
+        </label>
       </div>
 
       <div className="bg-[var(--color-surface-dark)] rounded-lg p-4 border border-[var(--color-hairline-violet)]">
-        <p className="text-sm text-[var(--color-on-dark-muted)] mb-2">
-          Your payment will be processed after you confirm your order. For cash on delivery, payment is collected upon delivery.
+        <p className="text-sm text-[var(--color-on-dark-muted)]">
+          {selectedProvider === "cashfree"
+            ? "You will be redirected to Cashfree to complete payment securely."
+            : "For cash on delivery, payment is collected upon delivery."}
         </p>
       </div>
 
@@ -74,11 +161,11 @@ export function PaymentForm({ onComplete, onBack, isProcessing }: PaymentFormPro
         </Button>
         <Button
           type="button"
-          onClick={onComplete}
-          disabled={isProcessing}
+          onClick={handleSubmit}
+          disabled={isProcessing || isLoadingCart}
           className="flex-1 bg-[var(--color-lime)] text-[var(--color-ink-deep)] hover:bg-[var(--color-lime-dark)] disabled:opacity-50"
         >
-          {isProcessing ? "Processing..." : "Place Order"}
+          {buttonLabel}
         </Button>
       </div>
     </div>

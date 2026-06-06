@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
 import { sdk } from "@/lib/sdk";
+import { validateIndianPhone } from "@/lib/checkout/paymentFlow";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -45,6 +46,7 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<ShippingAddress>({
     first_name: initialData?.first_name || "",
@@ -65,7 +67,6 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
           const { addresses } = await sdk.store.customer.listAddress({
             fields: "+address_name",
           });
-          console.log("Loaded addresses:", JSON.stringify(addresses, null, 2));
           setSavedAddresses((addresses || []) as SavedAddress[]);
         } catch (error) {
           console.error("Failed to load addresses:", error);
@@ -78,6 +79,9 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
   const handleChange = (field: keyof ShippingAddress) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
+    if (field === "phone") {
+      setPhoneError(null);
+    }
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
@@ -109,6 +113,21 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
       return;
     }
 
+    const phone = formData.phone?.trim() ?? "";
+    if (!phone) {
+      setPhoneError("Phone number is required for payment.");
+      return;
+    }
+    if (!validateIndianPhone(phone)) {
+      setPhoneError("Enter a valid 10-digit Indian phone number.");
+      return;
+    }
+
+    if (!user?.email) {
+      alert("Your account email is required for checkout.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const isUsingSavedAddress = Boolean(selectedAddressId);
@@ -136,6 +155,7 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
       }
 
       await sdk.store.cart.update(cartId, {
+        email: user.email,
         shipping_address: {
           first_name: formData.first_name,
           last_name: formData.last_name,
@@ -144,7 +164,7 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
           city: formData.city,
           postal_code: formData.postal_code,
           country_code: "in",
-          phone: formData.phone || undefined,
+          phone,
           address_name: formData.address_name || undefined,
         } as any,
       });
@@ -212,6 +232,27 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
                   </div>
                 </button>
               ))}
+            </div>
+          )}
+
+          {!showNewAddressForm && selectedAddressId && (
+            <div>
+              <label htmlFor="saved_phone" className="block text-sm font-medium text-[var(--color-on-dark-muted)] mb-1">
+                Phone *
+              </label>
+              <Input
+                id="saved_phone"
+                type="tel"
+                value={formData.phone || ""}
+                onChange={handleChange("phone")}
+                required
+                disabled={isSubmitting || isLoading}
+                className="w-full"
+                placeholder="+91 9876543210"
+              />
+              {phoneError && (
+                <p className="mt-1 text-sm text-red-400">{phoneError}</p>
+              )}
             </div>
           )}
         </div>
@@ -344,17 +385,21 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
 
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-[var(--color-on-dark-muted)] mb-1">
-                Phone (optional)
+                Phone *
               </label>
               <Input
                 id="phone"
                 type="tel"
                 value={formData.phone || ""}
                 onChange={handleChange("phone")}
+                required
                 disabled={isSubmitting || isLoading}
                 className="w-full"
                 placeholder="+91 9876543210"
               />
+              {phoneError && (
+                <p className="mt-1 text-sm text-red-400">{phoneError}</p>
+              )}
             </div>
           </div>
         </>
