@@ -7,7 +7,7 @@ import {
 } from "@/lib/cashfree";
 
 const CART_PAYMENT_FIELDS =
-  "id,email,*shipping_address,+payment_collection,*payment_sessions,currency_code,completed_at";
+  "id,email,*shipping_address,*shipping_methods,+payment_collection,*payment_collection.payment_sessions,currency_code,completed_at";
 
 export interface ResolvedOrder {
   id: string;
@@ -50,18 +50,28 @@ export async function retrieveCheckoutCart(cartId: string) {
   return cart;
 }
 
+function validateCheckoutReady(cart: HttpTypes.StoreCart): void {
+  if (!cart.shipping_address?.address_1) {
+    throw new Error(
+      "Shipping address is required. Go back to the address step and try again."
+    );
+  }
+
+  if (!cart.shipping_methods?.length) {
+    throw new Error(
+      "Shipping method is required. Go back to the shipping step and try again."
+    );
+  }
+}
+
 export async function initiateProviderSession(
   cartId: string,
   providerId: string
 ) {
   let cart = await retrieveCheckoutCart(cartId);
+  validateCheckoutReady(cart);
 
-  if (!cart.payment_collection) {
-    throw new Error(
-      "Payment collection is not ready. Please complete shipping and try again."
-    );
-  }
-
+  // SDK creates payment_collection automatically when missing.
   await sdk.store.payment.initiatePaymentSession(cart as HttpTypes.StoreCart, {
     provider_id: providerId,
   });
