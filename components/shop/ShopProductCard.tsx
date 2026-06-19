@@ -6,6 +6,7 @@ import { useCartStore } from "@/store/cartStore";
 import { trackAddToCart } from "@/lib/analytics/ga4";
 import type { HttpTypes } from "@medusajs/types";
 import { formatPrice } from "@/lib/utils/formatPrice";
+import { stripMarkdown } from "@/lib/utils/stripMarkdown";
 
 interface ShopProductCardProps {
   product: HttpTypes.StoreProduct;
@@ -69,7 +70,7 @@ export function ShopProductCard({ product }: ShopProductCardProps) {
                   {product.title}
                 </h3>
                 <p className="text-white/50 line-clamp-1">
-                  {product.description}
+                  {stripMarkdown(product.description ?? "")}
                 </p>
               </div>
             </div>

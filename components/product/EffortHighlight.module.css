@@ -1,0 +1,108 @@
+@property --effort-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.wrapper {
+  position: relative;
+  overflow: visible;
+}
+
+.outline {
+  --effort-angle: 0deg;
+  position: relative;
+  padding: 2px;
+  border-radius: 0.75rem;
+  background: conic-gradient(
+    from var(--effort-angle),
+    #ff006e,
+    #fb5607,
+    #ffbe0b,
+    #06d6a0,
+    #3a86ff,
+    #8338ec,
+    #ff006e
+  );
+  animation: effortBorderRotate 4s linear infinite;
+}
+
+.inner {
+  background: var(--color-ink-deep);
+  border-radius: calc(0.75rem - 2px);
+  padding: 1rem;
+}
+
+.star {
+  position: absolute;
+  width: var(--star-size, 4px);
+  height: var(--star-size, 4px);
+  pointer-events: none;
+  z-index: 2;
+  animation: starSparkle 2.4s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.star::before,
+.star::after {
+  content: "";
+  position: absolute;
+  background: var(--star-color, #ffffff);
+  border-radius: 1px;
+  box-shadow: 0 0 4px var(--star-color), 0 0 8px color-mix(in srgb, var(--star-color) 60%, transparent);
+}
+
+.star::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.star::after {
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+@keyframes effortBorderRotate {
+  to {
+    --effort-angle: 360deg;
+  }
+}
+
+@keyframes starSparkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.5) rotate(0deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.15) rotate(45deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .outline {
+    animation: none;
+    background: linear-gradient(
+      90deg,
+      #ff006e,
+      #fb5607,
+      #ffbe0b,
+      #06d6a0,
+      #3a86ff,
+      #8338ec
+    );
+  }
+
+  .star {
+    animation: none;
+    opacity: 0.45;
+  }
+}

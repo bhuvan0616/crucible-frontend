@@ -25,7 +25,7 @@ export function VariantSelector({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-semibold text-white uppercase tracking-wider">
+        <label className="text-sm font-semibold text-[var(--color-lime)] uppercase tracking-wider">
           {option.title}
         </label>
       </div>

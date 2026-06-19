@@ -1,18 +1,18 @@
+import { EffortHighlight } from "@/components/product/EffortHighlight";
 import { formatPrice } from "@/lib/utils/formatPrice";
 
 interface ProductInfoProps {
   title: string;
   price: number;
-  description: string;
+  effort?: string;
 }
 
 export function ProductInfo({
   title,
   price,
-  description,
+  effort,
 }: ProductInfoProps) {
   const displayPrice = formatPrice(price);
-  const debugPrice = price > 0 ? displayPrice : "Contact for price";
 
   return (
     <div className="space-y-4">
@@ -35,9 +35,7 @@ export function ProductInfo({
         )}
       </div>
 
-      <p className="text-[var(--color-on-dark-muted)] leading-relaxed">
-        {description}
-      </p>
+      {effort ? <EffortHighlight content={effort} /> : null}
     </div>
   );
 }

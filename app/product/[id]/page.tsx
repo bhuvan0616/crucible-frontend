@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProductById } from "@/lib/data/products";
 import { ProductPageClient } from "@/components/product/ProductPageClient";
-import { formatPrice } from "@/lib/utils/formatPrice";
+import { stripMarkdown } from "@/lib/utils/stripMarkdown";
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -22,15 +22,17 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const productUrl = `${baseUrl}/product/${id}`;
   const images = product.images?.map((img) => img.url) || [];
 
+  const metaDescription = stripMarkdown(product.description || "").slice(0, 160);
+
   return {
     title: product.title,
-    description: (product.description || "").slice(0, 160),
+    description: metaDescription,
     keywords: [product.title, "3D printed", "custom keychain", "phone stand"],
     openGraph: {
       type: "website",
       url: productUrl,
       title: product.title,
-      description: (product.description || "").slice(0, 160),
+      description: metaDescription,
       images: images.slice(0, 10).map((url, index) => ({
         url,
         width: 1200,
@@ -42,7 +44,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     twitter: {
       card: "summary_large_image",
       title: product.title,
-      description: (product.description || "").slice(0, 160),
+      description: metaDescription,
       images: images[0] ? [images[0]] : [],
     },
     alternates: {
@@ -69,7 +71,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.title,
-    description: product.description,
+    description: stripMarkdown(product.description || ""),
     image: product.images?.map((img) => img.url),
     url: `${baseUrl}/product/${id}`,
     brand: {

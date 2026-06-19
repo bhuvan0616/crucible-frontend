@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import type { HttpTypes } from "@medusajs/types";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductInfo } from "@/components/product/ProductInfo";
+import { ProductDescription } from "@/components/product/ProductDescription";
 import { CustomizationFields } from "@/components/product/CustomizationFields";
 import { VariantSelector } from "@/components/product/VariantSelector";
 import { AddToCartSection } from "@/components/product/AddToCartSection";
@@ -145,6 +146,11 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
     [product.metadata]
   );
 
+  const effort = useMemo(() => {
+    const value = (product.metadata as Record<string, unknown> | undefined)?.effort;
+    return typeof value === "string" ? value.trim() : "";
+  }, [product.metadata]);
+
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
     options.forEach(opt => {
@@ -251,7 +257,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             <ProductInfo
               title={product.title}
               price={price}
-              description={product.description || ""}
+              effort={effort}
             />
 
             {options.map(opt => (
@@ -313,6 +319,17 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
               </div>
             </div>
           </div>
+
+          {(product.description || "").trim() && (
+            <div className="lg:col-span-2 border-t border-[var(--color-hairline-violet)] pt-6 lg:pt-8">
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
+                Product Description
+              </h3>
+              <div className="rounded-lg border border-[var(--color-hairline-violet)] bg-[var(--color-ink-deep)] p-4 lg:p-6">
+                <ProductDescription content={product.description || ""} />
+              </div>
+            </div>
+          )}
         </motion.div>
       </div>
     </main>
