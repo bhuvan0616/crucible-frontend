@@ -139,8 +139,12 @@ export async function getProducts(): Promise<HttpTypes.StoreProduct[]> {
   if (regionId) {
     params.region_id = regionId
   }
-  const { products } = await sdk.store.product.list(params)
-  return products
+  try {
+    const { products } = await sdk.store.product.list(params)
+    return products ?? []
+  } catch {
+    return []
+  }
 }
 
 export async function getProductById(id: string): Promise<HttpTypes.StoreProduct | undefined> {

@@ -17,7 +17,7 @@ const footerLinks = {
 
 export default function V4Footer() {
   return (
-    <footer className="relative bg-[var(--color-surface-dark)] text-white mt-[-10px] pt-16 pb-8 overflow-hidden">
+    <footer className="relative bg-[var(--color-surface-dark)] text-white mt-[-10px] pt-12 sm:pt-16 pb-8 overflow-hidden">
       {/* Lime Squiggly Divider */}
       <div className="absolute top-0 left-0 right-0 h-3 squiggly-divider" />
 
@@ -118,7 +118,7 @@ export default function V4Footer() {
               transition={{ duration: 3, repeat: Infinity }}
               className="w-2 h-2 rounded-full bg-[var(--color-lime)]"
             />
-            <p className="text-white/50 text-sm text-center md:text-left">
+            <p className="text-white/50 text-xs sm:text-sm text-center md:text-left max-w-xs sm:max-w-none">
               © 2026 Crucible Creations · Part of COKUPA FOODS (OPC) PRIVATE LIMITED. All rights reserved.
             </p>
           </div>

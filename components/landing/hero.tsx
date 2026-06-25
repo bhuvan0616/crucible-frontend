@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import Link from "next/link";
 
@@ -43,6 +43,16 @@ function MagneticButton({ children, href }: { children: React.ReactNode; href: s
 
 export default function V4Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [floatBadges, setFloatBadges] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setFloatBadges(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -58,7 +68,7 @@ export default function V4Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center overflow-hidden bg-[var(--color-surface-night)]"
+      className="relative min-h-screen flex items-start md:items-center overflow-hidden bg-[var(--color-surface-night)] pt-20 md:pt-24 lg:pt-0"
     >
       {/* Starfield Background */}
       <motion.div
@@ -76,11 +86,11 @@ export default function V4Hero() {
         className="absolute top-1/3 -left-40 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[var(--color-violet)]/20 to-transparent blur-[100px]"
       />
 
-      {/* Floating Sticker Mascots */}
+      {/* Floating Sticker Mascots — desktop only to avoid overlapping copy/CTA */}
       <motion.div
         animate={{ y: [0, -25, 0], rotate: [-5, 5, -5] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-40 right-32 opacity-80"
+        className="absolute top-40 right-32 opacity-80 hidden lg:block"
       >
         <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
           <circle cx="60" cy="60" r="50" fill="var(--color-lime)" opacity="0.9"/>
@@ -96,7 +106,7 @@ export default function V4Hero() {
       <motion.div
         animate={{ y: [0, 20, 0], rotate: [5, -5, 5] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-40 left-20 opacity-70"
+        className="absolute bottom-40 left-20 opacity-70 hidden lg:block"
       >
         <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
           <circle cx="40" cy="40" r="35" fill="var(--color-pink)" opacity="0.9"/>
@@ -111,7 +121,7 @@ export default function V4Hero() {
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-        className="absolute top-20 left-1/4 w-32 h-32"
+        className="absolute top-20 left-1/4 w-32 h-32 hidden lg:block"
       >
         <svg viewBox="0 0 100 100" className="w-full h-full opacity-30">
           <circle cx="50" cy="50" r="45" fill="none" stroke="var(--color-lime)" strokeWidth="1" strokeDasharray="10 5" />
@@ -121,28 +131,28 @@ export default function V4Hero() {
       <motion.div
         animate={{ rotate: -360 }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        className="absolute bottom-32 right-1/4 w-24 h-24"
+        className="absolute bottom-32 right-1/4 w-24 h-24 hidden lg:block"
       >
         <svg viewBox="0 0 100 100" className="w-full h-full opacity-20">
           <rect x="10" y="10" width="80" height="80" fill="none" stroke="var(--color-pink)" strokeWidth="1" rx="8" transform="rotate(45 50 50)" />
         </svg>
       </motion.div>
 
-      {/* Lime Accent Circles */}
+      {/* Lime Accent Circles — desktop only */}
       <motion.div
         animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
         transition={{ duration: 4, repeat: Infinity }}
-        className="absolute top-1/2 right-1/3 w-4 h-4 rounded-full bg-[var(--color-lime)]"
+        className="absolute top-1/2 right-1/3 w-4 h-4 rounded-full bg-[var(--color-lime)] hidden lg:block"
       />
       <motion.div
         animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.5, 0.2] }}
         transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
-        className="absolute bottom-1/3 left-1/4 w-3 h-3 rounded-full bg-[var(--color-pink)]"
+        className="absolute bottom-1/3 left-1/4 w-3 h-3 rounded-full bg-[var(--color-pink)] hidden lg:block"
       />
 
-      <motion.div style={{ opacity, scale, y }} className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          <div className="space-y-10">
+      <motion.div style={{ opacity, scale, y }} className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full py-4 md:py-8 lg:py-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 lg:gap-16 xl:gap-20 items-center">
+          <div className="space-y-5 sm:space-y-6 md:space-y-8 lg:space-y-10 order-2 md:order-none">
             {/* Eyebrow */}
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -166,7 +176,7 @@ export default function V4Hero() {
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="text-7xl lg:text-9xl font-bold tracking-tight leading-[0.85]"
+                className="text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-bold tracking-tight leading-[0.9] sm:leading-[0.88] lg:leading-[0.85]"
               >
                 <motion.span
                   className="block text-white"
@@ -182,7 +192,7 @@ export default function V4Hero() {
                   animate={{ clipPath: "inset(0 0% 0 0)" }}
                   transition={{ duration: 1.2, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <span className="text-[var(--color-lime)] chip-lime">Elegance</span>
+                  <span className="text-[var(--color-lime)] chip-lime inline-block max-w-full">Elegance</span>
                 </motion.span>
               </motion.h1>
             </div>
@@ -192,7 +202,7 @@ export default function V4Hero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
-              className="text-xl text-white/70 max-w-md leading-relaxed"
+              className="text-base sm:text-lg lg:text-xl text-white/70 max-w-md leading-relaxed"
             >
               A phone stand that fits on your keychain.{" "}
               <span className="text-[var(--color-lime)] font-semibold">Personalized with your name.</span>{" "}
@@ -210,7 +220,7 @@ export default function V4Hero() {
                 <motion.div
                   whileHover={{ scale: 1.05, y: -3 }}
                   whileTap={{ scale: 0.95 }}
-                  className="group px-10 py-5 bg-[var(--color-lime)] text-[var(--color-ink-deep)] rounded-lg font-bold flex items-center gap-4 shadow-lg shadow-[var(--color-lime)]/30 animate-pulse-glow"
+                  className="group px-6 py-4 sm:px-8 sm:py-4 lg:px-10 lg:py-5 bg-[var(--color-lime)] text-[var(--color-ink-deep)] rounded-lg font-bold flex items-center gap-4 shadow-lg shadow-[var(--color-lime)]/30 animate-pulse-glow"
                 >
                   <span className="text-lg uppercase tracking-wider">Shop Now</span>
                   <motion.svg
@@ -236,12 +246,12 @@ export default function V4Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.2 }}
-              className="flex gap-16 pt-12 border-t border-[var(--color-hairline-violet)]"
+              className="flex gap-6 sm:gap-10 lg:gap-16 pt-8 sm:pt-10 lg:pt-12 border-t border-[var(--color-hairline-violet)]"
             >
               {[
                 { value: "3", label: "Variants" },
-                { value: "12", label: "Max Chars" },
-                { value: "₹449", label: "Starting" },
+                { value: "7", label: "Max Chars" },
+                { value: "₹249", label: "Starting" },
               ].map((stat, i) => (
                 <motion.div
                   key={i}
@@ -253,7 +263,7 @@ export default function V4Hero() {
                   <motion.span
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 3, repeat: Infinity, delay: i * 0.5 }}
-                    className="text-4xl font-bold text-white block"
+                    className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white block"
                   >
                     {stat.value}
                   </motion.span>
@@ -270,7 +280,7 @@ export default function V4Hero() {
             initial={{ opacity: 0, scale: 0.7, rotate: -10 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="relative"
+            className="relative order-first md:order-none w-full max-w-[min(300px,88vw)] sm:max-w-[320px] md:max-w-none mx-auto md:mx-0"
           >
             <motion.div
               animate={{
@@ -281,12 +291,12 @@ export default function V4Hero() {
                 ],
               }}
               transition={{ duration: 4, repeat: Infinity }}
-              className="relative bg-gradient-to-br from-[var(--color-surface-dark)] to-[var(--color-surface-night)] rounded-[2.5rem] p-10 border border-[var(--color-hairline-violet)]"
+              className="relative bg-gradient-to-br from-[var(--color-surface-dark)] to-[var(--color-surface-night)] rounded-2xl md:rounded-[2.5rem] p-2 md:p-6 lg:p-10 border border-[var(--color-hairline-violet)]"
             >
               <motion.div
                 whileHover={{ scale: 1.03 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="relative overflow-hidden rounded-[2rem]"
+                className="relative overflow-hidden rounded-xl md:rounded-[2rem]"
               >
                 <img
                   src="/images/captain.png"
@@ -294,35 +304,47 @@ export default function V4Hero() {
                   className="w-full aspect-square object-cover"
                 />
 
+                {/* Desktop: floating edge badges */}
                 <motion.div
-                  animate={{ y: [0, -12, 0] }}
+                  animate={floatBadges ? { y: [0, -12, 0] } : { y: 0 }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -right-6 top-10 px-6 py-4 bg-[var(--color-surface-night)] rounded-2xl border border-[var(--color-hairline-violet)] shadow-xl"
+                  className="hidden lg:block absolute -right-6 top-10 px-6 py-4 bg-[var(--color-surface-night)] rounded-2xl border border-[var(--color-hairline-violet)] shadow-xl"
                 >
-                  <p className="text-[10px] uppercase tracking-widest text-white/50">Price</p>
-                  <p className="text-3xl font-bold text-[var(--color-lime)]">₹449</p>
+                  <p className="text-[10px] leading-none uppercase tracking-widest text-white/50">Price</p>
+                  <p className="text-3xl font-bold text-[var(--color-lime)] leading-tight">₹249</p>
                 </motion.div>
 
                 <motion.div
-                  animate={{ y: [0, 8, 0] }}
+                  animate={floatBadges ? { y: [0, 8, 0] } : { y: 0 }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                  className="absolute -left-4 bottom-24 px-5 py-2.5 bg-[var(--color-lime)] text-[var(--color-ink-deep)] rounded-full shadow-lg"
+                  className="hidden lg:block absolute -left-4 bottom-24 px-5 py-2.5 bg-[var(--color-lime)] text-[var(--color-ink-deep)] rounded-full shadow-lg"
                 >
                   <span className="text-sm font-bold uppercase tracking-wider">Captain Teal</span>
                 </motion.div>
               </motion.div>
+
+              {/* Mobile / tablet: metadata row below image */}
+              <div className="flex items-center justify-between gap-4 mt-3 px-1 lg:hidden">
+                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-[var(--color-lime)] text-[var(--color-ink-deep)] text-xs font-bold uppercase tracking-wide">
+                  Captain Teal
+                </span>
+                <div className="text-right">
+                  <p className="text-[10px] uppercase tracking-widest text-white/50 leading-none">From</p>
+                  <p className="text-xl font-bold text-[var(--color-lime)] leading-tight">₹249</p>
+                </div>
+              </div>
             </motion.div>
 
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-              className="absolute -inset-16 border-2 border-dashed border-[var(--color-hairline-violet)]/50 rounded-full -z-10"
+              className="absolute -inset-16 border-2 border-dashed border-[var(--color-hairline-violet)]/50 rounded-full -z-10 hidden lg:block"
             />
 
             <motion.div
               animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.6, 0.3] }}
               transition={{ duration: 3, repeat: Infinity }}
-              className="absolute -bottom-12 -right-12 w-32 h-32 bg-[var(--color-pink)]/10 rounded-full blur-3xl"
+              className="absolute -bottom-12 -right-12 w-32 h-32 bg-[var(--color-pink)]/10 rounded-full blur-3xl hidden lg:block"
             />
           </motion.div>
         </div>
@@ -333,7 +355,7 @@ export default function V4Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="absolute bottom-16 left-1/2 -translate-x-1/2"
+        className="absolute bottom-16 left-1/2 -translate-x-1/2 hidden lg:flex"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
@@ -352,7 +374,7 @@ export default function V4Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.05 }}
         transition={{ delay: 1.8 }}
-        className="absolute top-1/4 right-16 text-[12rem] font-bold text-white whitespace-nowrap"
+        className="absolute top-1/4 right-16 text-[12rem] font-bold text-white whitespace-nowrap hidden md:block"
       >
         C
       </motion.div>

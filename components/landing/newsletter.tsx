@@ -24,7 +24,7 @@ export default function V4Newsletter() {
   };
 
   return (
-    <section className="relative py-32 bg-[var(--color-surface-night)] overflow-hidden">
+    <section className="relative py-16 md:py-24 lg:py-32 bg-[var(--color-surface-night)] overflow-hidden">
       <div className="absolute inset-0 starfield opacity-20" />
 
       <motion.div
@@ -81,7 +81,7 @@ export default function V4Newsletter() {
           </motion.span>
 
           <span className="eyebrow text-[var(--color-lime)]">Stay Updated</span>
-          <h2 className="text-5xl lg:text-7xl font-bold text-white mt-6 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mt-6 tracking-tight">
             Be First to <span className="chip-lime">Know</span>
           </h2>
           <p className="text-white/60 mt-6 max-w-md mx-auto text-lg">
@@ -108,7 +108,7 @@ export default function V4Newsletter() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     whileFocus={{ scale: 1.02 }}
-                    className="w-full px-8 py-5 bg-[var(--color-surface-dark)]/80 backdrop-blur-md border border-[var(--color-hairline-violet)] rounded-full text-white placeholder:text-white/40 focus:outline-none focus:border-[var(--color-lime)] focus:bg-[var(--color-surface-dark)] transition-all"
+                    className="w-full px-6 py-4 sm:px-8 sm:py-5 bg-[var(--color-surface-dark)]/80 backdrop-blur-md border border-[var(--color-hairline-violet)] rounded-full text-white placeholder:text-white/40 focus:outline-none focus:border-[var(--color-lime)] focus:bg-[var(--color-surface-dark)] transition-all"
                   />
                   {error && (
                     <motion.p
@@ -125,7 +125,7 @@ export default function V4Newsletter() {
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   disabled={isLoading}
-                  className="group px-10 py-5 bg-[var(--color-lime)] text-[var(--color-ink-deep)] font-bold rounded-full whitespace-nowrap hover:shadow-2xl hover:shadow-[var(--color-lime)]/30 transition-all flex items-center justify-center gap-3 disabled:opacity-70"
+                  className="group px-8 py-4 sm:px-10 sm:py-5 bg-[var(--color-lime)] text-[var(--color-ink-deep)] font-bold rounded-full whitespace-nowrap hover:shadow-2xl hover:shadow-[var(--color-lime)]/30 transition-all flex items-center justify-center gap-3 disabled:opacity-70"
                 >
                   {isLoading ? (
                     <motion.div
@@ -200,7 +200,7 @@ export default function V4Newsletter() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
-          className="mt-16 flex items-center justify-center gap-12 text-white/50"
+          className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 lg:gap-12 text-white/50"
         >
           {["New Colors", "Special Offers", "Early Access"].map((item, i) => (
             <motion.div

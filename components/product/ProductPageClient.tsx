@@ -314,7 +314,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
                   <svg className="w-4 h-4 text-[var(--color-lime)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  30-day return policy
+                  Premium environmentally friendly packaging
                 </div>
               </div>
             </div>

@@ -9,28 +9,31 @@ const products = [
     id: "var_black",
     name: "Wakanda Black",
     description: "Bold, sleek, unapologetically dark",
-    price: 449,
-    image: "/images/batman.png",
+    price: 249,
+    image: "/images/black panther.png",
     tag: "Best Seller",
+    handle: "prod_01KTF0D56NTNRC79HKR26TWBKT",
     tagBg: "bg-[var(--color-ink-deep)]",
   },
   {
     id: "var_grey",
     name: "Batman Grey",
     description: "Understated elegance for the refined",
-    price: 449,
-    image: "/images/black panther.png",
+    price: 249,
+    image: "/images/batman.png",
     tag: "Popular",
     tagBg: "bg-[var(--color-violet-mid)]",
+    handle: "prod_01KTF0D56NTNRC79HKR26TWBKT",
   },
   {
     id: "var_teal",
     name: "Captain Teal",
     description: "Stand out from the crowd",
-    price: 449,
+    price: 249,
     image: "/images/captain.png",
     tag: "New",
     tagBg: "bg-[var(--color-lime)]",
+    handle: "prod_01KTF0D56NTNRC79HKR26TWBKT",
   },
 ];
 
@@ -48,7 +51,7 @@ export default function V4Showcase() {
     <section
       id="showcase"
       ref={containerRef}
-      className="relative py-32 bg-[var(--color-surface-dark)] min-h-screen z-[20]"
+      className="relative py-16 md:py-24 lg:py-32 bg-[var(--color-surface-dark)] z-[20]"
     >
       {/* Starfield */}
       <div className="absolute inset-0 starfield opacity-50" />
@@ -73,7 +76,7 @@ export default function V4Showcase() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
@@ -94,7 +97,7 @@ export default function V4Showcase() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.15 }}
-            className="text-5xl lg:text-7xl font-bold text-white mt-6 tracking-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mt-6 tracking-tight"
           >
             Three <span className="chip-lime">Editions</span>
           </motion.h2>
@@ -109,7 +112,7 @@ export default function V4Showcase() {
           </motion.p>
         </motion.div>
 
-        <div className="flex gap-6 p-16 overflow-x-auto hide-scrollbar items-stretch">
+        <div className="flex gap-4 sm:gap-6 -mx-2 sm:mx-0 px-4 py-8 sm:px-8 md:px-12 lg:p-16 overflow-x-auto hide-scrollbar items-stretch snap-x snap-mandatory">
           {products.map((product, index) => (
             <motion.div
               key={product.id}
@@ -118,9 +121,9 @@ export default function V4Showcase() {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: index * 0.15 }}
               whileHover={{ y: -12 }}
-              className="flex-shrink-0 w-[360px] group relative z-[10] h-full"
+              className="flex-shrink-0 w-[min(340px,calc(100vw-2rem))] sm:w-[min(360px,calc(100vw-4rem))] snap-center group relative z-[10] h-full"
             >
-              <Link href={`/product/portable-keychain-phone-stand`}>
+              <Link href={`/product/${product.handle}`}>
                 <div className="relative bg-[var(--color-surface-night)] rounded-[1.5rem] overflow-hidden border border-[var(--color-hairline-violet)] shadow-2xl transition-all duration-500 group-hover:border-[var(--color-lime)]/50">
                   <div className="relative aspect-square overflow-hidden">
                     <motion.img
@@ -158,21 +161,21 @@ export default function V4Showcase() {
                     </motion.div>
                   </div>
 
-                  <div className="p-8">
+                  <div className="p-5 sm:p-6 lg:p-8">
                     <div className="flex items-start justify-between mb-4">
                       <div>
                         <motion.h3
                           whileHover={{ x: 3 }}
-                          className="text-2xl font-bold text-white mb-1"
+                          className="text-xl sm:text-2xl font-bold text-white mb-1"
                         >
                           {product.name}
                         </motion.h3>
-                        <p className="text-white/50 line-clamp-1">{product.description}</p>
+                        <p className="text-sm sm:text-base text-white/50 line-clamp-1">{product.description}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between pt-4 border-t border-[var(--color-hairline-violet)]">
-                      <span className="text-3xl font-bold text-white">₹{product.price}</span>
+                      <span className="text-2xl sm:text-3xl font-bold text-white">₹{product.price}</span>
                       <motion.span
                         whileHover={{ x: 5, scale: 1.05 }}
                         transition={{ duration: 0.3 }}
@@ -209,8 +212,9 @@ export default function V4Showcase() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
-          className="flex justify-center items-center gap-4 text-white/40 text-sm mt-12"
+          className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 text-white/40 text-sm mt-12"
         >
+          <span className="sm:hidden">Swipe to explore</span>
           <motion.div
             animate={{ x: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}

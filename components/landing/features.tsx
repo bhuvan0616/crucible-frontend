@@ -63,7 +63,7 @@ const features = [
 
 export default function V4Features() {
   return (
-    <section className="relative py-32 bg-[var(--color-cream)] z-[10]">
+    <section className="relative py-16 md:py-24 lg:py-32 bg-[var(--color-cream)] z-[10]">
       <motion.div
         animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 8, repeat: Infinity }}
@@ -81,7 +81,7 @@ export default function V4Features() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-24"
+          className="text-center mb-12 md:mb-16 lg:mb-24"
         >
           <span className="inline-flex items-center gap-3 eyebrow text-[var(--color-violet)]">
             <motion.span
@@ -94,7 +94,7 @@ export default function V4Features() {
             </motion.span>
             Why Choose Us
           </span>
-          <h2 className="text-5xl lg:text-7xl font-bold text-[var(--color-text-dark)] mt-6 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-[var(--color-text-dark)] mt-6 tracking-tight">
             Built <span className="chip-lime">Different</span>
           </h2>
           <p className="text-[var(--color-text-medium)] mt-6 max-w-xl mx-auto text-lg">
@@ -102,7 +102,7 @@ export default function V4Features() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           {features.map((feature, index) => (
             <motion.div
               key={feature.number}
@@ -111,7 +111,7 @@ export default function V4Features() {
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: index * 0.1 }}
               whileHover={{ y: -12, scale: 1.02 }}
-              className="group relative bg-white rounded-[1.5rem] p-8 border border-[var(--color-hairline-cloud)] shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden"
+              className="group relative bg-white rounded-[1.5rem] p-6 sm:p-8 border border-[var(--color-hairline-cloud)] shadow-lg hover:shadow-2xl transition-all duration-500 overflow-visible"
             >
               <motion.div
                 className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[var(--color-violet)]/5 to-transparent rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -122,7 +122,7 @@ export default function V4Features() {
                 whileInView={{ scale: 1, rotate: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 + 0.3, type: "spring", stiffness: 200 }}
-                className="absolute -top-3 -left-3 w-14 h-14 rounded-2xl bg-[var(--color-surface-night)] flex items-center justify-center shadow-lg"
+                className="absolute top-4 left-4 w-12 h-12 rounded-2xl bg-[var(--color-surface-night)] flex items-center justify-center shadow-lg"
               >
                 <span className="text-white text-sm font-bold">{feature.number}</span>
               </motion.div>

@@ -77,7 +77,7 @@ export default function V4HowItWorks() {
   return (
     <section
       ref={containerRef}
-      className="relative py-32 bg-[var(--color-surface-dark)] overflow-hidden"
+      className="relative py-16 md:py-24 lg:py-32 bg-[var(--color-surface-dark)] overflow-hidden"
     >
       <div className="absolute inset-0 starfield opacity-30" />
 
@@ -110,7 +110,7 @@ export default function V4HowItWorks() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-24"
+          className="text-center mb-12 md:mb-16 lg:mb-24"
         >
           <span className="inline-flex items-center gap-3 eyebrow text-[var(--color-lime)]">
             <motion.span
@@ -121,12 +121,12 @@ export default function V4HowItWorks() {
             </motion.span>
             Simple Process
           </span>
-          <h2 className="text-5xl lg:text-7xl font-bold text-white mt-6 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mt-6 tracking-tight">
             How It <span className="chip-lime">Works</span>
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8">
           {steps.map((step, index) => (
             <motion.div
               key={step.number}
@@ -143,14 +143,14 @@ export default function V4HowItWorks() {
                   whileInView={{ scaleX: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.12 + 0.3 }}
-                  className="hidden lg:block absolute top-16 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-[var(--color-lime)] via-[var(--color-pink)] to-transparent"
+                  className="hidden xl:block absolute top-16 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-[var(--color-lime)] via-[var(--color-pink)] to-transparent"
                 />
               )}
 
               <motion.div
                 whileHover={{ scale: 1.15, rotate: 5 }}
                 transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
-                className="relative inline-flex items-center justify-center w-28 h-28 mb-8"
+                className="relative inline-flex items-center justify-center w-24 h-24 sm:w-28 sm:h-28 mb-8"
               >
                 <motion.div
                   animate={{ scale: [1, 1.05, 1] }}
@@ -179,7 +179,7 @@ export default function V4HowItWorks() {
 
               <motion.h3
                 whileHover={{ scale: 1.05 }}
-                className="text-2xl font-bold text-white mb-3 group-hover:text-[var(--color-lime)] transition-colors"
+                className="text-xl sm:text-2xl font-bold text-white mb-3 group-hover:text-[var(--color-lime)] transition-colors"
               >
                 {step.title}
               </motion.h3>
