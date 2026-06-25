@@ -31,7 +31,7 @@ export function EffortHighlight({ content }: EffortHighlightProps) {
           aria-hidden="true"
           style={
             {
-              top: star.top,
+              top: "top" in star ? star.top : undefined,
               left: "left" in star ? star.left : undefined,
               right: "right" in star ? star.right : undefined,
               bottom: "bottom" in star ? star.bottom : undefined,
