@@ -28,16 +28,16 @@ export function CartSlideOver({ isOpen, onClose }: CartSlideOverProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 z-[105] bg-black/60 backdrop-blur-sm"
           />
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed right-0 top-0 h-full w-full max-w-md bg-[var(--color-ink-deep)] z-50 shadow-2xl flex flex-col"
+            className="fixed right-0 top-0 z-[110] flex h-full w-full max-w-md flex-col bg-[var(--color-ink-deep)] shadow-2xl"
           >
-            <div className="flex items-center justify-between p-6 border-b border-[var(--color-hairline-violet)]">
+            <div className="flex items-center justify-between border-b border-[var(--color-hairline-violet)] p-6">
               <h2 className="text-xl font-bold text-white">Your Cart ({itemCount})</h2>
               <button
                 onClick={onClose}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { Logo } from "@/components/brand/Logo";
 
 const navLinks = [
   { href: "/v4", label: "Home" },
@@ -35,21 +36,12 @@ export default function V4Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <Link href="/v4" className="flex items-center gap-3 group">
-              <motion.div
-                whileHover={{ rotate: 180, scale: 1.1 }}
-                transition={{ duration: 0.5, type: "spring", stiffness: 300 }}
-                className="w-10 h-10 bg-[var(--color-lime)] rounded-lg flex items-center justify-center shadow-lg"
-              >
-                <span className="text-[var(--color-ink-deep)] font-bold text-lg">C</span>
-              </motion.div>
-              <motion.span
-                whileHover={{ x: 3 }}
-                className="font-bold text-lg text-white group-hover:text-[var(--color-lime)] transition-colors"
-              >
-                Crucible
-              </motion.span>
-            </Link>
+            <Logo
+              variant="responsive"
+              linked
+              href="/v4"
+              className="transition-opacity hover:opacity-90"
+            />
 
             <div className="hidden md:flex items-center gap-2">
               {navLinks.map((link, i) => (

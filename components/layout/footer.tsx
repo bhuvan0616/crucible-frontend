@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Logo } from "@/components/brand/Logo";
 
 const footerLinks = [
   { label: "Shop", href: "/shop" },
@@ -15,8 +16,8 @@ export function Footer() {
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
           {/* Brand */}
           <div className="text-center lg:text-left">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-lg font-semibold tracking-tight text-white">Crucible Creations</span>
+            <div className="mb-2">
+              <Logo variant="long" linked imageClassName="h-9 max-w-[200px]" />
             </div>
             <p className="text-[#64748b] text-sm">Premium 3D Printed Products</p>
           </div>

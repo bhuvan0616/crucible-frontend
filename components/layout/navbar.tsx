@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { Logo } from "@/components/brand/Logo";
 import { CartSlideOver } from "@/components/shop/CartSlideOver";
 import { useCartStore, selectCartItemCount } from "@/store/cartStore";
 
@@ -41,6 +42,35 @@ function AccountIcon({ className }: { className?: string }) {
   );
 }
 
+const cartButtonClassName =
+  "group relative flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/[0.06] hover:text-white active:scale-[0.96] sm:h-12 sm:w-12";
+
+function CartIcon({ itemCount }: { itemCount: number }) {
+  return (
+    <>
+      <svg
+        className="h-5 w-5 sm:h-[1.375rem] sm:w-[1.375rem]"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.75}
+        viewBox="0 0 24 24"
+        aria-hidden
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2M9 20a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
+        />
+      </svg>
+      {itemCount > 0 && (
+        <span className="absolute right-0.5 top-0.5 flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-[var(--color-lime)] px-1 text-[10px] font-bold leading-none text-[var(--color-ink-deep)] sm:right-1 sm:top-1 sm:h-5 sm:min-w-5 sm:text-[11px]">
+          {itemCount}
+        </span>
+      )}
+    </>
+  );
+}
+
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -73,17 +103,12 @@ export default function Navbar() {
               aria-label="Main navigation"
               className="flex h-[3.25rem] items-center justify-between gap-3 rounded-full bg-[var(--color-ink-deep)] px-2 pl-3 pr-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:h-14 sm:pl-4 sm:pr-3"
             >
-              <Link
-                href="/"
-                className="group flex shrink-0 items-center gap-2.5 rounded-full py-1 pr-2 transition-opacity hover:opacity-90"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-lime)] text-sm font-bold text-[var(--color-ink-deep)] shadow-[0_4px_14px_rgba(194,239,78,0.22)]">
-                  C
-                </span>
-                <span className="hidden text-sm font-semibold tracking-tight text-white sm:inline">
-                  Crucible
-                </span>
-              </Link>
+              <Logo
+                variant="responsive"
+                linked
+                priority
+                className="shrink-0 rounded-full py-1 pr-2 transition-opacity hover:opacity-90"
+              />
 
               <div className="hidden items-center gap-0.5 md:flex">
                 {navLinks.map((link) => {
@@ -114,31 +139,20 @@ export default function Navbar() {
               </div>
 
               <div className="flex items-center gap-1">
+                <Link
+                  href="/cart"
+                  aria-label={`View cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}
+                  className={`${cartButtonClassName} md:hidden`}
+                >
+                  <CartIcon itemCount={itemCount} />
+                </Link>
                 <button
                   type="button"
                   onClick={() => setIsCartOpen(true)}
                   aria-label={`Open cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}
-                  className="group relative flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-white/[0.06] hover:text-white active:scale-[0.96] sm:h-12 sm:w-12"
+                  className={`${cartButtonClassName} hidden md:flex`}
                 >
-                  <svg
-                    className="h-5 w-5 sm:h-[1.375rem] sm:w-[1.375rem]"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1.75}
-                    viewBox="0 0 24 24"
-                    aria-hidden
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2M9 20a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"
-                    />
-                  </svg>
-                  {itemCount > 0 && (
-                    <span className="absolute right-0.5 top-0.5 flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full bg-[var(--color-lime)] px-1 text-[10px] font-bold leading-none text-[var(--color-ink-deep)] sm:right-1 sm:top-1 sm:h-5 sm:min-w-5 sm:text-[11px]">
-                      {itemCount}
-                    </span>
-                  )}
+                  <CartIcon itemCount={itemCount} />
                 </button>
 
                 <Link

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/authStore";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { pageMainClassName } from "@/components/layout/pageShell";
 import { sdk } from "@/lib/sdk";
 
 export default function LoginPageClient() {
@@ -58,16 +59,19 @@ export default function LoginPageClient() {
 
   if (isLoading || !isMounted) {
     return (
-      <main className="min-h-screen bg-[var(--color-primary)] flex items-center justify-center">
-        <div className="animate-pulse text-[var(--color-lime)] text-sm tracking-[0.3em] uppercase">
-          Loading
+      <main className={pageMainClassName}>
+        <div className="container mx-auto px-4 flex items-center justify-center min-h-[50vh]">
+          <div className="animate-pulse text-[var(--color-lime)] text-sm tracking-[0.3em] uppercase">
+            Loading
+          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[var(--color-primary)] flex items-center justify-center px-4">
+    <main className={pageMainClassName}>
+      <div className="container mx-auto px-4 flex items-center justify-center min-h-[50vh]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -136,6 +140,7 @@ export default function LoginPageClient() {
           </div>
         </div>
       </motion.div>
+      </div>
     </main>
   );
 }

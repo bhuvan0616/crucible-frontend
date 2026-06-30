@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Logo } from "@/components/brand/Logo";
 
 const footerLinks = {
   navigate: [
@@ -35,21 +36,12 @@ export default function V4Footer() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16 mb-16">
           <div className="md:col-span-2 lg:col-span-6">
-            <Link href="/" className="flex items-center gap-3 group">
-              <motion.div
-                whileHover={{ rotate: 180, scale: 1.1 }}
-                transition={{ duration: 0.5, type: "spring", stiffness: 300 }}
-                className="w-12 h-12 bg-[var(--color-lime)] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow"
-              >
-                <span className="text-[var(--color-ink-deep)] font-bold text-xl">C</span>
-              </motion.div>
-              <motion.span
-                whileHover={{ x: 3 }}
-                className="font-bold text-xl text-white group-hover:text-[var(--color-lime)] transition-colors"
-              >
-                Crucible Creations
-              </motion.span>
-            </Link>
+            <Logo
+              variant="long"
+              linked
+              imageClassName="h-11 max-w-[240px]"
+              className="transition-opacity hover:opacity-90"
+            />
             <p className="text-white/50 mt-6 leading-relaxed max-w-md">
               Carefully crafted 3D prints with premium materials — made to match
               what you expect, for you or someone you love.
