@@ -103,12 +103,18 @@ export default function Navbar() {
               aria-label="Main navigation"
               className="flex h-[3.25rem] items-center justify-between gap-3 rounded-full bg-[var(--color-ink-deep)] px-2 pl-3 pr-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] sm:h-14 sm:pl-4 sm:pr-3"
             >
-              <Logo
-                variant="responsive"
-                linked
-                priority
-                className="shrink-0 rounded-full py-1 pr-2 transition-opacity hover:opacity-90"
-              />
+              <div className="flex min-w-0 shrink-0 items-center gap-2 rounded-full py-1 pr-2">
+                <Logo
+                  variant="responsive"
+                  linked
+                  priority
+                  className="transition-opacity hover:opacity-90"
+                />
+                {/* Visible brand name for Google OAuth branding verification — remove after approval */}
+                <span className="truncate text-xs font-semibold text-white/90 sm:text-sm">
+                  Crucible Creations
+                </span>
+              </div>
 
               <div className="hidden items-center gap-0.5 md:flex">
                 {navLinks.map((link) => {

@@ -15,6 +15,7 @@ interface Address {
   country_code: string;
   phone?: string;
   address_name?: string;
+  is_default_shipping?: boolean;
 }
 
 interface AuthUser {
@@ -43,6 +44,7 @@ interface AuthStore {
   checkAuth: () => Promise<void>;
   clearError: () => void;
   addAddress: (address: Omit<Address, "id">) => Promise<Address>;
+  setDefaultShippingAddress: (addressId: string) => Promise<void>;
   getAddresses: () => Promise<Address[]>;
 }
 
@@ -146,6 +148,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       country_code: addressData.country_code || "in",
       phone: addressData.phone,
       address_name: addressData.address_name,
+      is_default_shipping: addressData.is_default_shipping,
     });
     set((state) => ({
       user: state.user ? {
@@ -154,6 +157,18 @@ export const useAuthStore = create<AuthStore>((set) => ({
       } : null,
     }));
     return (customer.addresses as Address[])[(customer.addresses as Address[]).length - 1];
+  },
+
+  setDefaultShippingAddress: async (addressId) => {
+    const { customer } = await sdk.store.customer.updateAddress(addressId, {
+      is_default_shipping: true,
+    });
+    set((state) => ({
+      user: state.user ? {
+        ...state.user,
+        addresses: (customer.addresses as Address[]) || [],
+      } : null,
+    }));
   },
 
   getAddresses: async () => {

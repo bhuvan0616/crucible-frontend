@@ -58,7 +58,7 @@ export default function GoogleCallback() {
 Add this callback URL in Google Cloud Console > APIs & Services > Credentials > OAuth client:
 
 ```
-http://localhost:9000/auth/google/callback
+http://localhost:3000/auth/customer/google/callback
 ```
 
 ## 4. Verify Authentication

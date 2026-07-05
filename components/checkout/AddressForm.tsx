@@ -19,6 +19,7 @@ interface SavedAddress {
   country_code: string;
   phone?: string;
   address_name?: string;
+  is_default_shipping?: boolean;
 }
 
 interface ShippingAddress {
@@ -39,14 +40,30 @@ interface AddressFormProps {
   isLoading?: boolean;
 }
 
+function toFormData(address: SavedAddress | ShippingAddress): ShippingAddress {
+  return {
+    first_name: address.first_name || "",
+    last_name: address.last_name || "",
+    address_1: address.address_1 || "",
+    address_2: address.address_2 || "",
+    city: address.city || "",
+    postal_code: address.postal_code || "",
+    country_code: address.country_code || "in",
+    phone: address.phone || "",
+    address_name: address.address_name || "",
+  };
+}
+
 export function AddressForm({ onSubmit, initialData, isLoading = false }: AddressFormProps) {
   const cartId = useCartStore((state) => state.cartId);
-  const { user, isAuthenticated, addAddress } = useAuthStore();
+  const { user, isAuthenticated, addAddress, setDefaultShippingAddress } = useAuthStore();
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [makeNewAddressDefault, setMakeNewAddressDefault] = useState(false);
+  const [makeSelectedAddressDefault, setMakeSelectedAddressDefault] = useState(false);
 
   const [formData, setFormData] = useState<ShippingAddress>({
     first_name: initialData?.first_name || "",
@@ -60,14 +77,30 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
     address_name: initialData?.address_name || "",
   });
 
+  const selectedAddress = savedAddresses.find((a) => a.id === selectedAddressId);
+
+  const applyAddressToForm = (address: SavedAddress) => {
+    setSelectedAddressId(address.id);
+    setFormData(toFormData(address));
+    setMakeSelectedAddressDefault(false);
+    setShowNewAddressForm(false);
+    setPhoneError(null);
+  };
+
   useEffect(() => {
     async function loadAddresses() {
       if (isAuthenticated) {
         try {
           const { addresses } = await sdk.store.customer.listAddress({
-            fields: "+address_name",
+            fields: "+address_name,+is_default_shipping",
           });
-          setSavedAddresses((addresses || []) as SavedAddress[]);
+          const list = (addresses || []) as SavedAddress[];
+          setSavedAddresses(list);
+
+          if (list.length > 0) {
+            const defaultAddr = list.find((a) => a.is_default_shipping) ?? list[0];
+            applyAddressToForm(defaultAddr);
+          }
         } catch (error) {
           console.error("Failed to load addresses:", error);
         }
@@ -86,21 +119,9 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
   };
 
   const handleAddressSelect = (addressId: string) => {
-    setSelectedAddressId(addressId);
-    const address = savedAddresses.find(a => a.id === addressId);
+    const address = savedAddresses.find((a) => a.id === addressId);
     if (address) {
-      setFormData({
-        first_name: address.first_name || "",
-        last_name: address.last_name || "",
-        address_1: address.address_1 || "",
-        address_2: address.address_2 || "",
-        city: address.city || "",
-        postal_code: address.postal_code || "",
-        country_code: address.country_code || "in",
-        phone: address.phone || "",
-        address_name: address.address_name || "",
-      });
-      setShowNewAddressForm(false);
+      applyAddressToForm(address);
     }
   };
 
@@ -113,9 +134,14 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
       return;
     }
 
-    const phone = formData.phone?.trim() ?? "";
+    const isUsingSavedAddress = Boolean(selectedAddressId) && !showNewAddressForm;
+    const phone = (isUsingSavedAddress ? selectedAddress?.phone : formData.phone)?.trim() ?? "";
     if (!phone) {
-      setPhoneError("Phone number is required for payment.");
+      setPhoneError(
+        isUsingSavedAddress
+          ? "This saved address has no phone number. Add a new address with a phone number to continue."
+          : "Phone number is required for payment."
+      );
       return;
     }
     if (!validateIndianPhone(phone)) {
@@ -130,7 +156,6 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
 
     setIsSubmitting(true);
     try {
-      const isUsingSavedAddress = Boolean(selectedAddressId);
       const isNewAddressEntry = showNewAddressForm || savedAddresses.length === 0;
       const shouldSaveNewAddress =
         isAuthenticated &&
@@ -141,6 +166,7 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
         formData.address_name;
 
       if (shouldSaveNewAddress) {
+        const isFirstAddress = savedAddresses.length === 0;
         await addAddress({
           first_name: formData.first_name,
           last_name: formData.last_name,
@@ -151,7 +177,10 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
           country_code: "in",
           phone: formData.phone,
           address_name: formData.address_name,
-        } as any);
+          is_default_shipping: isFirstAddress ? true : makeNewAddressDefault,
+        });
+      } else if (isUsingSavedAddress && makeSelectedAddressDefault && selectedAddressId) {
+        await setDefaultShippingAddress(selectedAddressId);
       }
 
       await sdk.store.cart.update(cartId, {
@@ -168,7 +197,7 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
           address_name: formData.address_name || undefined,
         } as any,
       });
-      onSubmit({ ...formData, country_code: "in" });
+      onSubmit({ ...formData, country_code: "in", phone });
     } catch (error: any) {
       alert(error.message || "Failed to save address");
     } finally {
@@ -187,8 +216,28 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
             <button
               type="button"
               onClick={() => {
-                setShowNewAddressForm(!showNewAddressForm);
-                setSelectedAddressId("");
+                if (showNewAddressForm) {
+                  const defaultAddr =
+                    savedAddresses.find((a) => a.is_default_shipping) ?? savedAddresses[0];
+                  if (defaultAddr) {
+                    applyAddressToForm(defaultAddr);
+                  }
+                } else {
+                  setShowNewAddressForm(true);
+                  setSelectedAddressId("");
+                  setMakeNewAddressDefault(false);
+                  setFormData({
+                    first_name: "",
+                    last_name: "",
+                    address_1: "",
+                    address_2: "",
+                    city: "",
+                    postal_code: "",
+                    country_code: "in",
+                    phone: "",
+                    address_name: "",
+                  });
+                }
               }}
               className="text-sm text-[var(--color-lime)] hover:text-[var(--color-lime-dark)]"
             >
@@ -213,7 +262,14 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
                     <div>
                       <p className="font-medium text-white">
                         {address.first_name} {address.last_name}
-                        {address.address_name && <span className="text-[var(--color-lime)] ml-2">({address.address_name})</span>}
+                        {address.address_name && (
+                          <span className="text-[var(--color-lime)] ml-2">({address.address_name})</span>
+                        )}
+                        {address.is_default_shipping && (
+                          <span className="ml-2 text-xs font-normal px-2 py-0.5 rounded-full bg-[var(--color-lime)]/20 text-[var(--color-lime)]">
+                            Default
+                          </span>
+                        )}
                       </p>
                       <p className="text-sm text-[var(--color-on-dark-muted)] mt-1">
                         {address.address_1}
@@ -236,24 +292,24 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
           )}
 
           {!showNewAddressForm && selectedAddressId && (
-            <div>
-              <label htmlFor="saved_phone" className="block text-sm font-medium text-[var(--color-on-dark-muted)] mb-1">
-                Phone *
-              </label>
-              <Input
-                id="saved_phone"
-                type="tel"
-                value={formData.phone || ""}
-                onChange={handleChange("phone")}
-                required
-                disabled={isSubmitting || isLoading}
-                className="w-full"
-                placeholder="+91 9876543210"
-              />
-              {phoneError && (
-                <p className="mt-1 text-sm text-red-400">{phoneError}</p>
+            <>
+              {selectedAddress && !selectedAddress.is_default_shipping && (
+                <label className="flex items-center gap-2 text-sm text-[var(--color-on-dark-muted)] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={makeSelectedAddressDefault}
+                    onChange={(e) => setMakeSelectedAddressDefault(e.target.checked)}
+                    disabled={isSubmitting || isLoading}
+                    className="accent-[var(--color-lime)]"
+                  />
+                  Make this my default shipping address
+                </label>
               )}
-            </div>
+
+              {phoneError && (
+                <p className="text-sm text-red-400">{phoneError}</p>
+              )}
+            </>
           )}
         </div>
       )}
@@ -402,6 +458,19 @@ export function AddressForm({ onSubmit, initialData, isLoading = false }: Addres
               )}
             </div>
           </div>
+
+          {savedAddresses.length > 0 && (
+            <label className="flex items-center gap-2 text-sm text-[var(--color-on-dark-muted)] cursor-pointer">
+              <input
+                type="checkbox"
+                checked={makeNewAddressDefault}
+                onChange={(e) => setMakeNewAddressDefault(e.target.checked)}
+                disabled={isSubmitting || isLoading}
+                className="accent-[var(--color-lime)]"
+              />
+              Set as default shipping address
+            </label>
+          )}
         </>
       )}
 

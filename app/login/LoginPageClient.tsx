@@ -18,6 +18,13 @@ export default function LoginPageClient() {
   const checkAuth = useAuthStore((state) => state.checkAuth);
   const [isMounted, setIsMounted] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const authError = searchParams.get("error");
+  const authErrorReason = searchParams.get("reason");
+
+  const authErrorMessage =
+    authError === "auth_failed"
+      ? authErrorReason || "Google sign-in failed. Please try again."
+      : null;
 
   useEffect(() => {
     checkAuth();
@@ -83,6 +90,12 @@ export default function LoginPageClient() {
             <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
             <p className="text-[var(--color-on-dark-muted)]">Sign in to manage your prints</p>
           </div>
+
+          {authErrorMessage ? (
+            <div className="mb-6 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              {authErrorMessage}
+            </div>
+          ) : null}
 
           <button
             onClick={handleGoogleSignIn}
