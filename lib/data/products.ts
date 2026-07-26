@@ -147,7 +147,9 @@ export async function getProducts(): Promise<HttpTypes.StoreProduct[]> {
   }
 }
 
-export async function getProductById(id: string): Promise<HttpTypes.StoreProduct | undefined> {
+export async function getProductByHandle(
+  handle: string
+): Promise<HttpTypes.StoreProduct | undefined> {
   let regionId: string | null = null
   try {
     const { regions } = await sdk.store.region.list({ limit: 1 })
@@ -155,6 +157,7 @@ export async function getProductById(id: string): Promise<HttpTypes.StoreProduct
   } catch {}
 
   const params: Record<string, any> = {
+    handle,
     fields:
       "id,title,description,handle,*images,*variants,*variants.options,*options,*collection,*tags,+metadata",
   }
@@ -162,8 +165,8 @@ export async function getProductById(id: string): Promise<HttpTypes.StoreProduct
     params.region_id = regionId
   }
   try {
-    const { product } = await sdk.store.product.retrieve(id, params)
-    return product
+    const { products } = await sdk.store.product.list(params)
+    return products?.[0]
   } catch {
     return undefined
   }

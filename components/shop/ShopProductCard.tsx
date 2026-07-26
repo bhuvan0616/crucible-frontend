@@ -36,7 +36,7 @@ export function ShopProductCard({ product }: ShopProductCardProps) {
   const priceDisplay = lowestPrice > 0 ? formatPrice(lowestPrice) : "Contact for price";
 
   return (
-    <Link href={`/product/${product.id}`}>
+    <Link href={`/product/${product.handle}`}>
       <motion.div
         whileHover={{ y: -12 }}
         transition={{ duration: 0.3 }}

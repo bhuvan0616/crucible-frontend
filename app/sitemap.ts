@@ -54,11 +54,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const { products } = await sdk.store.product.list({
       limit: 100,
-      fields: "id,title,updated_at",
+      fields: "id,handle,title,updated_at",
     });
 
     productPages = products.map((product) => ({
-      url: `${baseUrl}/products/${product.id}`,
+      url: `${baseUrl}/product/${product.handle}`,
       lastModified: new Date(product.updated_at || Date.now()),
       changeFrequency: "weekly" as const,
       priority: 0.8,

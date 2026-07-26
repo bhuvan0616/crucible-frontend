@@ -12,7 +12,7 @@ const products = [
     price: 249,
     image: "/images/black panther.png",
     tag: "Best Seller",
-    handle: "prod_01KTF0D56NTNRC79HKR26TWBKT",
+    handle: "wakanda-foldable-phone-stand-personalized-3d-printed-keychain-stand",
     tagBg: "bg-[var(--color-ink-deep)]",
   },
   {
@@ -23,7 +23,7 @@ const products = [
     image: "/images/batman.png",
     tag: "Popular",
     tagBg: "bg-[var(--color-violet-mid)]",
-    handle: "prod_01KTF0D56NTNRC79HKR26TWBKT",
+    handle: "batman-foldable-phone-stand-personalized-3d-printed-keychain-stand",
   },
   {
     id: "var_teal",
@@ -33,7 +33,7 @@ const products = [
     image: "/images/captain.png",
     tag: "New",
     tagBg: "bg-[var(--color-lime)]",
-    handle: "prod_01KTF0D56NTNRC79HKR26TWBKT",
+    handle: "captain-foldable-phone-stand-personalized-3d-printed-keychain-stand",
   },
 ];
 

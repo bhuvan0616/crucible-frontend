@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProductById } from "@/lib/data/products";
+import { getProductByHandle } from "@/lib/data/products";
 import { ProductPageClient } from "@/components/product/ProductPageClient";
 import { stripMarkdown } from "@/lib/utils/stripMarkdown";
 
 interface ProductPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ handle: string }>;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const { id } = await params;
-  const product = await getProductById(id);
+  const { handle } = await params;
+  const product = await getProductByHandle(handle);
 
   if (!product) {
     return {
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const productUrl = `${baseUrl}/product/${id}`;
+  const productUrl = `${baseUrl}/product/${handle}`;
   const images = product.images?.map((img) => img.url) || [];
 
   const metaDescription = stripMarkdown(product.description || "").slice(0, 160);
@@ -54,8 +54,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { id } = await params;
-  const product = await getProductById(id);
+  const { handle } = await params;
+  const product = await getProductByHandle(handle);
 
   if (!product) {
     notFound();
@@ -73,7 +73,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     name: product.title,
     description: stripMarkdown(product.description || ""),
     image: product.images?.map((img) => img.url),
-    url: `${baseUrl}/product/${id}`,
+    url: `${baseUrl}/product/${handle}`,
     brand: {
       "@type": "Brand",
       name: "Crucible Creations",
