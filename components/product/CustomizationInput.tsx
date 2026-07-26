@@ -33,7 +33,7 @@ export function CustomizationInput({
         type="text"
         value={value}
         onChange={handleChange}
-        placeholder="Your text here (max 12 characters)"
+        placeholder={`Your text here (max ${maxChars} characters)`}
         maxLength={maxChars}
         className="bg-[var(--color-ink-deep)] border-[var(--color-hairline-violet)] text-white placeholder:text-[var(--color-on-dark-faint)]"
       />

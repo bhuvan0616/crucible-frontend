@@ -6,12 +6,13 @@ const features = [
   {
     number: "01",
     title: "Crafted for You",
-    description: "Personalize with up to 12 characters. Your name, your message — permanently engraved.",
+    description: "Personalize with up to 7 characters. Your name, your message — permanently engraved.",
     icon: (
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 4v28M8 8l10 10 10-10" />
-        <circle cx="18" cy="28" r="6" />
-        <path d="M12 28h12" />
+        <path d="M8 28l14-14 4 4L12 32H8v-4z" />
+        <path d="M20 16l4 4" />
+        <path d="M24 8l4 4" />
+        <path d="M26 6c1.5-1.5 4-1.5 5.5 0s1.5 4 0 5.5L28 15" />
       </svg>
     ),
     color: "from-[var(--color-lime)] to-[var(--color-lime-dark)]",
@@ -22,10 +23,11 @@ const features = [
     description: "Attaches to any keychain. 73mm × 35mm × 12mm of pure practicality.",
     icon: (
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="18" cy="18" r="12" />
-        <circle cx="18" cy="18" r="6" />
-        <circle cx="18" cy="18" r="2" fill="currentColor" />
-        <path d="M18 2v4M18 30v4M2 18h4M30 18h4" />
+        <circle cx="14" cy="14" r="6" />
+        <circle cx="14" cy="14" r="2.5" />
+        <path d="M18.5 18.5L28 28" />
+        <path d="M24 28h4v-4" />
+        <path d="M22 22l3 3" />
       </svg>
     ),
     color: "from-[var(--color-pink)] to-[var(--color-pink-light)]",
@@ -36,10 +38,9 @@ const features = [
     description: "High-quality PLA/PETG ensures durability with a finish that feels premium.",
     icon: (
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 24l12-16 12 16-12 8-12-8z" />
-        <path d="M10 22l8 5 8-5" />
-        <circle cx="18" cy="10" r="3" fill="currentColor" />
-        <path d="M18 4v3" />
+        <path d="M18 4l12 8v12l-12 8L6 24V12l12-8z" />
+        <path d="M18 4v28" />
+        <path d="M6 12l12 8 12-8" />
       </svg>
     ),
     color: "from-[var(--color-violet)] to-[var(--color-violet-deep)]",
@@ -47,14 +48,15 @@ const features = [
   {
     number: "04",
     title: "Perfect Gift",
-    description: "Arrives in premium packaging. Ready to surprise anyone on your list.",
+    description: "Comes with premium eco-friendly packaging and the best unboxing experience.",
     icon: (
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="6" y="14" width="24" height="18" rx="3" />
+        <rect x="6" y="14" width="24" height="16" rx="2" />
+        <path d="M18 14v16" />
         <path d="M6 20h24" />
-        <path d="M18 14V8" />
-        <path d="M12 8h12" />
-        <path d="M18 28v4M14 30h8" />
+        <path d="M18 14c-2.5-4-6-5-8-4s-2 4 0 5c2 1 5.5 0 8-1z" />
+        <path d="M18 14c2.5-4 6-5 8-4s2 4 0 5c-2 1-5.5 0-8-1z" />
+        <path d="M26 8c1.5-2 3.5-2.5 5-1.5" />
       </svg>
     ),
     color: "from-[var(--color-violet-mid)] to-[var(--color-violet)]",

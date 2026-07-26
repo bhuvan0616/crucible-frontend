@@ -27,8 +27,8 @@ export function buildLineItemCustomizations(
         field_id: field.id,
         type: "text",
         label: field.label,
-        value: text.slice(0, field.max_length ?? 12),
-        display: text.slice(0, field.max_length ?? 12),
+        value: text.slice(0, field.max_length ?? 7),
+        display: text.slice(0, field.max_length ?? 7),
       });
       continue;
     }

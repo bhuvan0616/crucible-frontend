@@ -54,7 +54,7 @@ Use when every variant (or the only variant) supports customization at the same 
     "type": "text",
     "label": "Name / Text to Engrave",
     "helper": "This text will be 3D printed on your product",
-    "max_length": 12,
+    "max_length": 7,
     "required": false
   },
   {
@@ -105,7 +105,7 @@ Key: `customization_fields`. Value: JSON **object** with `when` + `fields` (stri
       "type": "text",
       "label": "Name / Text to Engrave",
       "helper": "This text will be 3D printed on your product",
-      "max_length": 12,
+      "max_length": 7,
       "required": true
     },
     {

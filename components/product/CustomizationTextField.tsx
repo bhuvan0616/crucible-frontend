@@ -16,7 +16,7 @@ export function CustomizationTextField({
   onChange,
   error,
 }: CustomizationTextFieldProps) {
-  const maxChars = field.max_length ?? 12;
+  const maxChars = field.max_length ?? 7;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length <= maxChars) {

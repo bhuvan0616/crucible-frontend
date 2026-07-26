@@ -20,7 +20,7 @@ const steps = [
   {
     number: "02",
     title: "Add Your Text",
-    description: "Enter up to 12 characters for custom engraving",
+    description: "Enter up to 7 characters for custom engraving",
     icon: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M8 32L32 8" />

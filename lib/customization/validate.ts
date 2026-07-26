@@ -59,10 +59,10 @@ export function validateCustomizationValues(
         errors.push({ fieldId: field.id, message: `${field.label} is required` });
         continue;
       }
-      if (text.length > (field.max_length ?? 12)) {
+      if (text.length > (field.max_length ?? 7)) {
         errors.push({
           fieldId: field.id,
-          message: `${field.label} must be at most ${field.max_length ?? 12} characters`,
+          message: `${field.label} must be at most ${field.max_length ?? 7} characters`,
         });
       }
       continue;

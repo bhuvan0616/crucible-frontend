@@ -7,7 +7,7 @@ import type {
 } from "./types";
 import { coerceJsonArray } from "./coerceJson";
 
-const DEFAULT_TEXT_MAX = 12;
+const DEFAULT_TEXT_MAX = 7;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

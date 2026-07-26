@@ -16,7 +16,7 @@ const benefits = [
   {
     number: "03",
     title: "Personal Touch",
-    description: "Add up to 12 custom characters. Your name or message, uniquely yours.",
+    description: "Add up to 7 custom characters. Your name or message, uniquely yours.",
   },
   {
     number: "04",
