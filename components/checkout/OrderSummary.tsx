@@ -53,7 +53,11 @@ export function OrderSummary({ items, totals, showShipping = false }: OrderSumma
           <div className="flex justify-between text-sm">
             <span className="text-[var(--color-on-dark-muted)]">Shipping</span>
             <span className="text-white">
-              {totals.shipping_total === 0 ? "FREE" : formatPrice(totals.shipping_total)}
+              {totals.shipping_total === 0 ? (
+                <span className="text-[var(--color-lime)]">FREE</span>
+              ) : (
+                formatPrice(totals.shipping_total)
+              )}
             </span>
           </div>
         )}

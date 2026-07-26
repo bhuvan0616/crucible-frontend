@@ -2,16 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { sdk } from "@/lib/sdk";
+import { useCartStore } from "@/store/cartStore";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils/formatPrice";
-
-interface ShippingMethodFormProps {
-  cartId: string;
-  onSubmit: (optionId: string) => void;
-  selectedOptionId?: string | null;
-  onBack: () => void;
-  isLoading?: boolean;
-}
 
 interface ShippingOption {
   id: string;
@@ -20,13 +13,24 @@ interface ShippingOption {
   amount: number;
 }
 
+interface ShippingMethodFormProps {
+  cartId: string;
+  onSubmit: (optionId: string) => void;
+  onOptionSelect?: (option: ShippingOption) => void;
+  selectedOptionId?: string | null;
+  onBack: () => void;
+  isLoading?: boolean;
+}
+
 export function ShippingMethodForm({
   cartId,
   onSubmit,
+  onOptionSelect,
   selectedOptionId,
   onBack,
   isLoading = false,
 }: ShippingMethodFormProps) {
+  const refreshCart = useCartStore((state) => state.refreshCart);
   const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(selectedOptionId ?? null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,6 +81,12 @@ export function ShippingMethodForm({
         
         if (options.length > 0 && !selectedOptionId) {
           setSelectedId(options[0].id);
+          onOptionSelect?.(options[0]);
+        } else if (selectedOptionId) {
+          const selected = options.find((opt) => opt.id === selectedOptionId);
+          if (selected) {
+            onOptionSelect?.(selected);
+          }
         }
       } catch (err: any) {
         if (!cancelled) {
@@ -95,6 +105,7 @@ export function ShippingMethodForm({
     return () => {
       cancelled = true;
     };
+    // Intentionally omit onOptionSelect — parent may pass an inline callback
   }, [cartId, selectedOptionId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -109,6 +120,7 @@ export function ShippingMethodForm({
         option_id: selectedId,
         data: {},
       });
+      await refreshCart();
       onSubmit(selectedId);
     } catch (err: any) {
       setError(err.message || "Failed to select shipping method");
@@ -154,14 +166,17 @@ export function ShippingMethodForm({
                 name="shipping_method"
                 value={option.id}
                 checked={selectedId === option.id}
-                onChange={() => setSelectedId(option.id)}
+                onChange={() => {
+                  setSelectedId(option.id);
+                  onOptionSelect?.(option);
+                }}
                 className="mt-1 accent-[var(--color-lime)]"
               />
               <div className="flex-grow">
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-white">{option.name}</span>
                   <span className="text-[var(--color-lime)] font-bold">
-                    {formatPrice(option.amount)}
+                    {option.amount === 0 ? "FREE" : formatPrice(option.amount)}
                   </span>
                 </div>
                 {option.description && (

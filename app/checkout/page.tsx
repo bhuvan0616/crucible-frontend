@@ -60,9 +60,22 @@ export default function CheckoutPage() {
 
   const [currentStep, setCurrentStep] = useState<CheckoutStep>(CheckoutStep.Address);
   const [selectedShippingOption, setSelectedShippingOption] = useState<string | null>(null);
+  const [selectedShippingAmount, setSelectedShippingAmount] = useState<number | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [orderData, setOrderData] = useState<any>(null);
+
+  const showShipping = selectedShippingAmount !== null || selectedShippingOption !== null;
+  const shippingTotal = selectedShippingAmount ?? totals.shipping_total;
+  // Preview shipping while choosing; after continue, use refreshed cart totals
+  const summaryTotals =
+    showShipping && currentStep === CheckoutStep.Shipping
+      ? {
+          ...totals,
+          shipping_total: shippingTotal,
+          total: totals.subtotal + shippingTotal + totals.tax_total,
+        }
+      : totals;
 
   useEffect(() => {
     checkAuth();
@@ -237,6 +250,9 @@ export default function CheckoutPage() {
                   <ShippingMethodForm
                     cartId={cartId || ""}
                     onSubmit={handleShippingSubmit}
+                    onOptionSelect={(option) => {
+                      setSelectedShippingAmount(option.amount);
+                    }}
                     selectedOptionId={selectedShippingOption}
                     onBack={() => setCurrentStep(CheckoutStep.Address)}
                   />
@@ -286,7 +302,11 @@ export default function CheckoutPage() {
             <div className="lg:col-span-1">
               <div className="bg-[var(--color-ink-deep)] rounded-xl border border-[var(--color-hairline-violet)] p-6 sticky top-24">
                 <h3 className="text-lg font-bold text-white mb-4">Order Summary</h3>
-                <OrderSummary items={items} totals={totals} />
+                <OrderSummary
+                  items={items}
+                  totals={summaryTotals}
+                  showShipping={showShipping}
+                />
               </div>
             </div>
           </div>

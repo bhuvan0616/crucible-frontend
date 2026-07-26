@@ -24,6 +24,7 @@ interface CartStore {
   isLoading: boolean;
   isInitialized: boolean;
   initCart: () => Promise<void>;
+  refreshCart: () => Promise<void>;
   addItem: (
     variantId: string,
     quantity: number,
@@ -33,6 +34,9 @@ interface CartStore {
   removeItem: (lineItemId: string) => Promise<void>;
   clearCart: () => Promise<void>;
 }
+
+const CART_RETRIEVE_FIELDS =
+  "id,*items,*items.variant,*items.variant.product,subtotal,shipping_total,tax_total,total";
 
 function extractTotals(cart: HttpTypes.StoreCart): CartTotals {
   return {
@@ -83,7 +87,7 @@ export const useCartStore = create<CartStore>()(
         if (existingCartId) {
           try {
             const { cart } = await sdk.store.cart.retrieve(existingCartId, {
-              fields: "id,*items,*items.variant,*items.variant.product,subtotal,shipping_total,tax_total,total",
+              fields: CART_RETRIEVE_FIELDS,
             });
             set({
               cartId: cart.id,
@@ -113,6 +117,18 @@ export const useCartStore = create<CartStore>()(
         }
       },
 
+      refreshCart: async () => {
+        const { cartId } = get();
+        if (!cartId) return;
+        const { cart } = await sdk.store.cart.retrieve(cartId, {
+          fields: CART_RETRIEVE_FIELDS,
+        });
+        set({
+          items: cart.items?.map(transformLineItem) ?? [],
+          totals: extractTotals(cart),
+        });
+      },
+
       addItem: async (
         variantId: string,
         quantity: number,
@@ -128,7 +144,7 @@ export const useCartStore = create<CartStore>()(
             metadata: lineItemMetadata,
           });
           const { cart } = await sdk.store.cart.retrieve(cartId, {
-            fields: "id,*items,*items.variant,*items.variant.product,subtotal,shipping_total,tax_total,total",
+            fields: CART_RETRIEVE_FIELDS,
           });
           set({
             items: cart.items?.map(transformLineItem) ?? [],
@@ -146,7 +162,7 @@ export const useCartStore = create<CartStore>()(
         try {
           await sdk.store.cart.updateLineItem(cartId, lineItemId, { quantity });
           const { cart } = await sdk.store.cart.retrieve(cartId, {
-            fields: "id,*items,*items.variant,*items.variant.product,subtotal,shipping_total,tax_total,total",
+            fields: CART_RETRIEVE_FIELDS,
           });
           set({
             items: cart.items?.map(transformLineItem) ?? [],
@@ -164,7 +180,7 @@ export const useCartStore = create<CartStore>()(
         try {
           await sdk.store.cart.deleteLineItem(cartId, lineItemId);
           const { cart } = await sdk.store.cart.retrieve(cartId, {
-            fields: "id,*items,*items.variant,*items.variant.product,subtotal,shipping_total,tax_total,total",
+            fields: CART_RETRIEVE_FIELDS,
           });
           set({
             items: cart.items?.map(transformLineItem) ?? [],
